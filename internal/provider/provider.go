@@ -119,6 +119,7 @@ func NewBlandProvider(ctx context.Context, testModeEnabled ...bool) func() provi
 
 	if len(testModeEnabled) > 0 && testModeEnabled[0] {
 		tflog.Warn(ctx, "Test mode enabled. Authentication requests will not be sent to the backend APIs.")
+		providerConfig.APIKey = "123"
 		providerConfig.TestMode = true
 	}
 
