@@ -1,0 +1,1 @@
+terraform import bland_conversational_pathway.test "id-123"
