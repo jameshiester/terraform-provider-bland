@@ -8,7 +8,6 @@ plugins:
   - "@semantic-release/changelog"
   - "@semantic-release/github"
   - "@semantic-release/exec"
-releaseBranches: 
 
 verifyConditions:
   - "@semantic-release/github"
