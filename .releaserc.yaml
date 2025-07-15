@@ -10,9 +10,21 @@ plugins:
   - "@semantic-release/commit-analyzer"
   - "@semantic-release/release-notes-generator"
   - "@semantic-release/changelog"
-  - "@semantic-release/github"
   - "@semantic-release/exec"
-  - "@semantic-release/git"
+  - [
+    '@semantic-release/github',
+    {
+      'draftRelease': true, 
+    },
+  ]
+  - [
+    '@semantic-release/git',
+    {
+      'assets': ['CHANGELOG.md', 'package.json', 'npm-shrinkwrap.json'],  # Files to include in the release commit
+      'message': 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',  # Custom commit message
+    },
+  ]
+
 
 verifyConditions:
   - "@semantic-release/github"
@@ -66,15 +78,15 @@ generateNotes:
     presetConfig: true
   - path: "@semantic-release/exec"
     cmd: "echo ${nextRelease.version} > nextRelease"
-prepare:
-  - path: "@semantic-release/changelog"
-    changelogFile: "CHANGELOG.md"
-publish:
-  - path: "@semantic-release/github"
-    draftRelease: true
+# prepare:
+#   - path: "@semantic-release/changelog"
+#     changelogFile: "CHANGELOG.md"
+# publish:
+#   - path: "@semantic-release/github"
+#     draftRelease: true
 
-success:
-  - "@semantic-release/github"
+# success:
+#   - "@semantic-release/github"
 
 fail:
   - "@semantic-release/github"
