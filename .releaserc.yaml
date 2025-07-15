@@ -25,8 +25,8 @@ analyzeCommits:
       release: "patch"
     - type: "chore"
       release: "patch"
-
-releaseBranches:
+      
+branches:
   - main
 
 generateNotes:
