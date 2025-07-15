@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/resourcevalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -69,15 +68,6 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 				Required:            true,
 			},
 		},
-	}
-}
-
-func (d *ConversationalPathwayResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
-	return []resource.ConfigValidator{
-		resourcevalidator.Conflicting(
-			path.MatchRoot("connection_parameters"),
-			path.MatchRoot("connection_parameters_set"),
-		),
 	}
 }
 
