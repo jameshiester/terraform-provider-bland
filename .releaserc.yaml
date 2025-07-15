@@ -12,6 +12,7 @@ plugins:
   - "@semantic-release/changelog"
   - "@semantic-release/github"
   - "@semantic-release/exec"
+  - "@semantic-release/git"
 
 verifyConditions:
   - "@semantic-release/github"
@@ -67,12 +68,14 @@ generateNotes:
     cmd: "echo ${nextRelease.version} > nextRelease"
 prepare:
   - path: "@semantic-release/changelog"
-    changelogFile: "docs/CHANGELOG.md"
+    changelogFile: "CHANGELOG.md"
 publish:
   - path: "@semantic-release/github"
+    draftRelease: true
 
 success:
   - "@semantic-release/github"
+  - "@semantic-release/git"
 
 fail:
   - "@semantic-release/github"
