@@ -64,7 +64,10 @@ func (p *BlandProvider) Configure(ctx context.Context, req provider.ConfigureReq
 	if baseUrl == "" {
 		baseUrl = "api.bland.ai"
 	}
+	if p.Config.TestMode {
+		tflog.Warn(ctx, "Test mode enabled. Missing API key may be ignored.")
 
+	}
 	if apiToken == "" {
 		resp.Diagnostics.AddError(
 			"Missing API Key Configuration",
