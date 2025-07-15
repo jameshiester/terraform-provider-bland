@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+// Copyright (c) James Hiester.
 // Licensed under the MIT license.
 
 package mocks
