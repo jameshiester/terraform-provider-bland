@@ -11,12 +11,12 @@ plugins:
   - "@semantic-release/release-notes-generator"
   - "@semantic-release/changelog"
   - "@semantic-release/exec"
-  - [
-    '@semantic-release/github',
-    {
-      'draftRelease': true, 
-    },
-  ]
+  # - [
+  #   '@semantic-release/github',
+  #   {
+  #     'draftRelease': true, 
+  #   },
+  # ]
   # - [
   #   '@semantic-release/git',
   #   {
@@ -25,9 +25,6 @@ plugins:
   #   },
   # ]
 
-
-verifyConditions:
-  - "@semantic-release/github"
 
 analyzeCommits:
   - path: "@semantic-release/commit-analyzer"
@@ -87,6 +84,3 @@ generateNotes:
 
 # success:
 #   - "@semantic-release/github"
-
-fail:
-  - "@semantic-release/github"
