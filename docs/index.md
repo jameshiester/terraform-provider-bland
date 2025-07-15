@@ -12,8 +12,9 @@ description: |-
 ## Example Usage
 
 ```terraform
-provider "scaffolding" {
+provider "bland" {
   # example configuration here
+  api_key = "123"
 }
 ```
 
