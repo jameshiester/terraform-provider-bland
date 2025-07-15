@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package arrays
 
 // DiffArrays returns the added and removed items between two string arrays.
