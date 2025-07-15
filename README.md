@@ -4,8 +4,6 @@
 
 This is an experimental provider designed to test the ability of Bland resources to be provisioned using Terraform.  At the current time, it is not intended to provide complete coverage of Bland's API nor is it intended for production use.  Additional contributors may be welcome to carry this forward if there's interest.
 
-
-
 ## Requirements
 
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.0
