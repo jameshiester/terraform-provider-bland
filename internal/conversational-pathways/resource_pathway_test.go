@@ -39,8 +39,7 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 
 	httpmock.RegisterResponder("POST", "https://api.bland.ai/v1/pathway/create?api-version=1",
 		func(req *http.Request) (*http.Response, error) {
-			// return httpmock.NewStringResponse(http.StatusCreated, httpmock.File("./tests/resource/pathway/Validate_Create/post_pathway.json").String()), nil
-			return httpmock.NewStringResponse(http.StatusCreated, "{}"), nil
+			return httpmock.NewStringResponse(http.StatusCreated, httpmock.File("./tests/resource/pathway/Validate_Create/post_pathway.json").String()), nil
 		})
 
 	resource.Test(t, resource.TestCase{
