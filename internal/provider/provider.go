@@ -82,8 +82,8 @@ func (p *BlandProvider) Configure(ctx context.Context, req provider.ConfigureReq
 		Config: p.Config,
 		Api:    p.Api,
 	}
-	resp.DataSourceData = providerClient
-	resp.ResourceData = providerClient
+	resp.DataSourceData = &providerClient
+	resp.ResourceData = &providerClient
 }
 
 func (p *BlandProvider) Resources(ctx context.Context) []func() resource.Resource {
