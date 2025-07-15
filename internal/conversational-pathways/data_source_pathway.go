@@ -63,7 +63,7 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "The name of the conversational pathway.",
-				Computed:            true,
+				Optional:            true,
 			},
 			"description": schema.StringAttribute{
 				MarkdownDescription: "A description of the conversational pathway.",
