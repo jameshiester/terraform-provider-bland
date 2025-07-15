@@ -28,7 +28,7 @@ func (client *client) CreatePathway(ctx context.Context, pathwayToCreate createP
 	apiUrl := &url.URL{
 		Scheme: constants.HTTPS,
 		Host:   client.Api.GetConfig().BaseURL,
-		Path:   "/v1/pathway",
+		Path:   "/v1/pathway/create",
 	}
 	values := url.Values{}
 	values.Add("api-version", "1")
