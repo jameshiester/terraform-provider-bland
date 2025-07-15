@@ -5,7 +5,6 @@ package pathways_test
 
 import (
 	"net/http"
-	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -38,7 +37,7 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	httpmock.RegisterRegexpResponder("POST", regexp.MustCompile(`^https://api.bland.ai/v1/pathway/create?api-version=1$`),
+	httpmock.RegisterResponder("POST", "https://api.bland.ai/v1/pathway/create?api-version=1",
 		func(req *http.Request) (*http.Response, error) {
 			// return httpmock.NewStringResponse(http.StatusCreated, httpmock.File("./tests/resource/pathway/Validate_Create/post_pathway.json").String()), nil
 			return httpmock.NewStringResponse(http.StatusCreated, "{}"), nil
