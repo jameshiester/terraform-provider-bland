@@ -22,9 +22,20 @@ jobs:
         with:
           node-version: 18.x # optional
 
+      - uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec # v6.3.0
+        id: import_gpg
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+
       - name: Install Semantic Release and plugins
         run: |
-          npm install semantic-release @semantic-release/exec @semantic-release/changelog @semantic-release/github
+          npm install semantic-release @semantic-release/exec @semantic-release/changelog @semantic-release/github @semantic-release/git
 
       - name: Create Release
         run: npx semantic-release
