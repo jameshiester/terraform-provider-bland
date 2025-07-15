@@ -13,26 +13,26 @@ import (
 	"github.com/jarcoal/httpmock"
 )
 
-func TestAccCConversationalPathwayResource_Validate_Create(t *testing.T) {
-	resource.Test(t, resource.TestCase{
+// func TestAccConversationalPathwayResource_Validate_Create(t *testing.T) {
+// 	resource.Test(t, resource.TestCase{
 
-		ProtoV6ProviderFactories: mocks.TestAccProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			{
-				Config: `
-					resource "bland_conversational_pathway" "path" {
-						name                              = "Test Provider Name"
-						description                       = "Test Provider Description"
-					}
-					`,
-				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "name", "Test Provider Name"),
-					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "description", "Test Provider Description"),
-				),
-			},
-		},
-	})
-}
+// 		ProtoV6ProviderFactories: mocks.TestAccProtoV6ProviderFactories,
+// 		Steps: []resource.TestStep{
+// 			{
+// 				Config: `
+// 					resource "bland_conversational_pathway" "path" {
+// 						name                              = "Test Provider Name"
+// 						description                       = "Test Provider Description"
+// 					}
+// 					`,
+// 				Check: resource.ComposeAggregateTestCheckFunc(
+// 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "name", "Test Provider Name"),
+// 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "description", "Test Provider Description"),
+// 				),
+// 			},
+// 		},
+// 	})
+// }
 
 func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 	httpmock.Activate()
@@ -40,7 +40,7 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 
 	httpmock.RegisterRegexpResponder("POST", regexp.MustCompile(`^https://api.bland.ai/v1/pathway/create?api-version=1$`),
 		func(req *http.Request) (*http.Response, error) {
-			return httpmock.NewStringResponse(http.StatusCreated, httpmock.File("tests/resource/pathway/Validate_Create/post_pathway.json").String()), nil
+			return httpmock.NewStringResponse(http.StatusCreated, httpmock.File("./tests/resource/pathway/Validate_Create/post_pathway.json").String()), nil
 		})
 
 	resource.Test(t, resource.TestCase{
