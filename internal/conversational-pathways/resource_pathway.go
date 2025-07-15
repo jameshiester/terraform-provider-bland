@@ -30,7 +30,7 @@ type ConversationalPathwayResource struct {
 func NewConversationalPathwayResource() resource.Resource {
 	return &ConversationalPathwayResource{
 		TypeInfo: utils.TypeInfo{
-			TypeName: "connection",
+			TypeName: "conversational_pathway",
 		},
 	}
 }

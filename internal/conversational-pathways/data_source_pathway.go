@@ -19,7 +19,11 @@ import (
 var _ datasource.DataSource = &ConversationalPathwayDataSource{}
 
 func NewConversationalPathwayDataSource() datasource.DataSource {
-	return &ConversationalPathwayDataSource{}
+	return &ConversationalPathwayDataSource{
+		TypeInfo: utils.TypeInfo{
+			TypeName: "conversational_pathway",
+		},
+	}
 }
 
 // ConversationalPathwayDataSource defines the data source implementation.
