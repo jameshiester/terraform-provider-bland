@@ -62,7 +62,7 @@ func (p *BlandProvider) Configure(ctx context.Context, req provider.ConfigureReq
 		apiToken = data.APIKey.ValueString()
 	}
 	if baseUrl == "" {
-		baseUrl = "https://api.bland.ai"
+		baseUrl = "api.bland.ai"
 	}
 
 	if apiToken == "" {
@@ -76,7 +76,7 @@ func (p *BlandProvider) Configure(ctx context.Context, req provider.ConfigureReq
 	}
 	p.Config.APIKey = apiToken
 	p.Config.BaseURL = baseUrl
-
+	p.Config.TerraformVersion = req.TerraformVersion
 	if resp.Diagnostics.HasError() {
 		return
 	}
