@@ -16,7 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
 	"github.com/jameshiester/terraform-provider-bland/internal/config"
-	pathways "github.com/jameshiester/terraform-provider-bland/internal/conversational-pathways/pathway"
+	pathways "github.com/jameshiester/terraform-provider-bland/internal/conversational-pathways"
 )
 
 // Ensure BlandProvider satisfies various provider interfaces.

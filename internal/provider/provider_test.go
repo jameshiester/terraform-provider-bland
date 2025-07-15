@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	test "github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	pathways "github.com/jameshiester/terraform-provider-bland/internal/conversational-pathways/pathway"
+	pathways "github.com/jameshiester/terraform-provider-bland/internal/conversational-pathways"
 	"github.com/jameshiester/terraform-provider-bland/internal/mocks"
 	"github.com/jameshiester/terraform-provider-bland/internal/provider"
 	"github.com/jarcoal/httpmock"
