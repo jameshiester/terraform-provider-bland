@@ -54,11 +54,15 @@ func (p *BlandProvider) Configure(ctx context.Context, req provider.ConfigureReq
 	var data BlandProviderModel
 	// Check environment variables
 	apiToken := os.Getenv("BLAND_API_KEY")
+	baseUrl := os.Getenv("BLAND_BASE_URL")
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
 	if data.APIKey.ValueString() != "" {
 		apiToken = data.APIKey.ValueString()
+	}
+	if baseUrl == "" {
+		baseUrl = "https://api.bland.ai"
 	}
 
 	if apiToken == "" {
@@ -70,6 +74,8 @@ func (p *BlandProvider) Configure(ctx context.Context, req provider.ConfigureReq
 		)
 		// Not returning early allows the logic to collect all errors.
 	}
+	p.Config.APIKey = apiToken
+	p.Config.BaseURL = baseUrl
 
 	if resp.Diagnostics.HasError() {
 		return
