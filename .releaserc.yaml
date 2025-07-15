@@ -17,13 +17,13 @@ plugins:
       'draftRelease': true, 
     },
   ]
-  - [
-    '@semantic-release/git',
-    {
-      'assets': ['CHANGELOG.md', 'package.json', 'npm-shrinkwrap.json'],  # Files to include in the release commit
-      'message': 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',  # Custom commit message
-    },
-  ]
+  # - [
+  #   '@semantic-release/git',
+  #   {
+  #     'assets': ['CHANGELOG.md', 'package.json', 'npm-shrinkwrap.json'],  # Files to include in the release commit
+  #     'message': 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',  # Custom commit message
+  #   },
+  # ]
 
 
 verifyConditions:
