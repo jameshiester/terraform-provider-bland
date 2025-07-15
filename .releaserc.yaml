@@ -1,5 +1,9 @@
 ---
 defaultBranch: "main"
+
+branches:
+  - main
+
 preset: "angular"
 tagFormat: "${version}"
 plugins:
@@ -25,9 +29,7 @@ analyzeCommits:
       release: "patch"
     - type: "chore"
       release: "patch"
-      
-branches:
-  - main
+
 
 generateNotes:
   - path: "@semantic-release/release-notes-generator"
