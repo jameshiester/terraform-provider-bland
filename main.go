@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 package main
 
 import (
@@ -9,35 +6,29 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
-	"github.com/hashicorp/terraform-provider-scaffolding-framework/internal/provider"
+	"github.com/jameshiester/terraform-provider-bland/common"
+	"github.com/jameshiester/terraform-provider-bland/internal/provider"
 )
 
-var (
-	// these will be set by the goreleaser configuration
-	// to appropriate values for the compiled binary.
-	version string = "dev"
-
-	// goreleaser can pass other information to the main package, such as the specific commit
-	// https://goreleaser.com/cookbooks/using-main.version/
-)
-
+// Generate the provider document.
+//
+//go:generate tfplugindocs generate --provider-name powerplatform --rendered-provider-name "Power Platform"
 func main() {
-	var debug bool
+	log.Printf("[INFO] Starting the Power Platform Terraform Provider %s %s", common.ProviderVersion, common.Branch)
 
+	var debug bool
 	flag.BoolVar(&debug, "debug", false, "set to true to run the provider with support for debuggers like delve")
 	flag.Parse()
+	ctx := context.Background()
 
-	opts := providerserver.ServeOpts{
-		// TODO: Update this string with the published name of your provider.
-		// Also update the tfplugindocs generate command to either remove the
-		// -provider-name flag or set its value to the updated provider name.
-		Address: "registry.terraform.io/hashicorp/scaffolding",
+	serveOpts := providerserver.ServeOpts{
 		Debug:   debug,
+		Address: "registry.terraform.io/jameshiester/bland",
 	}
 
-	err := providerserver.Serve(context.Background(), provider.New(version), opts)
+	err := providerserver.Serve(ctx, provider.NewBlandProvider(ctx), serveOpts)
 
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatalf("Error serving provider: %s", err)
 	}
 }

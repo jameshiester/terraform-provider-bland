@@ -1,34 +1,58 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
-package provider
+package provider_test
 
 import (
+	"context"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-framework/providerserver"
-	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
-	"github.com/hashicorp/terraform-plugin-testing/echoprovider"
+	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	test "github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	pathways "github.com/jameshiester/terraform-provider-bland/internal/conversational-pathways/pathway"
+	"github.com/jameshiester/terraform-provider-bland/internal/mocks"
+	"github.com/jameshiester/terraform-provider-bland/internal/provider"
+	"github.com/jarcoal/httpmock"
+	"github.com/stretchr/testify/require"
 )
 
-// testAccProtoV6ProviderFactories is used to instantiate a provider during acceptance testing.
-// The factory function is called for each Terraform CLI command to create a provider
-// server that the CLI can connect to and interact with.
-var testAccProtoV6ProviderFactories = map[string]func() (tfprotov6.ProviderServer, error){
-	"scaffolding": providerserver.NewProtocol6WithError(New("test")()),
+func TestUnitBlandProviderHasChildDataSources_Basic(t *testing.T) {
+	expectedDataSources := []datasource.DataSource{
+		pathways.NewConversationalPathwayDataSource(),
+	}
+	datasources := provider.NewBlandProvider(context.Background())().(*provider.BlandProvider).DataSources(context.Background())
+
+	require.Equalf(t, len(expectedDataSources), len(datasources), "Expected %d data sources, got %d", len(expectedDataSources), len(datasources))
+	for _, d := range datasources {
+		require.Containsf(t, expectedDataSources, d(), "Data source %+v was not expected", d())
+	}
 }
 
-// testAccProtoV6ProviderFactoriesWithEcho includes the echo provider alongside the scaffolding provider.
-// It allows for testing assertions on data returned by an ephemeral resource during Open.
-// The echoprovider is used to arrange tests by echoing ephemeral data into the Terraform state.
-// This lets the data be referenced in test assertions with state checks.
-var testAccProtoV6ProviderFactoriesWithEcho = map[string]func() (tfprotov6.ProviderServer, error){
-	"scaffolding": providerserver.NewProtocol6WithError(New("test")()),
-	"echo":        echoprovider.NewProviderServer(),
+func TestUnitBlandProviderHasChildResources_Basic(t *testing.T) {
+	expectedResources := []resource.Resource{
+		pathways.NewConversationalPathwayResource(),
+	}
+	resources := provider.NewBlandProvider(context.Background())().(*provider.BlandProvider).Resources(context.Background())
+
+	require.Equalf(t, len(expectedResources), len(resources), "Expected %d resources, got %d", len(expectedResources), len(resources))
+	for _, r := range resources {
+		require.Containsf(t, expectedResources, r(), "Resource %+v was not expected", r())
+	}
 }
 
-func testAccPreCheck(t *testing.T) {
-	// You can add code here to run prior to any test case execution, for example assertions
-	// about the appropriate environment variables being set are common to see in a pre-check
-	// function.
+func TestBlandProvider_Validate_Telementry_Optout_Is_False(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	mocks.ActivateEnvironmentHttpMocks()
+
+	test.Test(t, test.TestCase{
+		IsUnitTest:               true,
+		ProtoV6ProviderFactories: mocks.TestUnitTestProtoV6ProviderFactories,
+		Steps: []test.TestStep{
+			{
+				Config: `provider "bland" {
+					api_key = "123"
+				}`,
+			},
+		},
+	})
 }
