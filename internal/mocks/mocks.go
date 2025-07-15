@@ -1,5 +1,5 @@
 // Copyright (c) James Hiester.
-// Licensed under the MIT license.
+// SPDX-License-Identifier: MPL-2.0
 
 package mocks
 
