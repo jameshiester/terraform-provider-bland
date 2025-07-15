@@ -48,7 +48,7 @@ func (client *client) CreatePathway(ctx context.Context, pathwayToCreate createP
 		message := strings.Join(messages, ". ")
 		return nil, fmt.Errorf("failed to create pathway with incorrect status: %s", message)
 	}
-	if response.Data == nil {
+	if response.Data == nil || response.Data.ID == "" {
 		return nil, fmt.Errorf("failed to create pathway: %s", "invalid data in response")
 	}
 	pathway := pathwayDto{
