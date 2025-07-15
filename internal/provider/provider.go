@@ -5,7 +5,6 @@ package provider
 
 import (
 	"context"
-	"net/http"
 	"os"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -79,10 +78,12 @@ func (p *BlandProvider) Configure(ctx context.Context, req provider.ConfigureReq
 	// Configuration values are now available.
 	// if data.Endpoint.IsNull() { /* ... */ }
 
-	// Example client configuration for data sources and resources
-	client := http.DefaultClient
-	resp.DataSourceData = client
-	resp.ResourceData = client
+	providerClient := api.ProviderClient{
+		Config: p.Config,
+		Api:    p.Api,
+	}
+	resp.DataSourceData = providerClient
+	resp.ResourceData = providerClient
 }
 
 func (p *BlandProvider) Resources(ctx context.Context) []func() resource.Resource {
