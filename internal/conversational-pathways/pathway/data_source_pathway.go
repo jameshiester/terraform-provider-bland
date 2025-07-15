@@ -108,7 +108,7 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 }
 
 func (d *ConversationalPathwayDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	ctx, exitContext := utils.EnterRequestContext(ctx, d.TypeInfo, req)
+	_, exitContext := utils.EnterRequestContext(ctx, d.TypeInfo, req)
 	defer exitContext()
 
 	if req.ProviderData == nil {

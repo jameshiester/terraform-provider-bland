@@ -18,7 +18,8 @@ func TestUnitBlandProviderHasChildDataSources_Basic(t *testing.T) {
 	expectedDataSources := []datasource.DataSource{
 		pathways.NewConversationalPathwayDataSource(),
 	}
-	datasources := provider.NewBlandProvider(context.Background())().(*provider.BlandProvider).DataSources(context.Background())
+	providerInstance := provider.NewBlandProvider(context.Background())()
+	datasources := providerInstance.DataSources(context.Background())
 
 	require.Equalf(t, len(expectedDataSources), len(datasources), "Expected %d data sources, got %d", len(expectedDataSources), len(datasources))
 	for _, d := range datasources {
@@ -30,7 +31,8 @@ func TestUnitBlandProviderHasChildResources_Basic(t *testing.T) {
 	expectedResources := []resource.Resource{
 		pathways.NewConversationalPathwayResource(),
 	}
-	resources := provider.NewBlandProvider(context.Background())().(*provider.BlandProvider).Resources(context.Background())
+	providerInstance := provider.NewBlandProvider(context.Background())()
+	resources := providerInstance.Resources(context.Background())
 
 	require.Equalf(t, len(expectedResources), len(resources), "Expected %d resources, got %d", len(expectedResources), len(resources))
 	for _, r := range resources {

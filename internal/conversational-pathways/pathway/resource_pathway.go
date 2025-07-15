@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
 	utils "github.com/jameshiester/terraform-provider-bland/internal/util"
@@ -80,7 +79,7 @@ func (d *ConversationalPathwayResource) ConfigValidators(ctx context.Context) []
 }
 
 func (r *ConversationalPathwayResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	ctx, exitContext := utils.EnterRequestContext(ctx, r.TypeInfo, req)
+	_, exitContext := utils.EnterRequestContext(ctx, r.TypeInfo, req)
 	defer exitContext()
 	if req.ProviderData == nil {
 		// ProviderData will be null when Configure is called from ValidateConfig.  It's ok.
@@ -121,9 +120,9 @@ func (r *ConversationalPathwayResource) Create(ctx context.Context, req resource
 	}
 
 	responseModel := ConvertFromPathwayDto(*connection)
-	plan.ID = types.String(responseModel.ID)
-	plan.Description = types.String(responseModel.Description)
-	plan.Name = types.String(responseModel.Name)
+	plan.ID = responseModel.ID
+	plan.Description = responseModel.Description
+	plan.Name = responseModel.Name
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
@@ -149,9 +148,9 @@ func (r *ConversationalPathwayResource) Read(ctx context.Context, req resource.R
 	}
 
 	model := ConvertFromPathwayDto(*pathway)
-	state.ID = types.String(model.ID)
-	state.Name = types.String(model.Name)
-	state.Description = types.String(model.Description)
+	state.ID = model.ID
+	state.Name = model.Name
+	state.Description = model.Description
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
@@ -181,9 +180,9 @@ func (r *ConversationalPathwayResource) Update(ctx context.Context, req resource
 	}
 
 	modelState := ConvertFromPathwayDto(*updateReponse)
-	plan.ID = types.String(modelState.ID)
-	plan.Name = types.String(modelState.Name)
-	plan.Description = types.String(modelState.Description)
+	plan.ID = modelState.ID
+	plan.Name = modelState.Name
+	plan.Description = modelState.Description
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }

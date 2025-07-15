@@ -18,7 +18,7 @@ import (
 	arrays "github.com/jameshiester/terraform-provider-bland/internal/util/array"
 )
 
-// Client is a base client for specific API clients implmented in services.
+// Client is a base client for specific API clients implemented in services.
 type Client struct {
 	Config   *config.ProviderConfig
 	BaseAuth *Auth
