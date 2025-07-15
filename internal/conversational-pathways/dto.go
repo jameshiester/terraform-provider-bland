@@ -19,7 +19,21 @@ type pathwayDto struct {
 	Description string
 }
 
+type createPathwayResponseData struct {
+	ID string `json:"pathway_id"`
+}
+
+type errorDto struct {
+	Error   string `json:"error"`
+	Message string `json:"message"`
+}
+
 type createPathwayResponseDto struct {
-	ID     string `json:"pathway_id"`
-	Status string `json:"status"`
+	Errors *[]errorDto                `json:"errors,omitempty"`
+	Data   *createPathwayResponseData `json:"data"`
+}
+
+type updatePathwayResponseDto struct {
+	Errors *[]errorDto       `json:"errors,omitempty"`
+	Data   *updatePathwayDto `json:"pathway_data"`
 }
