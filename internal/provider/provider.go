@@ -68,7 +68,7 @@ func (p *BlandProvider) Configure(ctx context.Context, req provider.ConfigureReq
 	if apiToken == "" {
 		resp.Diagnostics.AddError(
 			"Missing API Key Configuration",
-			"While configuring the provider, the API key was not found in "+
+			"While configuring the provider the API key was not found in "+
 				"the BLAND_API_KEY environment variable or provider "+
 				"configuration block api_key attribute.",
 		)
