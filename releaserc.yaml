@@ -26,6 +26,9 @@ analyzeCommits:
     - type: "chore"
       release: "patch"
 
+releaseBranches:
+  - main
+
 generateNotes:
   - path: "@semantic-release/release-notes-generator"
     writerOpts:
