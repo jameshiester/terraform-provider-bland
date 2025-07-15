@@ -142,8 +142,8 @@ func (d *ConversationalPathwayDataSource) Read(ctx context.Context, req datasour
 
 	tflog.Debug(ctx, fmt.Sprintf("READ DATASOURCE CONVERSATIONAL PATHWAYS START: %s", d.FullTypeName()))
 	if state.ID.ValueString() == "" {
-		resp.Diagnostics.AddError(fmt.Sprintf("Client error when reading %s", d.FullTypeName()), "ID is missing from state")
-
+		resp.Diagnostics.AddError(fmt.Sprintf("Client error when reading %s %s", d.FullTypeName(), state.Name.ValueString()), "ID is missing from state")
+		return
 	}
 	state.Name = types.StringValue(state.Name.ValueString())
 	state.Description = types.StringValue(state.Description.ValueString())

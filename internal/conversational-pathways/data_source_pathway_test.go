@@ -29,6 +29,7 @@ func TestUnitConversationalPathwayDataSource_Validate_Read(t *testing.T) {
 				Config: `
 				data "bland_conversational_pathway" "pathway" {
 					id = "123"
+					name = "Test Name"
 				}
 				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
