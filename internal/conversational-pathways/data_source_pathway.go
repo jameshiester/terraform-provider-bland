@@ -32,11 +32,28 @@ type ConversationalPathwayDataSource struct {
 	ApplicationClient client
 }
 
-// ConversationalPathwayDataSourceModel describes the data source data model.
-type ConversationalPathwayDataSourceModel struct {
+// ConversationalPathwayNodeModel describes the node model.
+type ConversationalPathwayNodeModel struct {
+	Type types.String                       `tfsdk:"type"`
+	ID   types.String                       `tfsdk:"id"`
+	Data ConversationalPathwayNodeDataModel `tfsdk:"data"`
+}
+
+// ConversationalPathwayNodeDataModel describes the node data model.
+type ConversationalPathwayNodeDataModel struct {
 	Name        types.String `tfsdk:"name"`
 	ID          types.String `tfsdk:"id"`
 	Description types.String `tfsdk:"description"`
+	Prompt      types.String `tfsdk:"prompt"`
+	IsStart     types.Bool   `tfsdk:"is_start"`
+}
+
+// ConversationalPathwayDataSourceModel describes the data source data model.
+type ConversationalPathwayDataSourceModel struct {
+	Name        types.String                     `tfsdk:"name"`
+	ID          types.String                     `tfsdk:"id"`
+	Description types.String                     `tfsdk:"description"`
+	Nodes       []ConversationalPathwayNodeModel `tfsdk:"nodes"`
 }
 
 func (r *ConversationalPathwayDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
