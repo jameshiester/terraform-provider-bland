@@ -78,6 +78,9 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
            						}
 							}
 						]
+						global_config = {
+							global_prompt = "Example global prompt"
+						}
 					}
 					`,
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -85,6 +88,7 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "description", "TestPathwayDescription"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "id", "123"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.id", "1"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "global_config.global_prompt", "Example global prompt"),
 				),
 			},
 		},

@@ -5,11 +5,35 @@
         {
             "id": "1",
             "data": {
-              "name": "Start",
-              "text": "Hey there, how are you doing today?",
-              "isStart": true
+                "name": "Start",
+                "text": "Hey there, how are you doing today?",
+                "isStart": true
             },
             "type": "Default"
+        },
+        {
+            "id": "2",
+            "data": {
+                "name": "Edge 2",
+                "prompt": "Second edge information"
+            },
+            "type": "Default"
+        },
+        {
+            "globalConfig": {
+                "globalPrompt": "Example global prompt"
+            }
+        }
+    ],
+    "edges": [
+        {
+            "id": "Edge1",
+            "source": "1",
+            "data": {
+                "label": "Edge Label"
+            },
+            "target": "2",
+            "type": "custom"
         }
     ]
 }

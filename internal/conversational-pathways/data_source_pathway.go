@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
 	utils "github.com/jameshiester/terraform-provider-bland/internal/util"
@@ -95,12 +96,28 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 									MarkdownDescription: "Defines if this is the start node of the pathway.",
 									Computed:            true,
 								},
+								"is_global": schema.BoolAttribute{
+									MarkdownDescription: "Defines if this is a global node.",
+									Computed:            true,
+								},
 								"prompt": schema.StringAttribute{
 									MarkdownDescription: "Prompt for a knowledge base node.",
 									Computed:            true,
 								},
 								"url": schema.StringAttribute{
 									MarkdownDescription: "URL for the node.",
+									Computed:            true,
+								},
+								"condition": schema.StringAttribute{
+									MarkdownDescription: "Condition for the node.",
+									Computed:            true,
+								},
+								"kb": schema.StringAttribute{
+									MarkdownDescription: "Knowledge base for the node.",
+									Computed:            true,
+								},
+								"transfer_number": schema.StringAttribute{
+									MarkdownDescription: "Transfer number for the node.",
 									Computed:            true,
 								},
 								"extract_vars": schema.ListNestedAttribute{
@@ -181,8 +198,85 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 										},
 									},
 								},
+								"model_options": schema.SingleNestedAttribute{
+									MarkdownDescription: "Model options for the node.",
+									Computed:            true,
+									Attributes: map[string]schema.Attribute{
+										"model_type": schema.StringAttribute{
+											MarkdownDescription: "Type of the model.",
+											Computed:            true,
+										},
+										"interruption_threshold": schema.StringAttribute{
+											MarkdownDescription: "Interruption threshold for the model.",
+											Computed:            true,
+										},
+										"temperature": schema.Float32Attribute{
+											MarkdownDescription: "Temperature setting for the model.",
+											Computed:            true,
+										},
+										"skip_user_response": schema.BoolAttribute{
+											MarkdownDescription: "Whether to skip user response.",
+											Computed:            true,
+										},
+										"block_interruptions": schema.BoolAttribute{
+											MarkdownDescription: "Whether to block interruptions.",
+											Computed:            true,
+										},
+									},
+								},
 							},
 						},
+					},
+				},
+			},
+			"edges": schema.ListNestedAttribute{
+				MarkdownDescription: "Data about all the edges in the pathway.",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: "Unique identifier for the edge.",
+							Computed:            true,
+						},
+						"source": schema.StringAttribute{
+							MarkdownDescription: "Source node ID for the edge.",
+							Computed:            true,
+						},
+						"target": schema.StringAttribute{
+							MarkdownDescription: "Target node ID for the edge.",
+							Computed:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: "Type of the edge.",
+							Computed:            true,
+						},
+						"data": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"label": schema.StringAttribute{
+									MarkdownDescription: "Label for the edge.",
+									Computed:            true,
+								},
+								"is_highlighted": schema.BoolAttribute{
+									MarkdownDescription: "Whether the edge is highlighted.",
+									Computed:            true,
+								},
+								"description": schema.StringAttribute{
+									MarkdownDescription: "Description of the edge.",
+									Computed:            true,
+								},
+							},
+						},
+					},
+				},
+			},
+			"global_config": schema.SingleNestedAttribute{
+				MarkdownDescription: "Global configuration for the pathway.",
+				Computed:            true,
+				Attributes: map[string]schema.Attribute{
+					"global_prompt": schema.StringAttribute{
+						MarkdownDescription: "Global prompt for the pathway.",
+						Computed:            true,
 					},
 				},
 			},
@@ -218,9 +312,11 @@ func (d *ConversationalPathwayDataSource) Read(ctx context.Context, req datasour
 
 	tflog.Debug(ctx, fmt.Sprintf("READ DATASOURCE CONVERSATIONAL PATHWAYS START: %s", d.FullTypeName()))
 	if state.ID.ValueString() == "" {
-		resp.Diagnostics.AddError(fmt.Sprintf("Client error when reading %s", d.FullTypeName()), "ID is missing from state")
+		resp.Diagnostics.AddError(fmt.Sprintf("Client error when reading %s %s", d.FullTypeName(), state.Name.ValueString()), "ID is missing from state")
 		return
 	}
+	state.Name = types.StringValue(state.Name.ValueString())
+	state.Description = types.StringValue(state.Description.ValueString())
 
 	pathway, err := d.ApplicationClient.GetPathway(ctx, state.ID.ValueString())
 	if err != nil {
@@ -230,12 +326,15 @@ func (d *ConversationalPathwayDataSource) Read(ctx context.Context, req datasour
 
 	model, err := ConvertFromPathwayDto(*pathway)
 	if err != nil {
-		resp.Diagnostics.AddError(fmt.Sprintf("Error when parsing %s", d.FullTypeName()), err.Error())
+		resp.Diagnostics.AddError(fmt.Sprintf("Error when converting %s", d.FullTypeName()), err.Error())
 		return
 	}
-	state.Name = model.Name
-	state.Description = model.Description
+
+	state.Name = types.StringValue(model.Name.ValueString())
+	state.Description = types.StringValue(model.Description.ValueString())
 	state.Nodes = model.Nodes
+	state.Edges = model.Edges
+	state.GlobalConfig = model.GlobalConfig
 	diags := resp.State.Set(ctx, &state)
 
 	tflog.Debug(ctx, fmt.Sprintf("READ DATASOURCE CONVERSATIONAL PATHWAYS END: %s", d.FullTypeName()))

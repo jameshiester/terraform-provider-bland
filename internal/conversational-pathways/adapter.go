@@ -76,17 +76,35 @@ func ConvertFromPathwayNodeDataResponsePathway(
 	}, nil
 }
 
-func ConvertFromPathwayNodeDataDto(data pathwayNodeDataDto) (*ConversationalPathwayNodeDataModel, error) {
-	model := ConversationalPathwayNodeDataModel{
-		GlobalPrompt: types.StringPointerValue(data.GlobalPrompt),
-		GlobalLabel:  types.StringPointerValue(data.GlobalLabel),
-		Method:       types.StringPointerValue(data.Method),
-		IsStart:      types.BoolPointerValue(data.IsStart),
-		Name:         types.StringValue(data.Name),
-		Prompt:       types.StringPointerValue(data.Prompt),
-		Text:         types.StringPointerValue(data.Text),
-		URL:          types.StringPointerValue(data.URL),
+func ConvertFromPathwayNodeDataDto(data *pathwayNodeDataDto) (*ConversationalPathwayNodeDataModel, error) {
+	if data == nil {
+		return nil, nil
 	}
+	model := ConversationalPathwayNodeDataModel{
+		GlobalPrompt:   types.StringPointerValue(data.GlobalPrompt),
+		GlobalLabel:    types.StringPointerValue(data.GlobalLabel),
+		Method:         types.StringPointerValue(data.Method),
+		IsStart:        types.BoolPointerValue(data.IsStart),
+		IsGlobal:       types.BoolPointerValue(data.IsGlobal),
+		Name:           types.StringValue(data.Name),
+		Prompt:         types.StringPointerValue(data.Prompt),
+		Text:           types.StringPointerValue(data.Text),
+		URL:            types.StringPointerValue(data.URL),
+		Condition:      types.StringPointerValue(data.Condition),
+		KnowledgeBase:  types.StringPointerValue(data.KnowledgeBase),
+		TransferNumber: types.StringPointerValue(data.TransferNumber),
+	}
+
+	if data.ModelOptions != nil {
+		model.ModelOptions = &ConversationalPathwayNodeDataModelOptionModel{
+			Type:                  types.StringValue(data.ModelOptions.Type),
+			InterruptionThreshold: types.StringPointerValue(data.ModelOptions.InterruptionThreshold),
+			Temperature:           types.Float32PointerValue(data.ModelOptions.Temperature),
+			SkipUserResponse:      types.BoolPointerValue(data.ModelOptions.SkipUserResponse),
+			BlockInterruptions:    types.BoolPointerValue(data.ModelOptions.BlockInterruptions),
+		}
+	}
+
 	if data.ExtractVars != nil {
 		for _, variable := range *data.ExtractVars {
 			varModel, err := ConvertFromPathwayNodeDataExtractVars(variable)
@@ -114,7 +132,7 @@ func ConvertFromPathwayNodeDataDto(data pathwayNodeDataDto) (*ConversationalPath
 	return &model, nil
 }
 
-func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) pathwayNodeDataDto {
+func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) *pathwayNodeDataDto {
 	var extractVars *[][]string
 	if len(data.ExtractVars) > 0 {
 		tmp := make([][]string, 0, len(data.ExtractVars))
@@ -165,18 +183,36 @@ func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) pa
 		responsePathways = nil
 	}
 
-	return pathwayNodeDataDto{
+	var modelOptions *modelOptionDto
+	if data.ModelOptions != nil {
+		modelOptions = &modelOptionDto{
+			Type:                  data.ModelOptions.Type.ValueString(),
+			InterruptionThreshold: data.ModelOptions.InterruptionThreshold.ValueStringPointer(),
+			Temperature:           data.ModelOptions.Temperature.ValueFloat32Pointer(),
+			SkipUserResponse:      data.ModelOptions.SkipUserResponse.ValueBoolPointer(),
+			BlockInterruptions:    data.ModelOptions.BlockInterruptions.ValueBoolPointer(),
+		}
+	} else {
+		modelOptions = nil
+	}
+
+	return &pathwayNodeDataDto{
 		Name:             data.Name.ValueString(),
 		GlobalPrompt:     data.GlobalPrompt.ValueStringPointer(),
 		Prompt:           data.Prompt.ValueStringPointer(),
 		Text:             data.Text.ValueStringPointer(),
 		IsStart:          data.IsStart.ValueBoolPointer(),
+		IsGlobal:         data.IsGlobal.ValueBoolPointer(),
 		Method:           data.Method.ValueStringPointer(),
 		URL:              data.URL.ValueStringPointer(),
 		GlobalLabel:      data.GlobalLabel.ValueStringPointer(),
+		Condition:        data.Condition.ValueStringPointer(),
+		KnowledgeBase:    data.KnowledgeBase.ValueStringPointer(),
+		TransferNumber:   data.TransferNumber.ValueStringPointer(),
 		ExtractVars:      extractVars,
 		ResponseData:     responseData,
 		ResponsePathways: responsePathways,
+		ModelOptions:     modelOptions,
 	}
 }
 
@@ -186,17 +222,68 @@ func ConvertFromPathwayNodeDto(node pathwayNodeDto) (*ConversationalPathwayNodeM
 		return nil, err
 	}
 	return &ConversationalPathwayNodeModel{
-		ID:   types.StringValue(node.ID),
-		Type: types.StringValue(node.Type),
+		ID:   types.StringPointerValue(node.ID),
+		Type: types.StringPointerValue(node.Type),
 		Data: *data,
 	}, nil
 }
 
+func ConvertFromPathwayGlobalConfigNodeDto(node pathwayNodeDto) *ConversationalPathwayGlobalConfig {
+	return &ConversationalPathwayGlobalConfig{
+		GlobalPrompt: types.StringValue(node.GlobalConfig.GlobalPrompt),
+	}
+}
+
 func ConvertFromPathwayNodeModel(node ConversationalPathwayNodeModel) pathwayNodeDto {
 	return pathwayNodeDto{
-		ID:   node.ID.ValueString(),
-		Type: node.Type.ValueString(),
+		ID:   node.ID.ValueStringPointer(),
+		Type: node.Type.ValueStringPointer(),
 		Data: ConvertFromPathwayNodeDataModel(node.Data),
+	}
+}
+
+func ConvertFromPathwayEdgeDto(edge pathwayEdgeDto) ConversationalPathwayEdgeModel {
+	return ConversationalPathwayEdgeModel{
+		ID:     types.StringValue(edge.ID),
+		Source: types.StringValue(edge.Source),
+		Target: types.StringValue(edge.Target),
+		Type:   types.StringValue(edge.Type),
+		Data: ConversationalPathwayEdgeDataModel{
+			Label:         types.StringValue(edge.Data.Label),
+			IsHighlighted: types.BoolValue(edge.Data.IsHighlighted),
+			Description:   types.StringValue(edge.Data.Description),
+		},
+	}
+}
+
+func ConvertFromPathwayEdgeModel(edge ConversationalPathwayEdgeModel) pathwayEdgeDto {
+	return pathwayEdgeDto{
+		ID:     edge.ID.ValueString(),
+		Source: edge.Source.ValueString(),
+		Target: edge.Target.ValueString(),
+		Type:   edge.Type.ValueString(),
+		Data: pathwayEdgeDataDto{
+			Label:         edge.Data.Label.ValueString(),
+			IsHighlighted: edge.Data.IsHighlighted.ValueBool(),
+			Description:   edge.Data.Description.ValueString(),
+		},
+	}
+}
+
+func ConvertFromPathwayGlobalConfigDto(config *pathwayGlobalConfigDto) ConversationalPathwayGlobalConfig {
+	if config == nil {
+		return ConversationalPathwayGlobalConfig{}
+	}
+	return ConversationalPathwayGlobalConfig{
+		GlobalPrompt: types.StringValue(config.GlobalPrompt),
+	}
+}
+
+func ConvertFromPathwayGlobalConfigModel(config ConversationalPathwayGlobalConfig) pathwayNodeDto {
+	return pathwayNodeDto{
+		GlobalConfig: &pathwayGlobalConfigDto{
+			GlobalPrompt: config.GlobalPrompt.ValueString(),
+		},
 	}
 }
 
@@ -208,11 +295,19 @@ func ConvertFromPathwayDto(pathway pathwayDto) (*ConversationalPathwayDataSource
 		Description: types.StringValue(pathway.Description),
 	}
 	for _, node := range pathway.Nodes {
-		nodeModel, err := ConvertFromPathwayNodeDto(node)
-		if err != nil {
-			return nil, err
+		if node.GlobalConfig != nil {
+			nodeModel, err := ConvertFromPathwayNodeDto(node)
+			if err != nil {
+				return nil, err
+			}
+			path.Nodes = append(path.Nodes, *nodeModel)
+		} else {
+			path.GlobalConfig = ConvertFromPathwayGlobalConfigNodeDto(node)
 		}
-		path.Nodes = append(path.Nodes, *nodeModel)
+	}
+	for _, edge := range pathway.Edges {
+		edgeModel := ConvertFromPathwayEdgeDto(edge)
+		path.Edges = append(path.Edges, edgeModel)
 	}
 
 	return &path, nil
@@ -229,6 +324,13 @@ func ConvertFromPathwayModel(pathway ConversationalPathwayDataSourceModel) pathw
 		nodeModel := ConvertFromPathwayNodeModel(node)
 		path.Nodes = append(path.Nodes, nodeModel)
 	}
-
+	if pathway.GlobalConfig != nil {
+		globalNode := ConvertFromPathwayGlobalConfigModel(*pathway.GlobalConfig)
+		path.Nodes = append(path.Nodes, globalNode)
+	}
+	for _, edge := range pathway.Edges {
+		edgeModel := ConvertFromPathwayEdgeModel(edge)
+		path.Edges = append(path.Edges, edgeModel)
+	}
 	return path
 }

@@ -10,6 +10,11 @@
               "isStart": true
             },
             "type": "Default"
+        },
+        {
+            "globalConfig": {
+                "globalPrompt": "Example global prompt"
+            }
         }
     ]
 }

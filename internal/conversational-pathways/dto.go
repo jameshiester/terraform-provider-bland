@@ -4,14 +4,17 @@
 package pathways
 
 type createPathwayDto struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	Name        string           `json:"name"`
+	Description string           `json:"description"`
+	Nodes       []pathwayNodeDto `json:"nodes"`
+	Edges       []pathwayEdgeDto `json:"edges"`
 }
 
 type updatePathwayDto struct {
 	Name        string           `json:"name"`
 	Description string           `json:"description"`
 	Nodes       []pathwayNodeDto `json:"nodes"`
+	Edges       []pathwayEdgeDto `json:"edges"`
 }
 
 type pathwayDto struct {
@@ -19,12 +22,32 @@ type pathwayDto struct {
 	Name        string           `json:"name"`
 	Description string           `json:"description"`
 	Nodes       []pathwayNodeDto `json:"nodes"`
+	Edges       []pathwayEdgeDto `json:"edges"`
+}
+
+type pathwayGlobalConfigDto struct {
+	GlobalPrompt string `json:"globalPrompt"`
 }
 
 type pathwayNodeDto struct {
-	ID   string             `json:"id"`
-	Type string             `json:"type"`
-	Data pathwayNodeDataDto `json:"data"`
+	ID           *string                 `json:"id"`
+	Type         *string                 `json:"type"`
+	GlobalConfig *pathwayGlobalConfigDto `json:"globalConfig,omitempty"`
+	Data         *pathwayNodeDataDto     `json:"data"`
+}
+
+type pathwayEdgeDto struct {
+	ID     string             `json:"id"`
+	Source string             `json:"source"`
+	Target string             `json:"target"`
+	Type   string             `json:"type"`
+	Data   pathwayEdgeDataDto `json:"data"`
+}
+
+type pathwayEdgeDataDto struct {
+	Label         string `json:"label"`
+	IsHighlighted bool   `json:"isHighlighted"`
+	Description   string `json:"description"`
 }
 
 type pathwayNodeDataResponseDataDto struct {
@@ -39,12 +62,25 @@ type pathwayNodeDataDto struct {
 	GlobalPrompt     *string                           `json:"global_prompt,omitempty"`
 	Prompt           *string                           `json:"prompt,omitempty"`
 	IsStart          *bool                             `json:"isStart,omitempty"`
+	IsGlobal         *bool                             `json:"isGlobal,omitempty"`
 	GlobalLabel      *string                           `json:"globalLabel,omitempty"`
 	URL              *string                           `json:"url,omitempty"`
 	Method           *string                           `json:"method,omitempty"`
 	ExtractVars      *[][]string                       `json:"extractVars,omitempty"`
 	ResponseData     *[]pathwayNodeDataResponseDataDto `json:"responseData,omitempty"`
 	ResponsePathways *[][]interface{}                  `json:"responsePathways,omitempty"`
+	Condition        *string                           `json:"condition,omitempty"`
+	KnowledgeBase    *string                           `json:"kb,omitempty"`
+	TransferNumber   *string                           `json:"transferNumber,omitempty"`
+	ModelOptions     *modelOptionDto                   `json:"modelOptions,omitempty"`
+}
+
+type modelOptionDto struct {
+	Type                  string   `json:"modelType"`
+	InterruptionThreshold *string  `json:"interruption_threshold,omitempty"`
+	Temperature           *float32 `json:"temperature,omitempty"`
+	SkipUserResponse      *bool    `json:"skipUserResponse,omitempty"`
+	BlockInterruptions    *bool    `json:"block_interruptions,omitempty"`
 }
 
 type createPathwayResponseData struct {

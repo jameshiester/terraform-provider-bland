@@ -119,6 +119,10 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 									MarkdownDescription: "Defines if this is the start node of the pathway.",
 									Optional:            true,
 								},
+								"is_global": schema.BoolAttribute{
+									MarkdownDescription: "Defines if this is a global node.",
+									Optional:            true,
+								},
 								"prompt": schema.StringAttribute{
 									MarkdownDescription: "Prompt for a knowledge base node.",
 									Optional:            true,
@@ -135,6 +139,18 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 											"must be a valid URL starting with http:// or https:// (e.g., http://example.com)",
 										),
 									},
+								},
+								"condition": schema.StringAttribute{
+									MarkdownDescription: "Condition for the node.",
+									Optional:            true,
+								},
+								"kb": schema.StringAttribute{
+									MarkdownDescription: "Knowledge base for the node.",
+									Optional:            true,
+								},
+								"transfer_number": schema.StringAttribute{
+									MarkdownDescription: "Transfer number for the node.",
+									Optional:            true,
 								},
 								"extract_vars": schema.ListNestedAttribute{
 									MarkdownDescription: "Variables to extract from the node.",
@@ -214,8 +230,85 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 										},
 									},
 								},
+								"model_options": schema.SingleNestedAttribute{
+									MarkdownDescription: "Model options for the node.",
+									Optional:            true,
+									Attributes: map[string]schema.Attribute{
+										"model_type": schema.StringAttribute{
+											MarkdownDescription: "Type of the model.",
+											Required:            true,
+										},
+										"interruption_threshold": schema.StringAttribute{
+											MarkdownDescription: "Interruption threshold for the model.",
+											Optional:            true,
+										},
+										"temperature": schema.Float32Attribute{
+											MarkdownDescription: "Temperature setting for the model.",
+											Optional:            true,
+										},
+										"skip_user_response": schema.BoolAttribute{
+											MarkdownDescription: "Whether to skip user response.",
+											Optional:            true,
+										},
+										"block_interruptions": schema.BoolAttribute{
+											MarkdownDescription: "Whether to block interruptions.",
+											Optional:            true,
+										},
+									},
+								},
 							},
 						},
+					},
+				},
+			},
+			"edges": schema.ListNestedAttribute{
+				MarkdownDescription: "Data about all the edges in the pathway.",
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: "Unique identifier for the edge.",
+							Required:            true,
+						},
+						"source": schema.StringAttribute{
+							MarkdownDescription: "Source node ID for the edge.",
+							Required:            true,
+						},
+						"target": schema.StringAttribute{
+							MarkdownDescription: "Target node ID for the edge.",
+							Required:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: "Type of the edge.",
+							Required:            true,
+						},
+						"data": schema.SingleNestedAttribute{
+							Optional: true,
+							Attributes: map[string]schema.Attribute{
+								"label": schema.StringAttribute{
+									MarkdownDescription: "Label for the edge.",
+									Required:            true,
+								},
+								"is_highlighted": schema.BoolAttribute{
+									MarkdownDescription: "Whether the edge is highlighted.",
+									Optional:            true,
+								},
+								"description": schema.StringAttribute{
+									MarkdownDescription: "Description of the edge.",
+									Optional:            true,
+								},
+							},
+						},
+					},
+				},
+			},
+			"global_config": schema.SingleNestedAttribute{
+				MarkdownDescription: "Global configuration for the pathway.",
+				Optional:            true,
+				Attributes: map[string]schema.Attribute{
+					"global_prompt": schema.StringAttribute{
+						MarkdownDescription: "Global prompt for the pathway.",
+						Optional:            true,
 					},
 				},
 			},
@@ -258,6 +351,8 @@ func (r *ConversationalPathwayResource) Create(ctx context.Context, req resource
 	modelToCreate := createPathwayDto{
 		Name:        dto.Name,
 		Description: dto.Description,
+		Nodes:       dto.Nodes,
+		Edges:       dto.Edges,
 	}
 
 	connection, err := r.PathwayClient.CreatePathway(ctx, modelToCreate)
@@ -275,6 +370,7 @@ func (r *ConversationalPathwayResource) Create(ctx context.Context, req resource
 		Name:        dto.Name,
 		Description: dto.Description,
 		Nodes:       dto.Nodes,
+		Edges:       dto.Edges,
 	}
 
 	updatedPathwayWithNodes, err := r.PathwayClient.UpdatePathway(ctx, responseModel.ID.ValueString(), modelToUpdate)
@@ -291,6 +387,8 @@ func (r *ConversationalPathwayResource) Create(ctx context.Context, req resource
 	plan.Description = updatedResponseModel.Description
 	plan.Name = updatedResponseModel.Name
 	plan.Nodes = updatedResponseModel.Nodes
+	plan.Edges = updatedResponseModel.Edges
+	plan.GlobalConfig = updatedResponseModel.GlobalConfig
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -323,6 +421,8 @@ func (r *ConversationalPathwayResource) Read(ctx context.Context, req resource.R
 	state.Name = model.Name
 	state.Description = model.Description
 	state.Nodes = model.Nodes
+	state.Edges = model.Edges
+	state.GlobalConfig = model.GlobalConfig
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
@@ -345,6 +445,7 @@ func (r *ConversationalPathwayResource) Update(ctx context.Context, req resource
 		Name:        dto.Name,
 		Description: dto.Description,
 		Nodes:       dto.Nodes,
+		Edges:       dto.Edges,
 	}
 
 	updateReponse, err := r.PathwayClient.UpdatePathway(ctx, plan.ID.ValueString(), updateParams)
@@ -355,13 +456,15 @@ func (r *ConversationalPathwayResource) Update(ctx context.Context, req resource
 
 	modelState, err := ConvertFromPathwayDto(*updateReponse)
 	if err != nil {
-		resp.Diagnostics.AddError(fmt.Sprintf("Error when converting updated %s", r.FullTypeName()), err.Error())
+		resp.Diagnostics.AddError(fmt.Sprintf("Error when converting updated pathway", r.FullTypeName()), err.Error())
 		return
 	}
 	plan.ID = modelState.ID
 	plan.Name = modelState.Name
 	plan.Description = modelState.Description
 	plan.Nodes = modelState.Nodes
+	plan.Edges = modelState.Edges
+	plan.GlobalConfig = modelState.GlobalConfig
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
