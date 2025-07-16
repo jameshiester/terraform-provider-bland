@@ -53,10 +53,62 @@ Required:
 
 Optional:
 
+- `extract_vars` (Attributes List) Variables to extract from the node. (see [below for nested schema](#nestedatt--nodes--data--extract_vars))
+- `global_label` (String) Label for a global node.
 - `global_prompt` (String) Prompt for a global node.
 - `is_start` (Boolean) Defines if this is the start node of the pathway.
+- `method` (String) Method for the node.
 - `prompt` (String) Prompt for a knowledge base node.
+- `response_data` (Attributes List) Response data for the node. (see [below for nested schema](#nestedatt--nodes--data--response_data))
+- `response_pathways` (Attributes List) Response pathways for the node. (see [below for nested schema](#nestedatt--nodes--data--response_pathways))
 - `text` (String) Text for the node.
+- `url` (String) URL for the node.
+
+<a id="nestedatt--nodes--data--extract_vars"></a>
+### Nested Schema for `nodes.data.extract_vars`
+
+Required:
+
+- `description` (String) Description of the variable.
+- `name` (String) Name of the variable.
+- `type` (String) Type of the variable.
+
+
+<a id="nestedatt--nodes--data--response_data"></a>
+### Nested Schema for `nodes.data.response_data`
+
+Required:
+
+- `context` (String) Context for the response data.
+- `data` (String) Data value.
+- `name` (String) Name of the response data.
+
+
+<a id="nestedatt--nodes--data--response_pathways"></a>
+### Nested Schema for `nodes.data.response_pathways`
+
+Required:
+
+- `condition` (Attributes) (see [below for nested schema](#nestedatt--nodes--data--response_pathways--condition))
+- `outcome` (Attributes) (see [below for nested schema](#nestedatt--nodes--data--response_pathways--outcome))
+
+<a id="nestedatt--nodes--data--response_pathways--condition"></a>
+### Nested Schema for `nodes.data.response_pathways.condition`
+
+Required:
+
+- `condition` (String) Condition operator.
+- `value` (String) Condition value.
+- `variable` (String) Condition variable.
+
+
+<a id="nestedatt--nodes--data--response_pathways--outcome"></a>
+### Nested Schema for `nodes.data.response_pathways.outcome`
+
+Required:
+
+- `id` (String) Outcome node id.
+- `node_name` (String) Outcome node name.
 
 ## Import
 

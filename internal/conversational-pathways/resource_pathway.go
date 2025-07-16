@@ -7,12 +7,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"regexp"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
 	utils "github.com/jameshiester/terraform-provider-bland/internal/util"
@@ -90,18 +93,126 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 								"text": schema.StringAttribute{
 									MarkdownDescription: "Text for the node.",
 									Optional:            true,
+									Validators: []validator.String{
+										stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("prompt")),
+									},
 								},
 								"global_prompt": schema.StringAttribute{
 									MarkdownDescription: "Prompt for a global node.",
 									Optional:            true,
 								},
-								"prompt": schema.StringAttribute{
-									MarkdownDescription: "Prompt for a knowledge base node.",
+								"global_label": schema.StringAttribute{
+									MarkdownDescription: "Label for a global node.",
 									Optional:            true,
+								},
+								"method": schema.StringAttribute{
+									MarkdownDescription: "Method for the node.",
+									Optional:            true,
+									Validators: []validator.String{
+										stringvalidator.RegexMatches(
+											regexp.MustCompile(`^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|TRACE|CONNECT)$`),
+											"must be a valid HTTP method in uppercase (e.g., GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS, TRACE, CONNECT)",
+										),
+									},
 								},
 								"is_start": schema.BoolAttribute{
 									MarkdownDescription: "Defines if this is the start node of the pathway.",
 									Optional:            true,
+								},
+								"prompt": schema.StringAttribute{
+									MarkdownDescription: "Prompt for a knowledge base node.",
+									Optional:            true,
+									Validators: []validator.String{
+										stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("text")),
+									},
+								},
+								"url": schema.StringAttribute{
+									MarkdownDescription: "URL for the node.",
+									Optional:            true,
+									Validators: []validator.String{
+										stringvalidator.RegexMatches(
+											regexp.MustCompile(`^https?://[^\s]+$`),
+											"must be a valid URL starting with http:// or https:// (e.g., http://example.com)",
+										),
+									},
+								},
+								"extract_vars": schema.ListNestedAttribute{
+									MarkdownDescription: "Variables to extract from the node.",
+									Optional:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"name": schema.StringAttribute{
+												MarkdownDescription: "Name of the variable.",
+												Required:            true,
+											},
+											"type": schema.StringAttribute{
+												MarkdownDescription: "Type of the variable.",
+												Required:            true,
+											},
+											"description": schema.StringAttribute{
+												MarkdownDescription: "Description of the variable.",
+												Required:            true,
+											},
+										},
+									},
+								},
+								"response_data": schema.ListNestedAttribute{
+									MarkdownDescription: "Response data for the node.",
+									Optional:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"data": schema.StringAttribute{
+												MarkdownDescription: "Data value.",
+												Required:            true,
+											},
+											"name": schema.StringAttribute{
+												MarkdownDescription: "Name of the response data.",
+												Required:            true,
+											},
+											"context": schema.StringAttribute{
+												MarkdownDescription: "Context for the response data.",
+												Required:            true,
+											},
+										},
+									},
+								},
+								"response_pathways": schema.ListNestedAttribute{
+									MarkdownDescription: "Response pathways for the node.",
+									Optional:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"condition": schema.SingleNestedAttribute{
+												Required: true,
+												Attributes: map[string]schema.Attribute{
+													"variable": schema.StringAttribute{
+														MarkdownDescription: "Condition variable.",
+														Required:            true,
+													},
+													"condition": schema.StringAttribute{
+														MarkdownDescription: "Condition operator.",
+														Required:            true,
+													},
+													"value": schema.StringAttribute{
+														MarkdownDescription: "Condition value.",
+														Required:            true,
+													},
+												},
+											},
+											"outcome": schema.SingleNestedAttribute{
+												Required: true,
+												Attributes: map[string]schema.Attribute{
+													"id": schema.StringAttribute{
+														MarkdownDescription: "Outcome node id.",
+														Required:            true,
+													},
+													"node_name": schema.StringAttribute{
+														MarkdownDescription: "Outcome node name.",
+														Required:            true,
+													},
+												},
+											},
+										},
+									},
 								},
 							},
 						},
@@ -277,3 +388,5 @@ func (r *ConversationalPathwayResource) ImportState(ctx context.Context, req res
 
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
+
+// Custom validator to ensure 'text' and 'prompt' are mutually exclusive

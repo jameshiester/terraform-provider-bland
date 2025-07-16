@@ -83,13 +83,103 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 									MarkdownDescription: "Prompt for a global node.",
 									Computed:            true,
 								},
-								"prompt": schema.StringAttribute{
-									MarkdownDescription: "Prompt for a knowledge base node.",
+								"global_label": schema.StringAttribute{
+									MarkdownDescription: "Label for a global node.",
+									Computed:            true,
+								},
+								"method": schema.StringAttribute{
+									MarkdownDescription: "Method for the node.",
 									Computed:            true,
 								},
 								"is_start": schema.BoolAttribute{
 									MarkdownDescription: "Defines if this is the start node of the pathway.",
 									Computed:            true,
+								},
+								"prompt": schema.StringAttribute{
+									MarkdownDescription: "Prompt for a knowledge base node.",
+									Computed:            true,
+								},
+								"url": schema.StringAttribute{
+									MarkdownDescription: "URL for the node.",
+									Computed:            true,
+								},
+								"extract_vars": schema.ListNestedAttribute{
+									MarkdownDescription: "Variables to extract from the node.",
+									Computed:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"name": schema.StringAttribute{
+												MarkdownDescription: "Name of the variable.",
+												Computed:            true,
+											},
+											"type": schema.StringAttribute{
+												MarkdownDescription: "Type of the variable.",
+												Computed:            true,
+											},
+											"description": schema.StringAttribute{
+												MarkdownDescription: "Description of the variable.",
+												Computed:            true,
+											},
+										},
+									},
+								},
+								"response_data": schema.ListNestedAttribute{
+									MarkdownDescription: "Response data for the node.",
+									Computed:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"data": schema.StringAttribute{
+												MarkdownDescription: "Data value.",
+												Computed:            true,
+											},
+											"name": schema.StringAttribute{
+												MarkdownDescription: "Name of the response data.",
+												Computed:            true,
+											},
+											"context": schema.StringAttribute{
+												MarkdownDescription: "Context for the response data.",
+												Computed:            true,
+											},
+										},
+									},
+								},
+								"response_pathways": schema.ListNestedAttribute{
+									MarkdownDescription: "Response pathways for the node.",
+									Computed:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"condition": schema.SingleNestedAttribute{
+												Computed: true,
+												Attributes: map[string]schema.Attribute{
+													"variable": schema.StringAttribute{
+														MarkdownDescription: "Condition variable.",
+														Computed:            true,
+													},
+													"condition": schema.StringAttribute{
+														MarkdownDescription: "Condition operator.",
+														Computed:            true,
+													},
+													"value": schema.StringAttribute{
+														MarkdownDescription: "Condition value.",
+														Computed:            true,
+													},
+												},
+											},
+											"outcome": schema.SingleNestedAttribute{
+												Computed: true,
+												Attributes: map[string]schema.Attribute{
+													"id": schema.StringAttribute{
+														MarkdownDescription: "Outcome node id.",
+														Computed:            true,
+													},
+													"node_name": schema.StringAttribute{
+														MarkdownDescription: "Outcome node name.",
+														Computed:            true,
+													},
+												},
+											},
+										},
+									},
 								},
 							},
 						},
