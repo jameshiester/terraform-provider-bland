@@ -42,6 +42,11 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 			return httpmock.NewStringResponse(http.StatusCreated, httpmock.File("./tests/resource/pathway/Validate_Create/post_pathway.json").String()), nil
 		})
 
+	httpmock.RegisterResponder("POST", "https://api.bland.ai/v1/pathway/123?api-version=1",
+		func(req *http.Request) (*http.Response, error) {
+			return httpmock.NewStringResponse(http.StatusOK, httpmock.File("./tests/resource/pathway/Validate_Create/update_pathway.json").String()), nil
+		})
+
 	httpmock.RegisterResponder("DELETE", "https://api.bland.ai/v1/pathway/123?api-version=1",
 		func(req *http.Request) (*http.Response, error) {
 			return httpmock.NewStringResponse(http.StatusOK, ""), nil
@@ -68,6 +73,7 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "name", "TestPathwayName"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "description", "TestPathwayDescription"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "id", "123"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.id", "1"),
 				),
 			},
 		},

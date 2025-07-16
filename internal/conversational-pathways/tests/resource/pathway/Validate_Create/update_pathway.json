@@ -1,0 +1,18 @@
+{
+    "status": "success",
+    "pathway_data": {
+        "name": "TestPathwayName",
+        "description": "TestPathwayDescription",
+        "nodes": [
+            {
+                "id": "1",
+                "data": {
+                    "name": "Start",
+                    "text": "Hey there, how are you doing today?",
+                    "isStart": true
+                },
+                "type": "Default"
+            }
+        ]
+    }
+}

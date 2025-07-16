@@ -161,6 +161,24 @@ func (r *ConversationalPathwayResource) Create(ctx context.Context, req resource
 	plan.Name = responseModel.Name
 	plan.Nodes = responseModel.Nodes
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+
+	modelToUpdate := updatePathwayDto{
+		Name:        dto.Name,
+		Description: dto.Description,
+		Nodes:       dto.Nodes,
+	}
+
+	updatedPathwayWithNodes, err := r.PathwayClient.UpdatePathway(ctx, responseModel.ID.ValueString(), modelToUpdate)
+	if err != nil {
+		resp.Diagnostics.AddError("Failed to add nodes connection", err.Error())
+		return
+	}
+	responseModel = ConvertFromPathwayDto(*updatedPathwayWithNodes)
+	plan.ID = responseModel.ID
+	plan.Description = responseModel.Description
+	plan.Name = responseModel.Name
+	plan.Nodes = responseModel.Nodes
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
 func (r *ConversationalPathwayResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
