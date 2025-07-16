@@ -456,7 +456,7 @@ func (r *ConversationalPathwayResource) Update(ctx context.Context, req resource
 
 	modelState, err := ConvertFromPathwayDto(*updateReponse)
 	if err != nil {
-		resp.Diagnostics.AddError(fmt.Sprintf("Error when converting updated pathway", r.FullTypeName()), err.Error())
+		resp.Diagnostics.AddError(fmt.Sprintf("Error when converting updated %s", r.FullTypeName()), err.Error())
 		return
 	}
 	plan.ID = modelState.ID
