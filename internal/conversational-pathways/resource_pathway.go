@@ -85,7 +85,7 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 							Attributes: map[string]schema.Attribute{
 								"name": schema.StringAttribute{
 									MarkdownDescription: "Name of the node.",
-									Optional:            true,
+									Required:            true,
 								},
 								"text": schema.StringAttribute{
 									MarkdownDescription: "Text for the node.",

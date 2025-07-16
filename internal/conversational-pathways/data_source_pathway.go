@@ -186,20 +186,20 @@ func (d *ConversationalPathwayDataSource) Read(ctx context.Context, req datasour
 func ConvertFromPathwayNodeDataDto(data pathwayNodeDataDto) ConversationalPathwayNodeDataModel {
 	return ConversationalPathwayNodeDataModel{
 		Name:         types.StringValue(data.Name),
-		GlobalPrompt: types.StringValue(data.GlobalPrompt),
-		Prompt:       types.StringValue(data.Prompt),
-		Text:         types.StringValue(data.Text),
-		IsStart:      types.BoolValue(data.IsStart),
+		GlobalPrompt: types.StringPointerValue(data.GlobalPrompt),
+		Prompt:       types.StringPointerValue(data.Prompt),
+		Text:         types.StringPointerValue(data.Text),
+		IsStart:      types.BoolPointerValue(data.IsStart),
 	}
 }
 
 func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) pathwayNodeDataDto {
 	return pathwayNodeDataDto{
 		Name:         data.Name.ValueString(),
-		GlobalPrompt: data.GlobalPrompt.ValueString(),
-		Prompt:       data.Prompt.ValueString(),
-		Text:         data.Text.ValueString(),
-		IsStart:      data.IsStart.ValueBool(),
+		GlobalPrompt: data.GlobalPrompt.ValueStringPointer(),
+		Prompt:       data.Prompt.ValueStringPointer(),
+		Text:         data.Text.ValueStringPointer(),
+		IsStart:      data.IsStart.ValueBoolPointer(),
 	}
 }
 

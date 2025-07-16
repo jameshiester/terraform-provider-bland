@@ -28,11 +28,11 @@ type pathwayNodeDto struct {
 }
 
 type pathwayNodeDataDto struct {
-	Name         string `json:"name"`
-	Text         string `json:"text"`
-	GlobalPrompt string `json:"global_prompt"`
-	Prompt       string `json:"prompt"`
-	IsStart      bool   `json:"isStart"`
+	Name         string  `json:"name"`
+	Text         *string `json:"text,omitempty"`
+	GlobalPrompt *string `json:"global_prompt,omitempty"`
+	Prompt       *string `json:"prompt,omitempty"`
+	IsStart      *bool   `json:"isStart,omitempty"`
 }
 
 type createPathwayResponseData struct {
