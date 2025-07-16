@@ -167,11 +167,11 @@ func (r *ConversationalPathwayResource) Create(ctx context.Context, req resource
 		resp.Diagnostics.AddError("Failed to add nodes pathway", err.Error())
 		return
 	}
-	responseModel = ConvertFromPathwayDto(*updatedPathwayWithNodes)
-	plan.ID = responseModel.ID
-	plan.Description = responseModel.Description
-	plan.Name = responseModel.Name
-	plan.Nodes = responseModel.Nodes
+	updatedResponseModel := ConvertFromPathwayDto(*updatedPathwayWithNodes)
+	plan.ID = updatedResponseModel.ID
+	plan.Description = updatedResponseModel.Description
+	plan.Name = updatedResponseModel.Name
+	plan.Nodes = updatedResponseModel.Nodes
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
