@@ -9,14 +9,30 @@ type createPathwayDto struct {
 }
 
 type updatePathwayDto struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	Name        string           `json:"name"`
+	Description string           `json:"description"`
+	Nodes       []pathwayNodeDto `json:"nodes"`
 }
 
 type pathwayDto struct {
-	ID          string
-	Name        string
-	Description string
+	ID          string           `json:"pathway_id"`
+	Name        string           `json:"name"`
+	Description string           `json:"description"`
+	Nodes       []pathwayNodeDto `json:"nodes"`
+}
+
+type pathwayNodeDto struct {
+	ID   string             `json:"id"`
+	Type string             `json:"type"`
+	Data pathwayNodeDataDto `json:"data"`
+}
+
+type pathwayNodeDataDto struct {
+	Name         string `json:"name"`
+	Text         string `json:"text"`
+	GlobalPrompt string `json:"global_prompt"`
+	Prompt       string `json:"prompt"`
+	IsStart      bool   `json:"is_start"`
 }
 
 type createPathwayResponseData struct {

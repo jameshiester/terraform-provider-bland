@@ -67,6 +67,47 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 				MarkdownDescription: "Description of the pathway",
 				Required:            true,
 			},
+			"nodes": schema.ListNestedAttribute{
+				MarkdownDescription: "Data about all the nodes in the pathway.",
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: "Unique identifier for the node.",
+							Required:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: "Type of the node.",
+							Required:            true,
+						},
+						"data": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"name": schema.StringAttribute{
+									MarkdownDescription: "Name of the node.",
+									Optional:            true,
+								},
+								"text": schema.StringAttribute{
+									MarkdownDescription: "Text for the node.",
+									Optional:            true,
+								},
+								"global_prompt": schema.StringAttribute{
+									MarkdownDescription: "Prompt for a global node.",
+									Optional:            true,
+								},
+								"prompt": schema.StringAttribute{
+									MarkdownDescription: "Prompt for a knowledge base node.",
+									Optional:            true,
+								},
+								"is_start": schema.BoolAttribute{
+									MarkdownDescription: "Defines if this is the start node of the pathway.",
+									Optional:            true,
+								},
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }

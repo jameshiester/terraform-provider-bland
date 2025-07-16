@@ -41,11 +41,12 @@ type ConversationalPathwayNodeModel struct {
 
 // ConversationalPathwayNodeDataModel describes the node data model.
 type ConversationalPathwayNodeDataModel struct {
-	Name        types.String `tfsdk:"name"`
-	ID          types.String `tfsdk:"id"`
-	Description types.String `tfsdk:"description"`
-	Prompt      types.String `tfsdk:"prompt"`
-	IsStart     types.Bool   `tfsdk:"is_start"`
+	Name         types.String `tfsdk:"name"`
+	ID           types.String `tfsdk:"id"`
+	Text         types.String `tfsdk:"text"`
+	GlobalPrompt types.String `tfsdk:"global_prompt"`
+	Prompt       types.String `tfsdk:"prompt"`
+	IsStart      types.Bool   `tfsdk:"is_start"`
 }
 
 // ConversationalPathwayDataSourceModel describes the data source data model.
@@ -181,12 +182,34 @@ func (d *ConversationalPathwayDataSource) Read(ctx context.Context, req datasour
 	}
 }
 
+func ConvertFromPathwayNodeDataDto(data pathwayNodeDataDto) ConversationalPathwayNodeDataModel {
+	return ConversationalPathwayNodeDataModel{
+		Name:         types.StringValue(data.Name),
+		GlobalPrompt: types.StringValue(data.GlobalPrompt),
+		Prompt:       types.StringValue(data.Prompt),
+		Text:         types.StringValue(data.Text),
+		IsStart:      types.BoolValue(data.IsStart),
+	}
+}
+
+func ConvertFromPathwayNodeDto(node pathwayNodeDto) ConversationalPathwayNodeModel {
+	return ConversationalPathwayNodeModel{
+		ID:   types.StringValue(node.ID),
+		Type: types.StringValue(node.Type),
+		Data: ConvertFromPathwayNodeDataDto(node.Data),
+	}
+}
+
 func ConvertFromPathwayDto(pathway pathwayDto) ConversationalPathwayDataSourceModel {
 
 	path := ConversationalPathwayDataSourceModel{
 		ID:          types.StringValue(pathway.ID),
 		Name:        types.StringValue(pathway.Name),
 		Description: types.StringValue(pathway.Description),
+	}
+	for _, node := range pathway.Nodes {
+		nodeModel := ConvertFromPathwayNodeDto(node)
+		path.Nodes = append(path.Nodes, nodeModel)
 	}
 
 	return path

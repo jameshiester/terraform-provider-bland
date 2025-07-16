@@ -27,9 +27,36 @@ resource "bland_conversational_pathway" "example" {
 - `description` (String) Description of the pathway
 - `name` (String) Name of the pathway
 
+### Optional
+
+- `nodes` (Attributes List) Data about all the nodes in the pathway. (see [below for nested schema](#nestedatt--nodes))
+
 ### Read-Only
 
 - `id` (String) Unique pathway id
+
+<a id="nestedatt--nodes"></a>
+### Nested Schema for `nodes`
+
+Required:
+
+- `id` (String) Unique identifier for the node.
+- `type` (String) Type of the node.
+
+Read-Only:
+
+- `data` (Attributes) (see [below for nested schema](#nestedatt--nodes--data))
+
+<a id="nestedatt--nodes--data"></a>
+### Nested Schema for `nodes.data`
+
+Optional:
+
+- `global_prompt` (String) Prompt for a global node.
+- `is_start` (Boolean) Defines if this is the start node of the pathway.
+- `name` (String) Name of the node.
+- `prompt` (String) Prompt for a knowledge base node.
+- `text` (String) Text for the node.
 
 ## Import
 
