@@ -49,7 +49,7 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 
 	httpmock.RegisterResponder("GET", `https://api.bland.ai/v1/pathway/123?api-version=1`,
 		func(req *http.Request) (*http.Response, error) {
-			return httpmock.NewStringResponse(http.StatusOK, httpmock.File("./tests/datasource/Validate_Read/get_pathway.json").String()), nil
+			return httpmock.NewStringResponse(http.StatusOK, httpmock.File("./tests/resource/pathway/Validate_Create/get_pathway.json").String()), nil
 		})
 
 	resource.Test(t, resource.TestCase{

@@ -142,9 +142,11 @@ func (r *ConversationalPathwayResource) Create(ctx context.Context, req resource
 		return
 	}
 
+	dto := ConvertFromPathwayModel(plan)
+
 	modelToCreate := createPathwayDto{
-		Name:        plan.Name.ValueString(),
-		Description: plan.Description.ValueString(),
+		Name:        dto.Name,
+		Description: dto.Description,
 	}
 
 	connection, err := r.PathwayClient.CreatePathway(ctx, modelToCreate)
@@ -157,7 +159,7 @@ func (r *ConversationalPathwayResource) Create(ctx context.Context, req resource
 	plan.ID = responseModel.ID
 	plan.Description = responseModel.Description
 	plan.Name = responseModel.Name
-
+	plan.Nodes = responseModel.Nodes
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -185,6 +187,7 @@ func (r *ConversationalPathwayResource) Read(ctx context.Context, req resource.R
 	state.ID = model.ID
 	state.Name = model.Name
 	state.Description = model.Description
+	state.Nodes = model.Nodes
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
@@ -201,10 +204,12 @@ func (r *ConversationalPathwayResource) Update(ctx context.Context, req resource
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	dto := ConvertFromPathwayModel(plan)
 
 	updateParams := updatePathwayDto{
-		Name:        plan.Name.ValueString(),
-		Description: plan.Description.ValueString(),
+		Name:        dto.Name,
+		Description: dto.Description,
+		Nodes:       dto.Nodes,
 	}
 
 	updateReponse, err := r.PathwayClient.UpdatePathway(ctx, plan.ID.ValueString(), updateParams)
@@ -217,7 +222,7 @@ func (r *ConversationalPathwayResource) Update(ctx context.Context, req resource
 	plan.ID = modelState.ID
 	plan.Name = modelState.Name
 	plan.Description = modelState.Description
-
+	plan.Nodes = modelState.Nodes
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

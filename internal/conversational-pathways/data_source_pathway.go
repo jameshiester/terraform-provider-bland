@@ -170,8 +170,10 @@ func (d *ConversationalPathwayDataSource) Read(ctx context.Context, req datasour
 		return
 	}
 
-	state.Name = types.StringValue(pathway.Name)
-	state.Description = types.StringValue(pathway.Description)
+	model := ConvertFromPathwayDto(*pathway)
+	state.Name = model.Name
+	state.Description = model.Description
+	state.Nodes = model.Nodes
 	diags := resp.State.Set(ctx, &state)
 
 	tflog.Debug(ctx, fmt.Sprintf("READ DATASOURCE CONVERSATIONAL PATHWAYS END: %s", d.FullTypeName()))
@@ -192,11 +194,29 @@ func ConvertFromPathwayNodeDataDto(data pathwayNodeDataDto) ConversationalPathwa
 	}
 }
 
+func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) pathwayNodeDataDto {
+	return pathwayNodeDataDto{
+		Name:         data.Name.ValueString(),
+		GlobalPrompt: data.GlobalPrompt.ValueString(),
+		Prompt:       data.Prompt.ValueString(),
+		Text:         data.Text.ValueString(),
+		IsStart:      data.IsStart.ValueBool(),
+	}
+}
+
 func ConvertFromPathwayNodeDto(node pathwayNodeDto) ConversationalPathwayNodeModel {
 	return ConversationalPathwayNodeModel{
 		ID:   types.StringValue(node.ID),
 		Type: types.StringValue(node.Type),
 		Data: ConvertFromPathwayNodeDataDto(node.Data),
+	}
+}
+
+func ConvertFromPathwayNodeModel(node ConversationalPathwayNodeModel) pathwayNodeDto {
+	return pathwayNodeDto{
+		ID:   node.ID.ValueString(),
+		Type: node.Type.ValueString(),
+		Data: ConvertFromPathwayNodeDataModel(node.Data),
 	}
 }
 
@@ -209,6 +229,21 @@ func ConvertFromPathwayDto(pathway pathwayDto) ConversationalPathwayDataSourceMo
 	}
 	for _, node := range pathway.Nodes {
 		nodeModel := ConvertFromPathwayNodeDto(node)
+		path.Nodes = append(path.Nodes, nodeModel)
+	}
+
+	return path
+}
+
+func ConvertFromPathwayModel(pathway ConversationalPathwayDataSourceModel) pathwayDto {
+
+	path := pathwayDto{
+		ID:          pathway.ID.ValueString(),
+		Name:        pathway.Name.ValueString(),
+		Description: pathway.Description.ValueString(),
+	}
+	for _, node := range pathway.Nodes {
+		nodeModel := ConvertFromPathwayNodeModel(node)
 		path.Nodes = append(path.Nodes, nodeModel)
 	}
 

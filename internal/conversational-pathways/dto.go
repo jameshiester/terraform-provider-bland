@@ -32,7 +32,7 @@ type pathwayNodeDataDto struct {
 	Text         string `json:"text"`
 	GlobalPrompt string `json:"global_prompt"`
 	Prompt       string `json:"prompt"`
-	IsStart      bool   `json:"is_start"`
+	IsStart      bool   `json:"isStart"`
 }
 
 type createPathwayResponseData struct {
