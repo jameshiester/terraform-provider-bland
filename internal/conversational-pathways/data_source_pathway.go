@@ -153,7 +153,7 @@ func (d *ConversationalPathwayDataSource) Read(ctx context.Context, req datasour
 	}
 
 	state.Name = types.StringValue(pathway.Name)
-	state.Description = types.StringValue(pathway.Name)
+	state.Description = types.StringValue(pathway.Description)
 	diags := resp.State.Set(ctx, &state)
 
 	tflog.Debug(ctx, fmt.Sprintf("READ DATASOURCE CONVERSATIONAL PATHWAYS END: %s", d.FullTypeName()))
