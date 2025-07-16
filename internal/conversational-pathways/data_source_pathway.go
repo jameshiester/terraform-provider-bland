@@ -42,7 +42,6 @@ type ConversationalPathwayNodeModel struct {
 // ConversationalPathwayNodeDataModel describes the node data model.
 type ConversationalPathwayNodeDataModel struct {
 	Name         types.String `tfsdk:"name"`
-	ID           types.String `tfsdk:"id"`
 	Text         types.String `tfsdk:"text"`
 	GlobalPrompt types.String `tfsdk:"global_prompt"`
 	Prompt       types.String `tfsdk:"prompt"`
