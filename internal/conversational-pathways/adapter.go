@@ -87,23 +87,29 @@ func ConvertFromPathwayNodeDataDto(data pathwayNodeDataDto) (*ConversationalPath
 		Text:         types.StringPointerValue(data.Text),
 		URL:          types.StringPointerValue(data.URL),
 	}
-	for _, variable := range *data.ExtractVars {
-		varModel, err := ConvertFromPathwayNodeDataExtractVars(variable)
-		if err != nil {
-			return nil, err
+	if data.ExtractVars != nil {
+		for _, variable := range *data.ExtractVars {
+			varModel, err := ConvertFromPathwayNodeDataExtractVars(variable)
+			if err != nil {
+				return nil, err
+			}
+			model.ExtractVars = append(model.ExtractVars, varModel)
 		}
-		model.ExtractVars = append(model.ExtractVars, varModel)
 	}
-	for _, responseData := range *data.ResponseData {
-		responseModel := ConvertFromPathwayNodeDataResponseData(responseData)
-		model.ResponseData = append(model.ResponseData, responseModel)
-	}
-	for _, responsePathwayData := range *data.ResponsePathways {
-		responsePathway, err := ConvertFromPathwayNodeDataResponsePathway(responsePathwayData)
-		if err != nil {
-			return nil, err
+	if data.ResponseData != nil {
+		for _, responseData := range *data.ResponseData {
+			responseModel := ConvertFromPathwayNodeDataResponseData(responseData)
+			model.ResponseData = append(model.ResponseData, responseModel)
 		}
-		model.ResponsePathways = append(model.ResponsePathways, *responsePathway)
+	}
+	if data.ResponsePathways != nil {
+		for _, responsePathwayData := range *data.ResponsePathways {
+			responsePathway, err := ConvertFromPathwayNodeDataResponsePathway(responsePathwayData)
+			if err != nil {
+				return nil, err
+			}
+			model.ResponsePathways = append(model.ResponsePathways, *responsePathway)
+		}
 	}
 	return &model, nil
 }
