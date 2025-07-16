@@ -170,18 +170,10 @@ func (d *ConversationalPathwayDataSource) Read(ctx context.Context, req datasour
 	}
 
 	model := ConvertFromPathwayDto(*pathway)
-	if len(model.Nodes) == 0 {
-		resp.Diagnostics.AddError(fmt.Sprintf("Client error when reading %s", d.FullTypeName()), "Node are missing from model")
-		return
-	}
 	state.Name = model.Name
 	state.Description = model.Description
 	state.Nodes = model.Nodes
 	diags := resp.State.Set(ctx, &state)
-	if len(state.Nodes) == 0 {
-		resp.Diagnostics.AddError(fmt.Sprintf("Client error when reading %s", d.FullTypeName()), "Node are missing from state")
-		return
-	}
 
 	tflog.Debug(ctx, fmt.Sprintf("READ DATASOURCE CONVERSATIONAL PATHWAYS END: %s", d.FullTypeName()))
 

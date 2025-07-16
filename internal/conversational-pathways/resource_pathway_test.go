@@ -67,6 +67,17 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 					resource "bland_conversational_pathway" "path" {
 						name                              = "TestPathwayName"
 						description                       = "TestPathwayDescription"
+						nodes = [
+							{
+								id = "1"
+								type = "Default"
+								data = {
+              						name = "Start"
+              						text = "Hey there, how are you doing today?"
+              						is_start = true
+           						}
+							}
+						]
 					}
 					`,
 				Check: resource.ComposeAggregateTestCheckFunc(
