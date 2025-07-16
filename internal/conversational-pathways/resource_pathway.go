@@ -268,7 +268,7 @@ func (r *ConversationalPathwayResource) Create(ctx context.Context, req resource
 
 	responseModel, err := ConvertFromPathwayDto(*connection)
 	if err != nil {
-		resp.Diagnostics.AddError("Error occured when parsing create pathway response", err.Error())
+		resp.Diagnostics.AddError("Error occurred when parsing create pathway response", err.Error())
 		return
 	}
 	modelToUpdate := updatePathwayDto{
@@ -284,7 +284,7 @@ func (r *ConversationalPathwayResource) Create(ctx context.Context, req resource
 	}
 	updatedResponseModel, err := ConvertFromPathwayDto(*updatedPathwayWithNodes)
 	if err != nil {
-		resp.Diagnostics.AddError("Error occured when parsing update pathway response", err.Error())
+		resp.Diagnostics.AddError("Error occurred when parsing update pathway response", err.Error())
 		return
 	}
 	plan.ID = updatedResponseModel.ID
@@ -355,7 +355,7 @@ func (r *ConversationalPathwayResource) Update(ctx context.Context, req resource
 
 	modelState, err := ConvertFromPathwayDto(*updateReponse)
 	if err != nil {
-		resp.Diagnostics.AddError(fmt.Sprintf("Error when converting updated pathway", r.FullTypeName()), err.Error())
+		resp.Diagnostics.AddError(fmt.Sprintf("Error when converting updated %s", r.FullTypeName()), err.Error())
 		return
 	}
 	plan.ID = modelState.ID
