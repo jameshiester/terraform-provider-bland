@@ -9,7 +9,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
 	utils "github.com/jameshiester/terraform-provider-bland/internal/util"
@@ -24,36 +23,6 @@ func NewConversationalPathwayDataSource() datasource.DataSource {
 			TypeName: "conversational_pathway",
 		},
 	}
-}
-
-// ConversationalPathwayDataSource defines the data source implementation.
-type ConversationalPathwayDataSource struct {
-	utils.TypeInfo
-	ApplicationClient client
-}
-
-// ConversationalPathwayNodeModel describes the node model.
-type ConversationalPathwayNodeModel struct {
-	Type types.String                       `tfsdk:"type"`
-	ID   types.String                       `tfsdk:"id"`
-	Data ConversationalPathwayNodeDataModel `tfsdk:"data"`
-}
-
-// ConversationalPathwayNodeDataModel describes the node data model.
-type ConversationalPathwayNodeDataModel struct {
-	Name         types.String `tfsdk:"name"`
-	Text         types.String `tfsdk:"text"`
-	GlobalPrompt types.String `tfsdk:"global_prompt"`
-	Prompt       types.String `tfsdk:"prompt"`
-	IsStart      types.Bool   `tfsdk:"is_start"`
-}
-
-// ConversationalPathwayDataSourceModel describes the data source data model.
-type ConversationalPathwayDataSourceModel struct {
-	Name        types.String                     `tfsdk:"name"`
-	ID          types.String                     `tfsdk:"id"`
-	Description types.String                     `tfsdk:"description"`
-	Nodes       []ConversationalPathwayNodeModel `tfsdk:"nodes"`
 }
 
 func (r *ConversationalPathwayDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -169,7 +138,11 @@ func (d *ConversationalPathwayDataSource) Read(ctx context.Context, req datasour
 		return
 	}
 
-	model := ConvertFromPathwayDto(*pathway)
+	model, err := ConvertFromPathwayDto(*pathway)
+	if err != nil {
+		resp.Diagnostics.AddError(fmt.Sprintf("Error when parsing %s", d.FullTypeName()), err.Error())
+		return
+	}
 	state.Name = model.Name
 	state.Description = model.Description
 	state.Nodes = model.Nodes
@@ -181,70 +154,4 @@ func (d *ConversationalPathwayDataSource) Read(ctx context.Context, req datasour
 	if resp.Diagnostics.HasError() {
 		return
 	}
-}
-
-func ConvertFromPathwayNodeDataDto(data pathwayNodeDataDto) ConversationalPathwayNodeDataModel {
-	return ConversationalPathwayNodeDataModel{
-		Name:         types.StringValue(data.Name),
-		GlobalPrompt: types.StringPointerValue(data.GlobalPrompt),
-		Prompt:       types.StringPointerValue(data.Prompt),
-		Text:         types.StringPointerValue(data.Text),
-		IsStart:      types.BoolPointerValue(data.IsStart),
-	}
-}
-
-func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) pathwayNodeDataDto {
-	return pathwayNodeDataDto{
-		Name:         data.Name.ValueString(),
-		GlobalPrompt: data.GlobalPrompt.ValueStringPointer(),
-		Prompt:       data.Prompt.ValueStringPointer(),
-		Text:         data.Text.ValueStringPointer(),
-		IsStart:      data.IsStart.ValueBoolPointer(),
-	}
-}
-
-func ConvertFromPathwayNodeDto(node pathwayNodeDto) ConversationalPathwayNodeModel {
-	return ConversationalPathwayNodeModel{
-		ID:   types.StringValue(node.ID),
-		Type: types.StringValue(node.Type),
-		Data: ConvertFromPathwayNodeDataDto(node.Data),
-	}
-}
-
-func ConvertFromPathwayNodeModel(node ConversationalPathwayNodeModel) pathwayNodeDto {
-	return pathwayNodeDto{
-		ID:   node.ID.ValueString(),
-		Type: node.Type.ValueString(),
-		Data: ConvertFromPathwayNodeDataModel(node.Data),
-	}
-}
-
-func ConvertFromPathwayDto(pathway pathwayDto) ConversationalPathwayDataSourceModel {
-
-	path := ConversationalPathwayDataSourceModel{
-		ID:          types.StringValue(pathway.ID),
-		Name:        types.StringValue(pathway.Name),
-		Description: types.StringValue(pathway.Description),
-	}
-	for _, node := range pathway.Nodes {
-		nodeModel := ConvertFromPathwayNodeDto(node)
-		path.Nodes = append(path.Nodes, nodeModel)
-	}
-
-	return path
-}
-
-func ConvertFromPathwayModel(pathway ConversationalPathwayDataSourceModel) pathwayDto {
-
-	path := pathwayDto{
-		ID:          pathway.ID.ValueString(),
-		Name:        pathway.Name.ValueString(),
-		Description: pathway.Description.ValueString(),
-	}
-	for _, node := range pathway.Nodes {
-		nodeModel := ConvertFromPathwayNodeModel(node)
-		path.Nodes = append(path.Nodes, nodeModel)
-	}
-
-	return path
 }

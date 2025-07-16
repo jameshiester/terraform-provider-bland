@@ -27,12 +27,24 @@ type pathwayNodeDto struct {
 	Data pathwayNodeDataDto `json:"data"`
 }
 
+type pathwayNodeDataResponseDataDto struct {
+	Data    string `json:"data"`
+	Name    string `json:"name"`
+	Context string `json:"context"`
+}
+
 type pathwayNodeDataDto struct {
-	Name         string  `json:"name"`
-	Text         *string `json:"text,omitempty"`
-	GlobalPrompt *string `json:"global_prompt,omitempty"`
-	Prompt       *string `json:"prompt,omitempty"`
-	IsStart      *bool   `json:"isStart,omitempty"`
+	Name             string                            `json:"name"`
+	Text             *string                           `json:"text,omitempty"`
+	GlobalPrompt     *string                           `json:"global_prompt,omitempty"`
+	Prompt           *string                           `json:"prompt,omitempty"`
+	IsStart          *bool                             `json:"isStart,omitempty"`
+	GlobalLabel      *string                           `json:"globalLabel,omitempty"`
+	URL              *string                           `json:"url,omitempty"`
+	Method           *string                           `json:"method,omitempty"`
+	ExtractVars      *[][]string                       `json:"extractVars,omitempty"`
+	ResponseData     *[]pathwayNodeDataResponseDataDto `json:"responseData,omitempty"`
+	ResponsePathways *[][]interface{}                  `json:"responsePathways,omitempty"`
 }
 
 type createPathwayResponseData struct {

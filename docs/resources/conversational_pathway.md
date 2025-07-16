@@ -47,11 +47,14 @@ Required:
 <a id="nestedatt--nodes--data"></a>
 ### Nested Schema for `nodes.data`
 
+Required:
+
+- `name` (String) Name of the node.
+
 Optional:
 
 - `global_prompt` (String) Prompt for a global node.
 - `is_start` (Boolean) Defines if this is the start node of the pathway.
-- `name` (String) Name of the node.
 - `prompt` (String) Prompt for a knowledge base node.
 - `text` (String) Text for the node.
 
