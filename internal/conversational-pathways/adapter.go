@@ -295,7 +295,7 @@ func ConvertFromPathwayDto(pathway pathwayDto) (*ConversationalPathwayDataSource
 		Description: types.StringValue(pathway.Description),
 	}
 	for _, node := range pathway.Nodes {
-		if node.GlobalConfig != nil {
+		if node.GlobalConfig == nil {
 			nodeModel, err := ConvertFromPathwayNodeDto(node)
 			if err != nil {
 				return nil, err
