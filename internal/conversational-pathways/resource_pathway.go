@@ -151,17 +151,11 @@ func (r *ConversationalPathwayResource) Create(ctx context.Context, req resource
 
 	connection, err := r.PathwayClient.CreatePathway(ctx, modelToCreate)
 	if err != nil {
-		resp.Diagnostics.AddError("Failed to create connection", err.Error())
+		resp.Diagnostics.AddError("Failed to create pathway", err.Error())
 		return
 	}
 
 	responseModel := ConvertFromPathwayDto(*connection)
-	plan.ID = responseModel.ID
-	plan.Description = responseModel.Description
-	plan.Name = responseModel.Name
-	plan.Nodes = responseModel.Nodes
-	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
-
 	modelToUpdate := updatePathwayDto{
 		Name:        dto.Name,
 		Description: dto.Description,
@@ -170,7 +164,7 @@ func (r *ConversationalPathwayResource) Create(ctx context.Context, req resource
 
 	updatedPathwayWithNodes, err := r.PathwayClient.UpdatePathway(ctx, responseModel.ID.ValueString(), modelToUpdate)
 	if err != nil {
-		resp.Diagnostics.AddError("Failed to add nodes connection", err.Error())
+		resp.Diagnostics.AddError("Failed to add nodes pathway", err.Error())
 		return
 	}
 	responseModel = ConvertFromPathwayDto(*updatedPathwayWithNodes)
