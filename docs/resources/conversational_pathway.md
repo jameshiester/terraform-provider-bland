@@ -40,12 +40,9 @@ resource "bland_conversational_pathway" "example" {
 
 Required:
 
+- `data` (Attributes) (see [below for nested schema](#nestedatt--nodes--data))
 - `id` (String) Unique identifier for the node.
 - `type` (String) Type of the node.
-
-Read-Only:
-
-- `data` (Attributes) (see [below for nested schema](#nestedatt--nodes--data))
 
 <a id="nestedatt--nodes--data"></a>
 ### Nested Schema for `nodes.data`

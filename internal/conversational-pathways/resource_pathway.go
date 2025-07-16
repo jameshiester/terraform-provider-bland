@@ -81,7 +81,7 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 							Required:            true,
 						},
 						"data": schema.SingleNestedAttribute{
-							Computed: true,
+							Required: true,
 							Attributes: map[string]schema.Attribute{
 								"name": schema.StringAttribute{
 									MarkdownDescription: "Name of the node.",
