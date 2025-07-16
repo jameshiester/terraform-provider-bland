@@ -60,13 +60,13 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 			{
 				Config: `
 					resource "bland_conversational_pathway" "path" {
-						name                              = "Test Provider Name"
-						description                       = "Test Provider Description"
+						name                              = "TestPathwayName"
+						description                       = "TestPathwayDescription"
 					}
 					`,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "name", "Test Provider Name"),
-					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "description", "Test Provider Description"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "name", "TestPathwayName"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "description", "TestPathwayDescription"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "id", "123"),
 				),
 			},
