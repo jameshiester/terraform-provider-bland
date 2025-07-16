@@ -51,7 +51,7 @@ type ConversationalPathwayNodeDataResponsePathwayModel struct {
 
 // ConversationalPathwayNodeDataModel describes the node data model.
 type ConversationalPathwayNodeDataModel struct {
-	ExtractVars      []ConversationalPathwayNodeDataExtractVariableModel `tfsdk:"extract_vars,omitempty"`
+	ExtractVars      []ConversationalPathwayNodeDataExtractVariableModel `tfsdk:"extract_vars"`
 	GlobalLabel      types.String                                        `tfsdk:"global_label"`
 	GlobalPrompt     types.String                                        `tfsdk:"global_prompt"`
 	Method           types.String                                        `tfsdk:"method"`
