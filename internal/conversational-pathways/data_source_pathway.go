@@ -69,47 +69,47 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 				MarkdownDescription: "A description of the conversational pathway.",
 				Computed:            true,
 			},
-			// "nodes": schema.ListNestedAttribute{
-			// 	MarkdownDescription: "Data about all the nodes in the pathway.",
-			// 	Computed:            true,
-			// 	NestedObject: schema.NestedAttributeObject{
-			// 		Attributes: map[string]schema.Attribute{
-			// 			"id": schema.StringAttribute{
-			// 				MarkdownDescription: "Unique identifier for the node.",
-			// 				Computed:            true,
-			// 			},
-			// 			"type": schema.StringAttribute{
-			// 				MarkdownDescription: "Type of the node.",
-			// 				Computed:            true,
-			// 			},
-			// 			"data": schema.SingleNestedAttribute{
-			// 				Computed: true,
-			// 				Attributes: map[string]schema.Attribute{
-			// 					"name": schema.StringAttribute{
-			// 						MarkdownDescription: "Name of the node.",
-			// 						Computed:            true,
-			// 					},
-			// 					"text": schema.StringAttribute{
-			// 						MarkdownDescription: "Text for the node.",
-			// 						Computed:            true,
-			// 					},
-			// 					"global_prompt": schema.StringAttribute{
-			// 						MarkdownDescription: "Prompt for a global node.",
-			// 						Computed:            true,
-			// 					},
-			// 					"prompt": schema.StringAttribute{
-			// 						MarkdownDescription: "Prompt for a knowledge base node.",
-			// 						Computed:            true,
-			// 					},
-			// 					"is_start": schema.BoolAttribute{
-			// 						MarkdownDescription: "Defines if this is the start node of the pathway.",
-			// 						Computed:            true,
-			// 					},
-			// 				},
-			// 			},
-			// 		},
-			// 	},
-			// },
+			"nodes": schema.ListNestedAttribute{
+				MarkdownDescription: "Data about all the nodes in the pathway.",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: "Unique identifier for the node.",
+							Computed:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: "Type of the node.",
+							Computed:            true,
+						},
+						"data": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"name": schema.StringAttribute{
+									MarkdownDescription: "Name of the node.",
+									Computed:            true,
+								},
+								"text": schema.StringAttribute{
+									MarkdownDescription: "Text for the node.",
+									Computed:            true,
+								},
+								"global_prompt": schema.StringAttribute{
+									MarkdownDescription: "Prompt for a global node.",
+									Computed:            true,
+								},
+								"prompt": schema.StringAttribute{
+									MarkdownDescription: "Prompt for a knowledge base node.",
+									Computed:            true,
+								},
+								"is_start": schema.BoolAttribute{
+									MarkdownDescription: "Defines if this is the start node of the pathway.",
+									Computed:            true,
+								},
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }

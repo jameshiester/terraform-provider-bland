@@ -44,7 +44,7 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 
 	httpmock.RegisterResponder("DELETE", "https://api.bland.ai/v1/pathway/123?api-version=1",
 		func(req *http.Request) (*http.Response, error) {
-			return httpmock.NewStringResponse(http.StatusCreated, ""), nil
+			return httpmock.NewStringResponse(http.StatusOK, ""), nil
 		})
 
 	httpmock.RegisterResponder("GET", `https://api.bland.ai/v1/pathway/123?api-version=1`,
