@@ -403,7 +403,6 @@ func (r *ConversationalPathwayResource) Read(ctx context.Context, req resource.R
 		resp.Diagnostics.AddError(fmt.Sprintf("Error when converting %s", r.FullTypeName()), err.Error())
 		return
 	}
-	state.ID = model.ID
 	state.Name = model.Name
 	state.Description = model.Description
 	state.Nodes = model.Nodes
@@ -445,7 +444,6 @@ func (r *ConversationalPathwayResource) Update(ctx context.Context, req resource
 		resp.Diagnostics.AddError(fmt.Sprintf("Error when converting updated %s", r.FullTypeName()), err.Error())
 		return
 	}
-	plan.ID = modelState.ID
 	plan.Name = modelState.Name
 	plan.Description = modelState.Description
 	plan.Nodes = modelState.Nodes
