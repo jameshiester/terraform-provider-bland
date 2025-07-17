@@ -58,9 +58,9 @@ type pathwayEdgeDto struct {
 }
 
 type pathwayEdgeDataDto struct {
-	Label         string `json:"label"`
-	IsHighlighted bool   `json:"isHighlighted"`
-	Description   string `json:"description"`
+	Label         string  `json:"label"`
+	IsHighlighted bool    `json:"isHighlighted"`
+	Description   *string `json:"description,omitempty"`
 }
 
 type pathwayNodeDataResponseDataDto struct {

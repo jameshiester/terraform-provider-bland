@@ -251,7 +251,7 @@ func ConvertFromPathwayEdgeDto(edge pathwayEdgeDto) ConversationalPathwayEdgeMod
 		Data: ConversationalPathwayEdgeDataModel{
 			Label:         types.StringValue(edge.Data.Label),
 			IsHighlighted: types.BoolValue(edge.Data.IsHighlighted),
-			Description:   types.StringValue(edge.Data.Description),
+			Description:   types.StringPointerValue(edge.Data.Description),
 		},
 	}
 }
@@ -265,7 +265,7 @@ func ConvertFromPathwayEdgeModel(edge ConversationalPathwayEdgeModel) pathwayEdg
 		Data: pathwayEdgeDataDto{
 			Label:         edge.Data.Label.ValueString(),
 			IsHighlighted: edge.Data.IsHighlighted.ValueBool(),
-			Description:   edge.Data.Description.ValueString(),
+			Description:   edge.Data.Description.ValueStringPointer(),
 		},
 	}
 }
