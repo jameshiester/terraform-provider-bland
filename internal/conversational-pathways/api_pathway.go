@@ -87,6 +87,7 @@ func (client *client) UpdatePathway(ctx context.Context, pathwayID string, pathw
 	updatedPathway.Name = updateResponse.Data.Name
 	updatedPathway.Description = updateResponse.Data.Description
 	updatedPathway.Nodes = updateResponse.Data.Nodes
+	updatedPathway.Edges = updateResponse.Data.Edges
 	return &updatedPathway, nil
 }
 
