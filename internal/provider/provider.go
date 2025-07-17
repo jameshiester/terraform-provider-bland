@@ -64,7 +64,6 @@ func (p *BlandProvider) Configure(ctx context.Context, req provider.ConfigureReq
 	if baseUrl == "" {
 		baseUrl = "api.bland.ai"
 	}
-
 	if apiToken == "" {
 		resp.Diagnostics.AddError(
 			"Missing API Key Configuration",
@@ -87,6 +86,9 @@ func (p *BlandProvider) Configure(ctx context.Context, req provider.ConfigureReq
 	providerClient := api.ProviderClient{
 		Config: p.Config,
 		Api:    p.Api,
+	}
+	if p.Config.TestMode {
+		tflog.Warn(ctx, "Client initialized.")
 	}
 	resp.DataSourceData = &providerClient
 	resp.ResourceData = &providerClient
@@ -120,6 +122,7 @@ func NewBlandProvider(ctx context.Context, testModeEnabled ...bool) func() provi
 	if len(testModeEnabled) > 0 && testModeEnabled[0] {
 		tflog.Warn(ctx, "Test mode enabled. Authentication requests will not be sent to the backend APIs.")
 		providerConfig.TestMode = true
+		providerConfig.BaseURL = "api.bland.ai"
 	}
 
 	return func() provider.Provider {

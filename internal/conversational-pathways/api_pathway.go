@@ -48,7 +48,7 @@ func (client *client) CreatePathway(ctx context.Context, pathwayToCreate createP
 		message := strings.Join(messages, ". ")
 		return nil, fmt.Errorf("failed to create pathway with incorrect status: %s", message)
 	}
-	if response.Data == nil {
+	if response.Data == nil || response.Data.ID == "" {
 		return nil, fmt.Errorf("failed to create pathway: %s", "invalid data in response")
 	}
 	pathway := pathwayDto{
@@ -76,7 +76,7 @@ func (client *client) UpdatePathway(ctx context.Context, pathwayID string, pathw
 	apiUrl.RawQuery = values.Encode()
 
 	updateResponse := updatePathwayResponseDto{}
-	_, err = client.Api.Execute(ctx, nil, "PUT", apiUrl.String(), nil, pathwayToUpdate, []int{http.StatusOK}, &updateResponse)
+	_, err = client.Api.Execute(ctx, nil, "POST", apiUrl.String(), nil, pathwayToUpdate, []int{http.StatusOK}, &updateResponse)
 	if err != nil {
 		return nil, fmt.Errorf("failed to update connection: %w", err)
 	}
@@ -84,6 +84,7 @@ func (client *client) UpdatePathway(ctx context.Context, pathwayID string, pathw
 	updatedPathway.ID = pathwayID
 	updatedPathway.Name = updateResponse.Data.Name
 	updatedPathway.Description = updateResponse.Data.Description
+	updatedPathway.Nodes = updateResponse.Data.Nodes
 	return &updatedPathway, nil
 }
 

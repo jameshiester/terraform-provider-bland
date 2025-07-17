@@ -26,19 +26,6 @@ func NewConversationalPathwayDataSource() datasource.DataSource {
 	}
 }
 
-// ConversationalPathwayDataSource defines the data source implementation.
-type ConversationalPathwayDataSource struct {
-	utils.TypeInfo
-	ApplicationClient client
-}
-
-// ConversationalPathwayDataSourceModel describes the data source data model.
-type ConversationalPathwayDataSourceModel struct {
-	Name        types.String `tfsdk:"name"`
-	ID          types.String `tfsdk:"id"`
-	Description types.String `tfsdk:"description"`
-}
-
 func (r *ConversationalPathwayDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	// update our own internal storage of the provider type name.
 	r.ProviderTypeName = req.ProviderTypeName
@@ -97,16 +84,199 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 									MarkdownDescription: "Prompt for a global node.",
 									Computed:            true,
 								},
-								"prompt": schema.StringAttribute{
-									MarkdownDescription: "Prompt for a knowledge base node.",
+								"global_label": schema.StringAttribute{
+									MarkdownDescription: "Label for a global node.",
+									Computed:            true,
+								},
+								"method": schema.StringAttribute{
+									MarkdownDescription: "Method for the node.",
 									Computed:            true,
 								},
 								"is_start": schema.BoolAttribute{
 									MarkdownDescription: "Defines if this is the start node of the pathway.",
 									Computed:            true,
 								},
+								"is_global": schema.BoolAttribute{
+									MarkdownDescription: "Defines if this is a global node.",
+									Computed:            true,
+								},
+								"prompt": schema.StringAttribute{
+									MarkdownDescription: "Prompt for a knowledge base node.",
+									Computed:            true,
+								},
+								"url": schema.StringAttribute{
+									MarkdownDescription: "URL for the node.",
+									Computed:            true,
+								},
+								"condition": schema.StringAttribute{
+									MarkdownDescription: "Condition for the node.",
+									Computed:            true,
+								},
+								"kb": schema.StringAttribute{
+									MarkdownDescription: "Knowledge base for the node.",
+									Computed:            true,
+								},
+								"transfer_number": schema.StringAttribute{
+									MarkdownDescription: "Transfer number for the node.",
+									Computed:            true,
+								},
+								"extract_vars": schema.ListNestedAttribute{
+									MarkdownDescription: "Variables to extract from the node.",
+									Computed:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"name": schema.StringAttribute{
+												MarkdownDescription: "Name of the variable.",
+												Computed:            true,
+											},
+											"type": schema.StringAttribute{
+												MarkdownDescription: "Type of the variable.",
+												Computed:            true,
+											},
+											"description": schema.StringAttribute{
+												MarkdownDescription: "Description of the variable.",
+												Computed:            true,
+											},
+										},
+									},
+								},
+								"response_data": schema.ListNestedAttribute{
+									MarkdownDescription: "Response data for the node.",
+									Computed:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"data": schema.StringAttribute{
+												MarkdownDescription: "Data value.",
+												Computed:            true,
+											},
+											"name": schema.StringAttribute{
+												MarkdownDescription: "Name of the response data.",
+												Computed:            true,
+											},
+											"context": schema.StringAttribute{
+												MarkdownDescription: "Context for the response data.",
+												Computed:            true,
+											},
+										},
+									},
+								},
+								"response_pathways": schema.ListNestedAttribute{
+									MarkdownDescription: "Response pathways for the node.",
+									Computed:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"condition": schema.SingleNestedAttribute{
+												Computed: true,
+												Attributes: map[string]schema.Attribute{
+													"variable": schema.StringAttribute{
+														MarkdownDescription: "Condition variable.",
+														Computed:            true,
+													},
+													"condition": schema.StringAttribute{
+														MarkdownDescription: "Condition operator.",
+														Computed:            true,
+													},
+													"value": schema.StringAttribute{
+														MarkdownDescription: "Condition value.",
+														Computed:            true,
+													},
+												},
+											},
+											"outcome": schema.SingleNestedAttribute{
+												Computed: true,
+												Attributes: map[string]schema.Attribute{
+													"id": schema.StringAttribute{
+														MarkdownDescription: "Outcome node id.",
+														Computed:            true,
+													},
+													"node_name": schema.StringAttribute{
+														MarkdownDescription: "Outcome node name.",
+														Computed:            true,
+													},
+												},
+											},
+										},
+									},
+								},
+								"model_options": schema.SingleNestedAttribute{
+									MarkdownDescription: "Model options for the node.",
+									Computed:            true,
+									Attributes: map[string]schema.Attribute{
+										"model_type": schema.StringAttribute{
+											MarkdownDescription: "Type of the model.",
+											Computed:            true,
+										},
+										"interruption_threshold": schema.StringAttribute{
+											MarkdownDescription: "Interruption threshold for the model.",
+											Computed:            true,
+										},
+										"temperature": schema.Float32Attribute{
+											MarkdownDescription: "Temperature setting for the model.",
+											Computed:            true,
+										},
+										"skip_user_response": schema.BoolAttribute{
+											MarkdownDescription: "Whether to skip user response.",
+											Computed:            true,
+										},
+										"block_interruptions": schema.BoolAttribute{
+											MarkdownDescription: "Whether to block interruptions.",
+											Computed:            true,
+										},
+									},
+								},
 							},
 						},
+					},
+				},
+			},
+			"edges": schema.ListNestedAttribute{
+				MarkdownDescription: "Data about all the edges in the pathway.",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: "Unique identifier for the edge.",
+							Computed:            true,
+						},
+						"source": schema.StringAttribute{
+							MarkdownDescription: "Source node ID for the edge.",
+							Computed:            true,
+						},
+						"target": schema.StringAttribute{
+							MarkdownDescription: "Target node ID for the edge.",
+							Computed:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: "Type of the edge.",
+							Computed:            true,
+						},
+						"data": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"label": schema.StringAttribute{
+									MarkdownDescription: "Label for the edge.",
+									Computed:            true,
+								},
+								"is_highlighted": schema.BoolAttribute{
+									MarkdownDescription: "Whether the edge is highlighted.",
+									Computed:            true,
+								},
+								"description": schema.StringAttribute{
+									MarkdownDescription: "Description of the edge.",
+									Computed:            true,
+								},
+							},
+						},
+					},
+				},
+			},
+			"global_config": schema.SingleNestedAttribute{
+				MarkdownDescription: "Global configuration for the pathway.",
+				Computed:            true,
+				Attributes: map[string]schema.Attribute{
+					"global_prompt": schema.StringAttribute{
+						MarkdownDescription: "Global prompt for the pathway.",
+						Computed:            true,
 					},
 				},
 			},
@@ -138,10 +308,13 @@ func (d *ConversationalPathwayDataSource) Read(ctx context.Context, req datasour
 	ctx, exitContext := utils.EnterRequestContext(ctx, d.TypeInfo, req)
 	defer exitContext()
 	var state ConversationalPathwayDataSourceModel
-	resp.State.Get(ctx, &state)
+	resp.Diagnostics.Append(req.Config.Get(ctx, &state)...)
 
 	tflog.Debug(ctx, fmt.Sprintf("READ DATASOURCE CONVERSATIONAL PATHWAYS START: %s", d.FullTypeName()))
-
+	if state.ID.ValueString() == "" {
+		resp.Diagnostics.AddError(fmt.Sprintf("Client error when reading %s %s", d.FullTypeName(), state.Name.ValueString()), "ID is missing from state")
+		return
+	}
 	state.Name = types.StringValue(state.Name.ValueString())
 	state.Description = types.StringValue(state.Description.ValueString())
 
@@ -151,8 +324,17 @@ func (d *ConversationalPathwayDataSource) Read(ctx context.Context, req datasour
 		return
 	}
 
-	state.Name = types.StringValue(pathway.Name)
-	state.Description = types.StringValue(pathway.Name)
+	model, err := ConvertFromPathwayDto(*pathway)
+	if err != nil {
+		resp.Diagnostics.AddError(fmt.Sprintf("Error when converting %s", d.FullTypeName()), err.Error())
+		return
+	}
+
+	state.Name = types.StringValue(model.Name.ValueString())
+	state.Description = types.StringValue(model.Description.ValueString())
+	state.Nodes = model.Nodes
+	state.Edges = model.Edges
+	state.GlobalConfig = model.GlobalConfig
 	diags := resp.State.Set(ctx, &state)
 
 	tflog.Debug(ctx, fmt.Sprintf("READ DATASOURCE CONVERSATIONAL PATHWAYS END: %s", d.FullTypeName()))
@@ -161,15 +343,4 @@ func (d *ConversationalPathwayDataSource) Read(ctx context.Context, req datasour
 	if resp.Diagnostics.HasError() {
 		return
 	}
-}
-
-func ConvertFromPathwayDto(pathway pathwayDto) ConversationalPathwayDataSourceModel {
-
-	path := ConversationalPathwayDataSourceModel{
-		ID:          types.StringValue(pathway.ID),
-		Name:        types.StringValue(pathway.Name),
-		Description: types.StringValue(pathway.Description),
-	}
-
-	return path
 }

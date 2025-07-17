@@ -7,12 +7,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"regexp"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
 	utils "github.com/jameshiester/terraform-provider-bland/internal/util"
@@ -67,6 +70,248 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 				MarkdownDescription: "Description of the pathway",
 				Required:            true,
 			},
+			"nodes": schema.ListNestedAttribute{
+				MarkdownDescription: "Data about all the nodes in the pathway.",
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: "Unique identifier for the node.",
+							Required:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: "Type of the node.",
+							Required:            true,
+						},
+						"data": schema.SingleNestedAttribute{
+							Required: true,
+							Attributes: map[string]schema.Attribute{
+								"name": schema.StringAttribute{
+									MarkdownDescription: "Name of the node.",
+									Required:            true,
+								},
+								"text": schema.StringAttribute{
+									MarkdownDescription: "Text for the node.",
+									Optional:            true,
+									Validators: []validator.String{
+										stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("prompt")),
+									},
+								},
+								"global_prompt": schema.StringAttribute{
+									MarkdownDescription: "Prompt for a global node.",
+									Optional:            true,
+								},
+								"global_label": schema.StringAttribute{
+									MarkdownDescription: "Label for a global node.",
+									Optional:            true,
+								},
+								"method": schema.StringAttribute{
+									MarkdownDescription: "Method for the node.",
+									Optional:            true,
+									Validators: []validator.String{
+										stringvalidator.RegexMatches(
+											regexp.MustCompile(`^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|TRACE|CONNECT)$`),
+											"must be a valid HTTP method in uppercase (e.g., GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS, TRACE, CONNECT)",
+										),
+									},
+								},
+								"is_start": schema.BoolAttribute{
+									MarkdownDescription: "Defines if this is the start node of the pathway.",
+									Optional:            true,
+								},
+								"is_global": schema.BoolAttribute{
+									MarkdownDescription: "Defines if this is a global node.",
+									Optional:            true,
+								},
+								"prompt": schema.StringAttribute{
+									MarkdownDescription: "Prompt for a knowledge base node.",
+									Optional:            true,
+									Validators: []validator.String{
+										stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("text")),
+									},
+								},
+								"url": schema.StringAttribute{
+									MarkdownDescription: "URL for the node.",
+									Optional:            true,
+									Validators: []validator.String{
+										stringvalidator.RegexMatches(
+											regexp.MustCompile(`^https?://[^\s]+$`),
+											"must be a valid URL starting with http:// or https:// (e.g., http://example.com)",
+										),
+									},
+								},
+								"condition": schema.StringAttribute{
+									MarkdownDescription: "Condition for the node.",
+									Optional:            true,
+								},
+								"kb": schema.StringAttribute{
+									MarkdownDescription: "Knowledge base for the node.",
+									Optional:            true,
+								},
+								"transfer_number": schema.StringAttribute{
+									MarkdownDescription: "Transfer number for the node.",
+									Optional:            true,
+								},
+								"extract_vars": schema.ListNestedAttribute{
+									MarkdownDescription: "Variables to extract from the node.",
+									Optional:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"name": schema.StringAttribute{
+												MarkdownDescription: "Name of the variable.",
+												Required:            true,
+											},
+											"type": schema.StringAttribute{
+												MarkdownDescription: "Type of the variable.",
+												Required:            true,
+											},
+											"description": schema.StringAttribute{
+												MarkdownDescription: "Description of the variable.",
+												Required:            true,
+											},
+										},
+									},
+								},
+								"response_data": schema.ListNestedAttribute{
+									MarkdownDescription: "Response data for the node.",
+									Optional:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"data": schema.StringAttribute{
+												MarkdownDescription: "Data value.",
+												Required:            true,
+											},
+											"name": schema.StringAttribute{
+												MarkdownDescription: "Name of the response data.",
+												Required:            true,
+											},
+											"context": schema.StringAttribute{
+												MarkdownDescription: "Context for the response data.",
+												Required:            true,
+											},
+										},
+									},
+								},
+								"response_pathways": schema.ListNestedAttribute{
+									MarkdownDescription: "Response pathways for the node.",
+									Optional:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"condition": schema.SingleNestedAttribute{
+												Required: true,
+												Attributes: map[string]schema.Attribute{
+													"variable": schema.StringAttribute{
+														MarkdownDescription: "Condition variable.",
+														Required:            true,
+													},
+													"condition": schema.StringAttribute{
+														MarkdownDescription: "Condition operator.",
+														Required:            true,
+													},
+													"value": schema.StringAttribute{
+														MarkdownDescription: "Condition value.",
+														Required:            true,
+													},
+												},
+											},
+											"outcome": schema.SingleNestedAttribute{
+												Required: true,
+												Attributes: map[string]schema.Attribute{
+													"id": schema.StringAttribute{
+														MarkdownDescription: "Outcome node id.",
+														Required:            true,
+													},
+													"node_name": schema.StringAttribute{
+														MarkdownDescription: "Outcome node name.",
+														Required:            true,
+													},
+												},
+											},
+										},
+									},
+								},
+								"model_options": schema.SingleNestedAttribute{
+									MarkdownDescription: "Model options for the node.",
+									Optional:            true,
+									Attributes: map[string]schema.Attribute{
+										"model_type": schema.StringAttribute{
+											MarkdownDescription: "Type of the model.",
+											Required:            true,
+										},
+										"interruption_threshold": schema.StringAttribute{
+											MarkdownDescription: "Interruption threshold for the model.",
+											Optional:            true,
+										},
+										"temperature": schema.Float32Attribute{
+											MarkdownDescription: "Temperature setting for the model.",
+											Optional:            true,
+										},
+										"skip_user_response": schema.BoolAttribute{
+											MarkdownDescription: "Whether to skip user response.",
+											Optional:            true,
+										},
+										"block_interruptions": schema.BoolAttribute{
+											MarkdownDescription: "Whether to block interruptions.",
+											Optional:            true,
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"edges": schema.ListNestedAttribute{
+				MarkdownDescription: "Data about all the edges in the pathway.",
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: "Unique identifier for the edge.",
+							Required:            true,
+						},
+						"source": schema.StringAttribute{
+							MarkdownDescription: "Source node ID for the edge.",
+							Required:            true,
+						},
+						"target": schema.StringAttribute{
+							MarkdownDescription: "Target node ID for the edge.",
+							Required:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: "Type of the edge.",
+							Required:            true,
+						},
+						"data": schema.SingleNestedAttribute{
+							Optional: true,
+							Attributes: map[string]schema.Attribute{
+								"label": schema.StringAttribute{
+									MarkdownDescription: "Label for the edge.",
+									Required:            true,
+								},
+								"is_highlighted": schema.BoolAttribute{
+									MarkdownDescription: "Whether the edge is highlighted.",
+									Optional:            true,
+								},
+								"description": schema.StringAttribute{
+									MarkdownDescription: "Description of the edge.",
+									Optional:            true,
+								},
+							},
+						},
+					},
+				},
+			},
+			"global_config": schema.SingleNestedAttribute{
+				MarkdownDescription: "Global configuration for the pathway.",
+				Optional:            true,
+				Attributes: map[string]schema.Attribute{
+					"global_prompt": schema.StringAttribute{
+						MarkdownDescription: "Global prompt for the pathway.",
+						Optional:            true,
+					},
+				},
+			},
 		},
 	}
 }
@@ -101,22 +346,49 @@ func (r *ConversationalPathwayResource) Create(ctx context.Context, req resource
 		return
 	}
 
+	dto := ConvertFromPathwayModel(plan)
+
 	modelToCreate := createPathwayDto{
-		Name:        plan.Name.ValueString(),
-		Description: plan.Description.ValueString(),
+		Name:        dto.Name,
+		Description: dto.Description,
+		Nodes:       dto.Nodes,
+		Edges:       dto.Edges,
 	}
 
 	connection, err := r.PathwayClient.CreatePathway(ctx, modelToCreate)
 	if err != nil {
-		resp.Diagnostics.AddError("Failed to create connection", err.Error())
+		resp.Diagnostics.AddError("Failed to create pathway", err.Error())
 		return
 	}
 
-	responseModel := ConvertFromPathwayDto(*connection)
-	plan.ID = responseModel.ID
-	plan.Description = responseModel.Description
-	plan.Name = responseModel.Name
+	responseModel, err := ConvertFromPathwayDto(*connection)
+	if err != nil {
+		resp.Diagnostics.AddError("Error occurred when parsing create pathway response", err.Error())
+		return
+	}
+	modelToUpdate := updatePathwayDto{
+		Name:        dto.Name,
+		Description: dto.Description,
+		Nodes:       dto.Nodes,
+		Edges:       dto.Edges,
+	}
 
+	updatedPathwayWithNodes, err := r.PathwayClient.UpdatePathway(ctx, responseModel.ID.ValueString(), modelToUpdate)
+	if err != nil {
+		resp.Diagnostics.AddError("Failed to add nodes pathway", err.Error())
+		return
+	}
+	updatedResponseModel, err := ConvertFromPathwayDto(*updatedPathwayWithNodes)
+	if err != nil {
+		resp.Diagnostics.AddError("Error occurred when parsing update pathway response", err.Error())
+		return
+	}
+	plan.ID = updatedResponseModel.ID
+	plan.Description = updatedResponseModel.Description
+	plan.Name = updatedResponseModel.Name
+	plan.Nodes = updatedResponseModel.Nodes
+	plan.Edges = updatedResponseModel.Edges
+	plan.GlobalConfig = updatedResponseModel.GlobalConfig
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -140,10 +412,17 @@ func (r *ConversationalPathwayResource) Read(ctx context.Context, req resource.R
 		return
 	}
 
-	model := ConvertFromPathwayDto(*pathway)
+	model, err := ConvertFromPathwayDto(*pathway)
+	if err != nil {
+		resp.Diagnostics.AddError(fmt.Sprintf("Error when converting %s", r.FullTypeName()), err.Error())
+		return
+	}
 	state.ID = model.ID
 	state.Name = model.Name
 	state.Description = model.Description
+	state.Nodes = model.Nodes
+	state.Edges = model.Edges
+	state.GlobalConfig = model.GlobalConfig
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
@@ -160,10 +439,13 @@ func (r *ConversationalPathwayResource) Update(ctx context.Context, req resource
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	dto := ConvertFromPathwayModel(plan)
 
 	updateParams := updatePathwayDto{
-		Name:        plan.Name.ValueString(),
-		Description: plan.Description.ValueString(),
+		Name:        dto.Name,
+		Description: dto.Description,
+		Nodes:       dto.Nodes,
+		Edges:       dto.Edges,
 	}
 
 	updateReponse, err := r.PathwayClient.UpdatePathway(ctx, plan.ID.ValueString(), updateParams)
@@ -172,11 +454,17 @@ func (r *ConversationalPathwayResource) Update(ctx context.Context, req resource
 		return
 	}
 
-	modelState := ConvertFromPathwayDto(*updateReponse)
+	modelState, err := ConvertFromPathwayDto(*updateReponse)
+	if err != nil {
+		resp.Diagnostics.AddError(fmt.Sprintf("Error when converting updated %s", r.FullTypeName()), err.Error())
+		return
+	}
 	plan.ID = modelState.ID
 	plan.Name = modelState.Name
 	plan.Description = modelState.Description
-
+	plan.Nodes = modelState.Nodes
+	plan.Edges = modelState.Edges
+	plan.GlobalConfig = modelState.GlobalConfig
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -203,3 +491,5 @@ func (r *ConversationalPathwayResource) ImportState(ctx context.Context, req res
 
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
+
+// Custom validator to ensure 'text' and 'prompt' are mutually exclusive

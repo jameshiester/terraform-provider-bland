@@ -27,9 +27,146 @@ resource "bland_conversational_pathway" "example" {
 - `description` (String) Description of the pathway
 - `name` (String) Name of the pathway
 
+### Optional
+
+- `edges` (Attributes List) Data about all the edges in the pathway. (see [below for nested schema](#nestedatt--edges))
+- `global_config` (Attributes) Global configuration for the pathway. (see [below for nested schema](#nestedatt--global_config))
+- `nodes` (Attributes List) Data about all the nodes in the pathway. (see [below for nested schema](#nestedatt--nodes))
+
 ### Read-Only
 
 - `id` (String) Unique pathway id
+
+<a id="nestedatt--edges"></a>
+### Nested Schema for `edges`
+
+Required:
+
+- `id` (String) Unique identifier for the edge.
+- `source` (String) Source node ID for the edge.
+- `target` (String) Target node ID for the edge.
+- `type` (String) Type of the edge.
+
+Optional:
+
+- `data` (Attributes) (see [below for nested schema](#nestedatt--edges--data))
+
+<a id="nestedatt--edges--data"></a>
+### Nested Schema for `edges.data`
+
+Required:
+
+- `label` (String) Label for the edge.
+
+Optional:
+
+- `description` (String) Description of the edge.
+- `is_highlighted` (Boolean) Whether the edge is highlighted.
+
+
+
+<a id="nestedatt--global_config"></a>
+### Nested Schema for `global_config`
+
+Optional:
+
+- `global_prompt` (String) Global prompt for the pathway.
+
+
+<a id="nestedatt--nodes"></a>
+### Nested Schema for `nodes`
+
+Required:
+
+- `data` (Attributes) (see [below for nested schema](#nestedatt--nodes--data))
+- `id` (String) Unique identifier for the node.
+- `type` (String) Type of the node.
+
+<a id="nestedatt--nodes--data"></a>
+### Nested Schema for `nodes.data`
+
+Required:
+
+- `name` (String) Name of the node.
+
+Optional:
+
+- `condition` (String) Condition for the node.
+- `extract_vars` (Attributes List) Variables to extract from the node. (see [below for nested schema](#nestedatt--nodes--data--extract_vars))
+- `global_label` (String) Label for a global node.
+- `global_prompt` (String) Prompt for a global node.
+- `is_global` (Boolean) Defines if this is a global node.
+- `is_start` (Boolean) Defines if this is the start node of the pathway.
+- `kb` (String) Knowledge base for the node.
+- `method` (String) Method for the node.
+- `model_options` (Attributes) Model options for the node. (see [below for nested schema](#nestedatt--nodes--data--model_options))
+- `prompt` (String) Prompt for a knowledge base node.
+- `response_data` (Attributes List) Response data for the node. (see [below for nested schema](#nestedatt--nodes--data--response_data))
+- `response_pathways` (Attributes List) Response pathways for the node. (see [below for nested schema](#nestedatt--nodes--data--response_pathways))
+- `text` (String) Text for the node.
+- `transfer_number` (String) Transfer number for the node.
+- `url` (String) URL for the node.
+
+<a id="nestedatt--nodes--data--extract_vars"></a>
+### Nested Schema for `nodes.data.extract_vars`
+
+Required:
+
+- `description` (String) Description of the variable.
+- `name` (String) Name of the variable.
+- `type` (String) Type of the variable.
+
+
+<a id="nestedatt--nodes--data--model_options"></a>
+### Nested Schema for `nodes.data.model_options`
+
+Required:
+
+- `model_type` (String) Type of the model.
+
+Optional:
+
+- `block_interruptions` (Boolean) Whether to block interruptions.
+- `interruption_threshold` (String) Interruption threshold for the model.
+- `skip_user_response` (Boolean) Whether to skip user response.
+- `temperature` (Number) Temperature setting for the model.
+
+
+<a id="nestedatt--nodes--data--response_data"></a>
+### Nested Schema for `nodes.data.response_data`
+
+Required:
+
+- `context` (String) Context for the response data.
+- `data` (String) Data value.
+- `name` (String) Name of the response data.
+
+
+<a id="nestedatt--nodes--data--response_pathways"></a>
+### Nested Schema for `nodes.data.response_pathways`
+
+Required:
+
+- `condition` (Attributes) (see [below for nested schema](#nestedatt--nodes--data--response_pathways--condition))
+- `outcome` (Attributes) (see [below for nested schema](#nestedatt--nodes--data--response_pathways--outcome))
+
+<a id="nestedatt--nodes--data--response_pathways--condition"></a>
+### Nested Schema for `nodes.data.response_pathways.condition`
+
+Required:
+
+- `condition` (String) Condition operator.
+- `value` (String) Condition value.
+- `variable` (String) Condition variable.
+
+
+<a id="nestedatt--nodes--data--response_pathways--outcome"></a>
+### Nested Schema for `nodes.data.response_pathways.outcome`
+
+Required:
+
+- `id` (String) Outcome node id.
+- `node_name` (String) Outcome node name.
 
 ## Import
 
