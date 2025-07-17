@@ -55,6 +55,8 @@ func (client *client) CreatePathway(ctx context.Context, pathwayToCreate createP
 		ID:          response.Data.ID,
 		Name:        pathwayToCreate.Name,
 		Description: pathwayToCreate.Description,
+		Nodes:       pathwayToCreate.Nodes,
+		Edges:       pathwayToCreate.Edges,
 	}
 
 	return &pathway, nil
