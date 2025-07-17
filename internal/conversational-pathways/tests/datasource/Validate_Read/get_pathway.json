@@ -7,7 +7,8 @@
             "data": {
                 "name": "Start",
                 "text": "Hey there, how are you doing today?",
-                "isStart": true
+                "isStart": true,
+                "isHighlighted": false
             },
             "type": "Default"
         },
@@ -15,7 +16,8 @@
             "id": "2",
             "data": {
                 "name": "Edge 2",
-                "prompt": "Second edge information"
+                "prompt": "Second edge information",
+                "isHighlighted": false
             },
             "type": "Default"
         },
