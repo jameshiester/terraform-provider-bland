@@ -366,29 +366,12 @@ func (r *ConversationalPathwayResource) Create(ctx context.Context, req resource
 		resp.Diagnostics.AddError("Error occurred when parsing create pathway response", err.Error())
 		return
 	}
-	modelToUpdate := updatePathwayDto{
-		Name:        dto.Name,
-		Description: dto.Description,
-		Nodes:       dto.Nodes,
-		Edges:       dto.Edges,
-	}
-
-	updatedPathwayWithNodes, err := r.PathwayClient.UpdatePathway(ctx, responseModel.ID.ValueString(), modelToUpdate)
-	if err != nil {
-		resp.Diagnostics.AddError("Failed to add nodes pathway", err.Error())
-		return
-	}
-	updatedResponseModel, err := ConvertFromPathwayDto(*updatedPathwayWithNodes)
-	if err != nil {
-		resp.Diagnostics.AddError("Error occurred when parsing update pathway response", err.Error())
-		return
-	}
-	plan.ID = updatedResponseModel.ID
-	plan.Description = updatedResponseModel.Description
-	plan.Name = updatedResponseModel.Name
-	plan.Nodes = updatedResponseModel.Nodes
-	plan.Edges = updatedResponseModel.Edges
-	plan.GlobalConfig = updatedResponseModel.GlobalConfig
+	plan.ID = responseModel.ID
+	plan.Description = responseModel.Description
+	plan.Name = responseModel.Name
+	plan.Nodes = responseModel.Nodes
+	plan.Edges = responseModel.Edges
+	plan.GlobalConfig = responseModel.GlobalConfig
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
