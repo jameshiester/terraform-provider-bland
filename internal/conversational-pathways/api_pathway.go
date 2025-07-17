@@ -111,7 +111,7 @@ func (client *client) GetPathway(ctx context.Context, pathwayID string) (*pathwa
 	}
 
 	result := pathwayDto{
-		ID:          pathway.ID,
+		ID:          pathwayID,
 		Name:        pathway.Name,
 		Description: pathway.Description,
 		Nodes:       pathway.Nodes,
