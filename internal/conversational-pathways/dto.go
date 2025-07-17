@@ -3,6 +3,11 @@
 
 package pathways
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 type createPathwayDto struct {
 	Name        string           `json:"name"`
 	Description string           `json:"description"`
@@ -23,6 +28,14 @@ type pathwayDto struct {
 	Description string           `json:"description"`
 	Nodes       []pathwayNodeDto `json:"nodes"`
 	Edges       []pathwayEdgeDto `json:"edges"`
+}
+
+type getPathwayDto struct {
+	ID          string      `json:"pathway_id"`
+	Name        string      `json:"name"`
+	Description string      `json:"description"`
+	Nodes       NodesOrBool `json:"nodes"`
+	Edges       EdgesOrBool `json:"edges"`
 }
 
 type pathwayGlobalConfigDto struct {
@@ -100,4 +113,44 @@ type createPathwayResponseDto struct {
 type updatePathwayResponseDto struct {
 	Errors *[]errorDto       `json:"errors,omitempty"`
 	Data   *updatePathwayDto `json:"pathway_data"`
+}
+
+// Custom type for nodes that can be a boolean or an array
+// If boolean, will be nil. If array, will be the array.
+type NodesOrBool []pathwayNodeDto
+
+func (n *NodesOrBool) UnmarshalJSON(data []byte) error {
+	// Check for boolean
+	var b bool
+	if err := json.Unmarshal(data, &b); err == nil {
+		*n = nil
+		return nil
+	}
+	// Otherwise, try as array
+	var arr []pathwayNodeDto
+	if err := json.Unmarshal(data, &arr); err == nil {
+		*n = arr
+		return nil
+	}
+	return fmt.Errorf("nodes is neither bool nor array")
+}
+
+// Custom type for edges that can be a boolean or an array
+// If boolean, will be nil. If array, will be the array.
+type EdgesOrBool []pathwayEdgeDto
+
+func (e *EdgesOrBool) UnmarshalJSON(data []byte) error {
+	// Check for boolean
+	var b bool
+	if err := json.Unmarshal(data, &b); err == nil {
+		*e = nil
+		return nil
+	}
+	// Otherwise, try as array
+	var arr []pathwayEdgeDto
+	if err := json.Unmarshal(data, &arr); err == nil {
+		*e = arr
+		return nil
+	}
+	return fmt.Errorf("edges is neither bool nor array")
 }

@@ -98,7 +98,7 @@ func (client *client) GetPathway(ctx context.Context, pathwayID string) (*pathwa
 	values.Add("api-version", "1")
 	apiUrl.RawQuery = values.Encode()
 
-	pathway := pathwayDto{}
+	pathway := getPathwayDto{}
 	_, err := client.Api.Execute(ctx, nil, "GET", apiUrl.String(), nil, nil, []int{http.StatusOK}, &pathway)
 	if err != nil {
 		if strings.Contains(err.Error(), "PathwayNotFound") {
@@ -106,7 +106,16 @@ func (client *client) GetPathway(ctx context.Context, pathwayID string) (*pathwa
 		}
 		return nil, fmt.Errorf("failed to get pathway: %w", err)
 	}
-	return &pathway, nil
+
+	result := pathwayDto{
+		ID:          pathway.ID,
+		Name:        pathway.Name,
+		Description: pathway.Description,
+		Nodes:       pathway.Nodes,
+		Edges:       pathway.Edges,
+	}
+
+	return &result, nil
 }
 
 func (client *client) DeletePathway(ctx context.Context, pathwayID string) error {
