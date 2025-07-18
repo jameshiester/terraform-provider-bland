@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"regexp"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -254,6 +255,50 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 										"block_interruptions": schema.BoolAttribute{
 											MarkdownDescription: "Whether to block interruptions.",
 											Optional:            true,
+										},
+									},
+								},
+								"pathway_examples": schema.ListNestedAttribute{
+									MarkdownDescription: "Example conversations and chosen pathways for this node.",
+									Optional:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"chosen_pathway": schema.StringAttribute{
+												MarkdownDescription: "The chosen pathway for the example.",
+												Required:            true,
+											},
+											"conversation_history": schema.SingleNestedAttribute{
+												MarkdownDescription: "The conversation history for the example.",
+												Required:            true,
+												Attributes: map[string]schema.Attribute{
+													"basic_history": schema.StringAttribute{
+														MarkdownDescription: "Conversation history as a string.",
+														Optional:            true,
+														Validators: []validator.String{
+															stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("advanced_history")),
+														},
+													},
+													"advanced_history": schema.ListNestedAttribute{
+														MarkdownDescription: "Conversation history as a list of messages.",
+														Optional:            true,
+														Validators: []validator.List{
+															listvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("basic_history")),
+														},
+														NestedObject: schema.NestedAttributeObject{
+															Attributes: map[string]schema.Attribute{
+																"role": schema.StringAttribute{
+																	MarkdownDescription: "Role of the message (user or assistant).",
+																	Required:            true,
+																},
+																"content": schema.StringAttribute{
+																	MarkdownDescription: "Content of the message.",
+																	Required:            true,
+																},
+															},
+														},
+													},
+												},
+											},
 										},
 									},
 								},

@@ -86,6 +86,7 @@ type pathwayNodeDataDto struct {
 	KnowledgeBase    *string                           `json:"kb,omitempty"`
 	TransferNumber   *string                           `json:"transferNumber,omitempty"`
 	ModelOptions     *modelOptionDto                   `json:"modelOptions,omitempty"`
+	PathwayExamples  *[]pathwayExampleDto              `json:"pathway_examples,omitempty"`
 }
 
 type modelOptionDto struct {
@@ -153,4 +154,36 @@ func (e *EdgesOrBool) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 	return fmt.Errorf("edges is neither bool nor array")
+}
+
+// pathwayExampleDto supports both string and array of messages for Conversation History
+
+type pathwayExampleDto struct {
+	ChosenPathway       string                `json:"Chosen Pathway"`
+	ConversationHistory pathwayExampleHistory `json:"Conversation History"`
+}
+
+type pathwayExampleHistory struct {
+	BasicHistory    *string
+	AdvancedHistory *[]pathwayExampleMessageDto
+}
+
+type pathwayExampleMessageDto struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
+}
+
+// Custom unmarshaller for Conversation History
+func (h *pathwayExampleHistory) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err == nil {
+		h.BasicHistory = &s
+		return nil
+	}
+	var arr []pathwayExampleMessageDto
+	if err := json.Unmarshal(data, &arr); err == nil {
+		h.AdvancedHistory = &arr
+		return nil
+	}
+	return fmt.Errorf("conversation History is neither string nor array of messages")
 }
