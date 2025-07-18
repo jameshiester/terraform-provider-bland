@@ -100,6 +100,7 @@ Optional:
 - `kb` (String) Knowledge base for the node.
 - `method` (String) Method for the node.
 - `model_options` (Attributes) Model options for the node. (see [below for nested schema](#nestedatt--nodes--data--model_options))
+- `pathway_examples` (Attributes List) Example conversations and chosen pathways for this node. (see [below for nested schema](#nestedatt--nodes--data--pathway_examples))
 - `prompt` (String) Prompt for a knowledge base node.
 - `response_data` (Attributes List) Response data for the node. (see [below for nested schema](#nestedatt--nodes--data--response_data))
 - `response_pathways` (Attributes List) Response pathways for the node. (see [below for nested schema](#nestedatt--nodes--data--response_pathways))
@@ -130,6 +131,33 @@ Optional:
 - `interruption_threshold` (String) Interruption threshold for the model.
 - `skip_user_response` (Boolean) Whether to skip user response.
 - `temperature` (Number) Temperature setting for the model.
+
+
+<a id="nestedatt--nodes--data--pathway_examples"></a>
+### Nested Schema for `nodes.data.pathway_examples`
+
+Required:
+
+- `chosen_pathway` (String) The chosen pathway for the example.
+- `conversation_history` (Attributes) The conversation history for the example. (see [below for nested schema](#nestedatt--nodes--data--pathway_examples--conversation_history))
+
+<a id="nestedatt--nodes--data--pathway_examples--conversation_history"></a>
+### Nested Schema for `nodes.data.pathway_examples.conversation_history`
+
+Optional:
+
+- `advanced_history` (Attributes List) Conversation history as a list of messages. (see [below for nested schema](#nestedatt--nodes--data--pathway_examples--conversation_history--advanced_history))
+- `basic_history` (String) Conversation history as a string.
+
+<a id="nestedatt--nodes--data--pathway_examples--conversation_history--advanced_history"></a>
+### Nested Schema for `nodes.data.pathway_examples.conversation_history.advanced_history`
+
+Required:
+
+- `content` (String) Content of the message.
+- `role` (String) Role of the message (user or assistant).
+
+
 
 
 <a id="nestedatt--nodes--data--response_data"></a>

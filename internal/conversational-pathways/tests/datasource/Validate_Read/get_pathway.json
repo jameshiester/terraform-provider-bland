@@ -12,15 +12,15 @@
                 "pathway_examples": [
                     {
                         "Chosen Pathway": "The user has asked about something to do with rosters or rostering.",
-                        "Conversation History": { "basic_history": "i want to talk to the rostering team" }
+                        "Conversation History": "i want to talk to the rostering team"
                     },
                     {
                         "Chosen Pathway": "User responded",
-                        "Conversation History": { "advanced_history": [
+                        "Conversation History": [
                             {"role": "user", "content": "Hello?"},
                             {"role": "assistant", "content": "Hello, this is YLDP. How can I help you today?"},
                             {"role": "user", "content": "I broke a door in  my house"}
-                        ]}
+                        ]
                     }
                 ]
             },
