@@ -173,7 +173,7 @@ type pathwayExampleMessageDto struct {
 	Content string `json:"content"`
 }
 
-// Custom unmarshaller for Conversation History
+// Custom unmarshaller for Conversation History.
 func (h *pathwayExampleHistory) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err == nil {
