@@ -456,6 +456,15 @@ func (r *ConversationalPathwayResource) Read(ctx context.Context, req resource.R
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
+func findLatestUnpublishedVersion(versions []pathwayVersionDto) (versionNumber, revisionNumber int, found bool) {
+	for _, v := range versions {
+		if v.IsPrevPublished == nil || !*v.IsPrevPublished {
+			return v.VersionNumber, v.RevisionNumber, true
+		}
+	}
+	return 0, 0, false
+}
+
 func (r *ConversationalPathwayResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	ctx, exitContext := utils.EnterRequestContext(ctx, r.TypeInfo, req)
 	defer exitContext()
@@ -471,11 +480,25 @@ func (r *ConversationalPathwayResource) Update(ctx context.Context, req resource
 	}
 	dto := ConvertFromPathwayModel(plan)
 
+	versions, err := r.PathwayClient.GetPathwayVersions(ctx, plan.ID.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError(fmt.Sprintf("Client error when finding latest version %s", r.FullTypeName()), err.Error())
+		return
+	}
+	latestVersion, latestRevision, found := findLatestUnpublishedVersion(versions)
+	if found {
+		resp.Diagnostics.AddError(fmt.Sprintf("Client error when finding latest version %s", r.FullTypeName()), "Could not find latest version")
+		return
+	}
+
 	updateParams := updatePathwayDto{
+		ID:          plan.ID.ValueString(),
 		Name:        dto.Name,
 		Description: dto.Description,
 		Nodes:       dto.Nodes,
 		Edges:       dto.Edges,
+		Version:     latestVersion,
+		Revision:    latestRevision,
 	}
 
 	updateReponse, err := r.PathwayClient.UpdatePathway(ctx, plan.ID.ValueString(), updateParams)

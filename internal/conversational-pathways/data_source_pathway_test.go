@@ -16,7 +16,7 @@ func TestUnitConversationalPathwayDataSource_Validate_Read(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	httpmock.RegisterResponder("GET", `https://api.bland.ai/v1/pathway/123?api-version=1`,
+	httpmock.RegisterResponder("GET", `https://api.bland.ai/v1/pathway/123`,
 		func(req *http.Request) (*http.Response, error) {
 			return httpmock.NewStringResponse(http.StatusOK, httpmock.File("./tests/datasource/Validate_Read/get_pathway.json").String()), nil
 		})

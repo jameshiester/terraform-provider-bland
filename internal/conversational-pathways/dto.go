@@ -16,10 +16,14 @@ type createPathwayDto struct {
 }
 
 type updatePathwayDto struct {
-	Name        string           `json:"name"`
-	Description string           `json:"description"`
-	Nodes       []pathwayNodeDto `json:"nodes"`
-	Edges       []pathwayEdgeDto `json:"edges"`
+	ID              string           `json:"id"`
+	Name            string           `json:"name"`
+	Description     string           `json:"description"`
+	Nodes           []pathwayNodeDto `json:"nodes"`
+	Edges           []pathwayEdgeDto `json:"edges"`
+	Revision        int              `json:"revision_number"`
+	Version         int              `json:"version_number"`
+	PostCallActions []string         `json:"post_call_actions"`
 }
 
 type pathwayDto struct {
@@ -111,9 +115,24 @@ type createPathwayResponseDto struct {
 	Data   *createPathwayResponseData `json:"data"`
 }
 
+type updatePathwayDataDto struct {
+	Message string `json:"message"`
+}
+
 type updatePathwayResponseDto struct {
-	Errors *[]errorDto       `json:"errors,omitempty"`
-	Data   *updatePathwayDto `json:"pathway_data"`
+	Errors *[]errorDto           `json:"errors,omitempty"`
+	Data   *updatePathwayDataDto `json:"pathway_data"`
+}
+
+type pathwayVersionDto struct {
+	VersionNumber       int    `json:"version_number"`
+	RevisionNumber      int    `json:"revision_number"`
+	CreatedAt           string `json:"created_at"`
+	Name                string `json:"name"`
+	SourceVersionNumber *int   `json:"source_version_number"`
+	IsStaging           *bool  `json:"is_staging,omitempty"`
+	IsProduction        *bool  `json:"is_production,omitempty"`
+	IsPrevPublished     *bool  `json:"is_prev_published,omitempty"`
 }
 
 // Custom type for nodes that can be a boolean or an array
