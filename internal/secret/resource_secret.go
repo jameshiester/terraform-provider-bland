@@ -156,6 +156,7 @@ func (r *SecretResource) Read(ctx context.Context, req resource.ReadRequest, res
 		return
 	}
 	model := ConvertFromSecretDto(*read)
+	model.Value = state.Value
 	resp.State.Set(ctx, model)
 }
 
