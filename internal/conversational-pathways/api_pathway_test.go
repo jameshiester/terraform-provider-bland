@@ -55,12 +55,12 @@ func TestFindLatestUnpublishedVersion(t *testing.T) {
 			expectV: 3, expectR: 1, found: true,
 		},
 		{
-			name: "nil isPrevPublished treated as published",
+			name: "nil isPrevPublished treated as not published",
 			input: []pathwayVersionDto{
 				{VersionNumber: 2, RevisionNumber: 1, IsPrevPublished: nil},
 				{VersionNumber: 1, RevisionNumber: 2, IsPrevPublished: boolPtr(false)},
 			},
-			expectV: 1, expectR: 2, found: true,
+			expectV: 2, expectR: 1, found: true,
 		},
 	}
 
