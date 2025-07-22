@@ -26,6 +26,14 @@ type createSecretDto struct {
 	Config *secretConfigDto `json:"config,omitempty"`
 }
 
+type readSecretDataDto struct {
+	Secret secretDto `json:"secret"`
+}
+
+type readSecretDto struct {
+	Data readSecretDataDto `json:"data"`
+}
+
 type updateSecretDto struct {
 	Name   string           `json:"name"`
 	Value  *string          `json:"value,omitempty"`

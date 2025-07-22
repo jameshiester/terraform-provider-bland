@@ -46,12 +46,12 @@ func (c *SecretClient) ReadSecret(ctx context.Context, id string) (*secretDto, e
 		Host:   c.Api.Config.BaseURL,
 		Path:   fmt.Sprintf("/v1/secrets/%s", id),
 	}
-	var secret secretDto
+	var secret readSecretDto
 	_, err := c.Api.Execute(ctx, nil, "GET", apiUrl.String(), nil, nil, []int{http.StatusOK}, &secret)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read secret: %w", err)
 	}
-	return &secret, nil
+	return &secret.Data.Secret, nil
 }
 
 func (c *SecretClient) UpdateSecret(ctx context.Context, secretID string, secret updateSecretDto) (*secretDto, error) {
@@ -60,12 +60,12 @@ func (c *SecretClient) UpdateSecret(ctx context.Context, secretID string, secret
 		Host:   c.Api.Config.BaseURL,
 		Path:   fmt.Sprintf("/v1/secrets/%s", secretID),
 	}
-	var updated secretDto
-	_, err := c.Api.Execute(ctx, nil, "POST", apiUrl.String(), nil, secret, []int{http.StatusOK}, &updated)
+	var updated readSecretDto
+	_, err := c.Api.Execute(ctx, nil, "PATCH", apiUrl.String(), nil, secret, []int{http.StatusOK}, &updated)
 	if err != nil {
 		return nil, fmt.Errorf("failed to update secret: %w", err)
 	}
-	return &updated, nil
+	return &updated.Data.Secret, nil
 }
 
 func (c *SecretClient) DeleteSecret(ctx context.Context, id string) error {
