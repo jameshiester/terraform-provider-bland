@@ -42,17 +42,17 @@ func TestUnitSecretResource_Validate_Create(t *testing.T) {
 			return httpmock.NewStringResponse(http.StatusOK, httpmock.File("./tests/resource/secret/Validate_Create/post_secret.json").String()), nil
 		})
 
-	httpmock.RegisterResponder("PATCH", "https://api.bland.ai/v1/secrets/123",
+	httpmock.RegisterResponder("PATCH", "https://api.bland.ai/v1/secrets/secret_123",
 		func(req *http.Request) (*http.Response, error) {
 			return httpmock.NewStringResponse(http.StatusOK, httpmock.File("./tests/resource/secret/Validate_Create/update_secret.json").String()), nil
 		})
 
-	httpmock.RegisterResponder("DELETE", "https://api.bland.ai/v1/secrets/123",
+	httpmock.RegisterResponder("DELETE", "https://api.bland.ai/v1/secrets/secret_123",
 		func(req *http.Request) (*http.Response, error) {
 			return httpmock.NewStringResponse(http.StatusOK, ""), nil
 		})
 
-	httpmock.RegisterResponder("GET", `https://api.bland.ai/v1/secrets/123`,
+	httpmock.RegisterResponder("GET", `https://api.bland.ai/v1/secrets/secret_123`,
 		func(req *http.Request) (*http.Response, error) {
 			return httpmock.NewStringResponse(http.StatusOK, httpmock.File("./tests/resource/secret/Validate_Create/get_secret.json").String()), nil
 		})
