@@ -115,7 +115,7 @@ func TestGetPathwayVersions_HTTPMock(t *testing.T) {
 		},
 	)
 
-	client := client{Api: &api.Client{Config: &config.ProviderConfig{BaseURL: "api.bland.ai"}}}
+	client := client{Api: &api.Client{Config: &config.ProviderConfig{BaseURL: "api.bland.ai", APIKey: "123"}}}
 	ctx := context.Background()
 	versions, err := client.GetPathwayVersions(ctx, pathwayID)
 	if err != nil {
