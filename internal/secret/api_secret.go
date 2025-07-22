@@ -65,6 +65,8 @@ func (c *SecretClient) UpdateSecret(ctx context.Context, secretID string, secret
 	if err != nil {
 		return nil, fmt.Errorf("failed to update secret: %w", err)
 	}
+	// the existing value is not returned
+	updated.Data.Secret.Value = secret.Value
 	return &updated.Data.Secret, nil
 }
 
