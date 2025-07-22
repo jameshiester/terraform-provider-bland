@@ -165,6 +165,10 @@ func (r *SecretResource) Update(ctx context.Context, req resource.UpdateRequest,
 		resp.Diagnostics.AddError("Error parsing secret", err.Error())
 		return
 	}
+	if plan.ID.ValueString() == "" {
+		resp.Diagnostics.AddError("Error parsing secret ID", "failed to parse Secret ID")
+		return
+	}
 	updateDto := updateSecretDto{
 		Name:   dto.Name,
 		Config: dto.Config,
