@@ -28,7 +28,7 @@ func (c *SecretClient) CreateSecret(ctx context.Context, secret createSecretDto)
 		Path:   "/v1/secrets",
 	}
 	var created createSecretResponseDto
-	_, err := c.Api.Execute(ctx, nil, "POST", apiUrl.String(), nil, secret, []int{http.StatusCreated}, &created)
+	_, err := c.Api.Execute(ctx, nil, "POST", apiUrl.String(), nil, secret, []int{http.StatusOK}, &created)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create secret: %w", err)
 	}
