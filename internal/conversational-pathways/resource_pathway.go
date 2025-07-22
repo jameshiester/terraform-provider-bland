@@ -486,7 +486,7 @@ func (r *ConversationalPathwayResource) Update(ctx context.Context, req resource
 		return
 	}
 	latestVersion, latestRevision, found := FindLatestUnpublishedVersion(versions)
-	if found {
+	if !found {
 		resp.Diagnostics.AddError(fmt.Sprintf("Client error when finding latest version %s", r.FullTypeName()), "Could not find latest version")
 		return
 	}
