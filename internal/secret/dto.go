@@ -36,13 +36,13 @@ type readSecretDto struct {
 
 type updateSecretDto struct {
 	Name   string           `json:"name"`
-	Value  *string          `json:"value,omitempty"`
+	Value  *string          `json:"secret,omitempty"`
 	Config *secretConfigDto `json:"config,omitempty"`
 }
 
 type secretDto struct {
 	ID     string           `json:"id"`
 	Name   string           `json:"name"`
-	Value  *string          `json:"value,omitempty"`
+	Value  *string          `json:"secret,omitempty"`
 	Config *secretConfigDto `json:"config,omitempty"`
 }
