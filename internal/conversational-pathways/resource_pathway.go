@@ -456,7 +456,7 @@ func (r *ConversationalPathwayResource) Read(ctx context.Context, req resource.R
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
-func findLatestUnpublishedVersion(versions []pathwayVersionDto) (versionNumber, revisionNumber int, found bool) {
+func FindLatestUnpublishedVersion(versions []pathwayVersionDto) (versionNumber, revisionNumber int, found bool) {
 	for _, v := range versions {
 		if v.IsPrevPublished == nil || !*v.IsPrevPublished {
 			return v.VersionNumber, v.RevisionNumber, true
@@ -482,10 +482,10 @@ func (r *ConversationalPathwayResource) Update(ctx context.Context, req resource
 
 	versions, err := r.PathwayClient.GetPathwayVersions(ctx, plan.ID.ValueString())
 	if err != nil {
-		resp.Diagnostics.AddError(fmt.Sprintf("Client error when finding latest version %s", r.FullTypeName()), err.Error())
+		resp.Diagnostics.AddError(fmt.Sprintf("Client error fetching latest version %s", r.FullTypeName()), err.Error())
 		return
 	}
-	latestVersion, latestRevision, found := findLatestUnpublishedVersion(versions)
+	latestVersion, latestRevision, found := FindLatestUnpublishedVersion(versions)
 	if found {
 		resp.Diagnostics.AddError(fmt.Sprintf("Client error when finding latest version %s", r.FullTypeName()), "Could not find latest version")
 		return
