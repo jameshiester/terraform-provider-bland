@@ -13,6 +13,7 @@ import (
 	pathways "github.com/jameshiester/terraform-provider-bland/internal/conversational-pathways"
 	"github.com/jameshiester/terraform-provider-bland/internal/mocks"
 	"github.com/jameshiester/terraform-provider-bland/internal/provider"
+	"github.com/jameshiester/terraform-provider-bland/internal/secret"
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/require"
 )
@@ -33,6 +34,7 @@ func TestUnitBlandProviderHasChildDataSources_Basic(t *testing.T) {
 func TestUnitBlandProviderHasChildResources_Basic(t *testing.T) {
 	expectedResources := []resource.Resource{
 		pathways.NewConversationalPathwayResource(),
+		secret.NewSecretResource(),
 	}
 	providerInstance := provider.NewBlandProvider(context.Background())()
 	resources := providerInstance.Resources(context.Background())

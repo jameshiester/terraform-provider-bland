@@ -16,6 +16,7 @@ import (
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
 	"github.com/jameshiester/terraform-provider-bland/internal/config"
 	pathways "github.com/jameshiester/terraform-provider-bland/internal/conversational-pathways"
+	"github.com/jameshiester/terraform-provider-bland/internal/secret"
 )
 
 // Ensure BlandProvider satisfies various provider interfaces.
@@ -97,6 +98,7 @@ func (p *BlandProvider) Configure(ctx context.Context, req provider.ConfigureReq
 func (p *BlandProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		func() resource.Resource { return pathways.NewConversationalPathwayResource() },
+		func() resource.Resource { return secret.NewSecretResource() },
 	}
 }
 
