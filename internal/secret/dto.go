@@ -22,7 +22,7 @@ type secretConfigDto struct {
 
 type createSecretDto struct {
 	Name   string           `json:"name"`
-	Value  *string          `json:"value,omitempty"`
+	Value  *string          `json:"secret,omitempty"`
 	Config *secretConfigDto `json:"config,omitempty"`
 }
 
