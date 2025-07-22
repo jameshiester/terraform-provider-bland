@@ -10,6 +10,8 @@ import (
 	"net/url"
 	"strings"
 
+	"sort"
+
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
 	"github.com/jameshiester/terraform-provider-bland/internal/constants"
 )
@@ -30,9 +32,6 @@ func (client *client) CreatePathway(ctx context.Context, pathwayToCreate createP
 		Host:   client.Api.GetConfig().BaseURL,
 		Path:   "/v1/pathway/create",
 	}
-	values := url.Values{}
-	values.Add("api-version", "1")
-	apiUrl.RawQuery = values.Encode()
 
 	response := createPathwayResponseDto{}
 	_, err := client.Api.Execute(ctx, nil, "POST", apiUrl.String(), nil, pathwayToCreate, []int{http.StatusCreated}, &response)
@@ -62,6 +61,29 @@ func (client *client) CreatePathway(ctx context.Context, pathwayToCreate createP
 	return &pathway, nil
 }
 
+func (client *client) GetPathwayVersions(ctx context.Context, pathwayID string) ([]pathwayVersionDto, error) {
+	apiUrl := &url.URL{
+		Scheme: constants.HTTPS,
+		Host:   client.Api.Config.BaseURL,
+		Path:   fmt.Sprintf("/v1/pathway/%s/versions", pathwayID),
+	}
+
+	var versions []pathwayVersionDto
+	_, err := client.Api.Execute(ctx, nil, "GET", apiUrl.String(), nil, nil, []int{http.StatusOK}, &versions)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get pathway versions: %w", err)
+	}
+
+	sort.Slice(versions, func(i, j int) bool {
+		if versions[i].VersionNumber != versions[j].VersionNumber {
+			return versions[i].VersionNumber > versions[j].VersionNumber
+		}
+		return versions[i].RevisionNumber > versions[j].RevisionNumber
+	})
+
+	return versions, nil
+}
+
 func (client *client) UpdatePathway(ctx context.Context, pathwayID string, pathwayToUpdate updatePathwayDto) (*pathwayDto, error) {
 	_, err := client.GetPathway(ctx, pathwayID)
 	if err != nil {
@@ -71,11 +93,8 @@ func (client *client) UpdatePathway(ctx context.Context, pathwayID string, pathw
 	apiUrl := &url.URL{
 		Scheme: constants.HTTPS,
 		Host:   client.Api.Config.BaseURL,
-		Path:   fmt.Sprintf("/v1/pathway/%s", pathwayID),
+		Path:   "/convo_pathway/update",
 	}
-	values := url.Values{}
-	values.Add("api-version", "1")
-	apiUrl.RawQuery = values.Encode()
 
 	updateResponse := updatePathwayResponseDto{}
 	_, err = client.Api.Execute(ctx, nil, "POST", apiUrl.String(), nil, pathwayToUpdate, []int{http.StatusOK}, &updateResponse)
@@ -84,10 +103,10 @@ func (client *client) UpdatePathway(ctx context.Context, pathwayID string, pathw
 	}
 	updatedPathway := pathwayDto{}
 	updatedPathway.ID = pathwayID
-	updatedPathway.Name = updateResponse.Data.Name
-	updatedPathway.Description = updateResponse.Data.Description
-	updatedPathway.Nodes = updateResponse.Data.Nodes
-	updatedPathway.Edges = updateResponse.Data.Edges
+	updatedPathway.Name = pathwayToUpdate.Name
+	updatedPathway.Description = pathwayToUpdate.Description
+	updatedPathway.Nodes = pathwayToUpdate.Nodes
+	updatedPathway.Edges = pathwayToUpdate.Edges
 	return &updatedPathway, nil
 }
 
@@ -97,9 +116,6 @@ func (client *client) GetPathway(ctx context.Context, pathwayID string) (*pathwa
 		Host:   client.Api.Config.BaseURL,
 		Path:   fmt.Sprintf("/v1/pathway/%s", pathwayID),
 	}
-	values := url.Values{}
-	values.Add("api-version", "1")
-	apiUrl.RawQuery = values.Encode()
 
 	pathway := getPathwayDto{}
 	_, err := client.Api.Execute(ctx, nil, "GET", apiUrl.String(), nil, nil, []int{http.StatusOK}, &pathway)
@@ -127,9 +143,6 @@ func (client *client) DeletePathway(ctx context.Context, pathwayID string) error
 		Host:   client.Api.Config.BaseURL,
 		Path:   fmt.Sprintf("/v1/pathway/%s", pathwayID),
 	}
-	values := url.Values{}
-	values.Add("api-version", "1")
-	apiUrl.RawQuery = values.Encode()
 
 	_, err := client.Api.Execute(ctx, nil, "DELETE", apiUrl.String(), nil, nil, []int{http.StatusOK}, nil)
 	if err != nil {

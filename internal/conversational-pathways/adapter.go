@@ -129,7 +129,34 @@ func ConvertFromPathwayNodeDataDto(data *pathwayNodeDataDto) (*ConversationalPat
 			model.ResponsePathways = append(model.ResponsePathways, *responsePathway)
 		}
 	}
+	if data.PathwayExamples != nil {
+		for _, ex := range *data.PathwayExamples {
+			model.PathwayExamples = append(model.PathwayExamples, ConvertFromPathwayExampleDto(ex))
+		}
+	}
 	return &model, nil
+}
+
+func ConvertFromPathwayExampleDto(dto pathwayExampleDto) ConversationalPathwayExampleModel {
+	model := ConversationalPathwayExampleModel{
+		ChosenPathway: types.StringValue(dto.ChosenPathway),
+	}
+	if dto.ConversationHistory.BasicHistory != nil {
+		model.ConversationHistory.BasicHistory = types.StringValue(*dto.ConversationHistory.BasicHistory)
+	}
+	if dto.ConversationHistory.AdvancedHistory != nil {
+		for _, msg := range *dto.ConversationHistory.AdvancedHistory {
+			model.ConversationHistory.AdvancedHistory = append(model.ConversationHistory.AdvancedHistory, ConvertFromPathwayExampleMessageDto(msg))
+		}
+	}
+	return model
+}
+
+func ConvertFromPathwayExampleMessageDto(dto pathwayExampleMessageDto) ConversationalPathwayExampleMessageModel {
+	return ConversationalPathwayExampleMessageModel{
+		Role:    types.StringValue(dto.Role),
+		Content: types.StringValue(dto.Content),
+	}
 }
 
 func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) *pathwayNodeDataDto {
@@ -196,6 +223,17 @@ func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) *p
 		modelOptions = nil
 	}
 
+	var pathwayExamples *[]pathwayExampleDto
+	if len(data.PathwayExamples) > 0 {
+		tmp := make([]pathwayExampleDto, 0, len(data.PathwayExamples))
+		for _, ex := range data.PathwayExamples {
+			tmp = append(tmp, ConvertFromPathwayExampleModel(ex))
+		}
+		pathwayExamples = &tmp
+	} else {
+		pathwayExamples = nil
+	}
+
 	return &pathwayNodeDataDto{
 		Name:             data.Name.ValueString(),
 		GlobalPrompt:     data.GlobalPrompt.ValueStringPointer(),
@@ -213,6 +251,32 @@ func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) *p
 		ResponseData:     responseData,
 		ResponsePathways: responsePathways,
 		ModelOptions:     modelOptions,
+		PathwayExamples:  pathwayExamples,
+	}
+}
+
+func ConvertFromPathwayExampleModel(model ConversationalPathwayExampleModel) pathwayExampleDto {
+	dto := pathwayExampleDto{
+		ChosenPathway: model.ChosenPathway.ValueString(),
+	}
+	if !model.ConversationHistory.BasicHistory.IsNull() && !model.ConversationHistory.BasicHistory.IsUnknown() {
+		str := model.ConversationHistory.BasicHistory.ValueString()
+		dto.ConversationHistory.BasicHistory = &str
+	}
+	if len(model.ConversationHistory.AdvancedHistory) > 0 {
+		arr := make([]pathwayExampleMessageDto, 0, len(model.ConversationHistory.AdvancedHistory))
+		for _, msg := range model.ConversationHistory.AdvancedHistory {
+			arr = append(arr, ConvertFromPathwayExampleMessageModel(msg))
+		}
+		dto.ConversationHistory.AdvancedHistory = &arr
+	}
+	return dto
+}
+
+func ConvertFromPathwayExampleMessageModel(model ConversationalPathwayExampleMessageModel) pathwayExampleMessageDto {
+	return pathwayExampleMessageDto{
+		Role:    model.Role.ValueString(),
+		Content: model.Content.ValueString(),
 	}
 }
 

@@ -37,24 +37,29 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	httpmock.RegisterResponder("POST", "https://api.bland.ai/v1/pathway/create?api-version=1",
+	httpmock.RegisterResponder("POST", "https://api.bland.ai/v1/pathway/create",
 		func(req *http.Request) (*http.Response, error) {
 			return httpmock.NewStringResponse(http.StatusCreated, httpmock.File("./tests/resource/pathway/Validate_Create/post_pathway.json").String()), nil
 		})
 
-	httpmock.RegisterResponder("POST", "https://api.bland.ai/v1/pathway/123?api-version=1",
+	httpmock.RegisterResponder("POST", "https://api.bland.ai/v1/pathway/123",
 		func(req *http.Request) (*http.Response, error) {
 			return httpmock.NewStringResponse(http.StatusOK, httpmock.File("./tests/resource/pathway/Validate_Create/update_pathway.json").String()), nil
 		})
 
-	httpmock.RegisterResponder("DELETE", "https://api.bland.ai/v1/pathway/123?api-version=1",
+	httpmock.RegisterResponder("DELETE", "https://api.bland.ai/v1/pathway/123",
 		func(req *http.Request) (*http.Response, error) {
 			return httpmock.NewStringResponse(http.StatusOK, ""), nil
 		})
 
-	httpmock.RegisterResponder("GET", `https://api.bland.ai/v1/pathway/123?api-version=1`,
+	httpmock.RegisterResponder("GET", `https://api.bland.ai/v1/pathway/123`,
 		func(req *http.Request) (*http.Response, error) {
 			return httpmock.NewStringResponse(http.StatusOK, httpmock.File("./tests/resource/pathway/Validate_Create/get_pathway.json").String()), nil
+		})
+
+	httpmock.RegisterResponder("GET", `https://api.bland.ai/v1/pathway/123/versions`,
+		func(req *http.Request) (*http.Response, error) {
+			return httpmock.NewStringResponse(http.StatusOK, httpmock.File("./tests/resource/pathway/Validate_Create/get_pathway_versions.json").String()), nil
 		})
 
 	resource.Test(t, resource.TestCase{

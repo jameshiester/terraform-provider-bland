@@ -16,10 +16,14 @@ type createPathwayDto struct {
 }
 
 type updatePathwayDto struct {
-	Name        string           `json:"name"`
-	Description string           `json:"description"`
-	Nodes       []pathwayNodeDto `json:"nodes"`
-	Edges       []pathwayEdgeDto `json:"edges"`
+	ID              string           `json:"id"`
+	Name            string           `json:"name"`
+	Description     string           `json:"description"`
+	Nodes           []pathwayNodeDto `json:"nodes"`
+	Edges           []pathwayEdgeDto `json:"edges"`
+	Revision        int              `json:"revision_number"`
+	Version         int              `json:"version_number"`
+	PostCallActions []string         `json:"post_call_actions"`
 }
 
 type pathwayDto struct {
@@ -86,6 +90,7 @@ type pathwayNodeDataDto struct {
 	KnowledgeBase    *string                           `json:"kb,omitempty"`
 	TransferNumber   *string                           `json:"transferNumber,omitempty"`
 	ModelOptions     *modelOptionDto                   `json:"modelOptions,omitempty"`
+	PathwayExamples  *[]pathwayExampleDto              `json:"pathway_examples,omitempty"`
 }
 
 type modelOptionDto struct {
@@ -110,9 +115,24 @@ type createPathwayResponseDto struct {
 	Data   *createPathwayResponseData `json:"data"`
 }
 
+type updatePathwayDataDto struct {
+	Message string `json:"message"`
+}
+
 type updatePathwayResponseDto struct {
-	Errors *[]errorDto       `json:"errors,omitempty"`
-	Data   *updatePathwayDto `json:"pathway_data"`
+	Errors *[]errorDto           `json:"errors,omitempty"`
+	Data   *updatePathwayDataDto `json:"pathway_data"`
+}
+
+type pathwayVersionDto struct {
+	VersionNumber       int    `json:"version_number"`
+	RevisionNumber      int    `json:"revision_number"`
+	CreatedAt           string `json:"created_at"`
+	Name                string `json:"name"`
+	SourceVersionNumber *int   `json:"source_version_number"`
+	IsStaging           *bool  `json:"is_staging,omitempty"`
+	IsProduction        *bool  `json:"is_production,omitempty"`
+	IsPrevPublished     *bool  `json:"is_prev_published,omitempty"`
 }
 
 // Custom type for nodes that can be a boolean or an array
@@ -153,4 +173,36 @@ func (e *EdgesOrBool) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 	return fmt.Errorf("edges is neither bool nor array")
+}
+
+// pathwayExampleDto supports both string and array of messages for Conversation History
+
+type pathwayExampleDto struct {
+	ChosenPathway       string                `json:"Chosen Pathway"`
+	ConversationHistory pathwayExampleHistory `json:"Conversation History"`
+}
+
+type pathwayExampleHistory struct {
+	BasicHistory    *string
+	AdvancedHistory *[]pathwayExampleMessageDto
+}
+
+type pathwayExampleMessageDto struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
+}
+
+// Custom unmarshaller for Conversation History.
+func (h *pathwayExampleHistory) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err == nil {
+		h.BasicHistory = &s
+		return nil
+	}
+	var arr []pathwayExampleMessageDto
+	if err := json.Unmarshal(data, &arr); err == nil {
+		h.AdvancedHistory = &arr
+		return nil
+	}
+	return fmt.Errorf("conversation History is neither string nor array of messages")
 }

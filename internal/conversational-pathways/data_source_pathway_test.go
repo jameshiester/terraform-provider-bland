@@ -16,7 +16,7 @@ func TestUnitConversationalPathwayDataSource_Validate_Read(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	httpmock.RegisterResponder("GET", `https://api.bland.ai/v1/pathway/123?api-version=1`,
+	httpmock.RegisterResponder("GET", `https://api.bland.ai/v1/pathway/123`,
 		func(req *http.Request) (*http.Response, error) {
 			return httpmock.NewStringResponse(http.StatusOK, httpmock.File("./tests/datasource/Validate_Read/get_pathway.json").String()), nil
 		})
@@ -41,6 +41,17 @@ func TestUnitConversationalPathwayDataSource_Validate_Read(t *testing.T) {
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.name", "Start"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.text", "Hey there, how are you doing today?"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.is_start", "true"),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.pathway_examples.#", "2"),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.pathway_examples.0.chosen_pathway", "The user has asked about something to do with rosters or rostering."),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.pathway_examples.0.conversation_history.basic_history", "i want to talk to the rostering team"),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.pathway_examples.1.chosen_pathway", "User responded"),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.pathway_examples.1.conversation_history.advanced_history.#", "3"),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.pathway_examples.1.conversation_history.advanced_history.0.role", "user"),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.pathway_examples.1.conversation_history.advanced_history.0.content", "Hello?"),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.pathway_examples.1.conversation_history.advanced_history.1.role", "assistant"),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.pathway_examples.1.conversation_history.advanced_history.1.content", "Hello, this is YLDP. How can I help you today?"),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.pathway_examples.1.conversation_history.advanced_history.2.role", "user"),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.pathway_examples.1.conversation_history.advanced_history.2.content", "I broke a door in  my house"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.1.id", "2"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.1.type", "Default"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.1.data.name", "Edge 2"),

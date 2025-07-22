@@ -7,8 +7,12 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
@@ -221,6 +225,50 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 										"block_interruptions": schema.BoolAttribute{
 											MarkdownDescription: "Whether to block interruptions.",
 											Computed:            true,
+										},
+									},
+								},
+								"pathway_examples": schema.ListNestedAttribute{
+									MarkdownDescription: "Example conversations and chosen pathways for this node.",
+									Computed:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"chosen_pathway": schema.StringAttribute{
+												MarkdownDescription: "The chosen pathway for the example.",
+												Computed:            true,
+											},
+											"conversation_history": schema.SingleNestedAttribute{
+												MarkdownDescription: "The conversation history for the example.",
+												Computed:            true,
+												Attributes: map[string]schema.Attribute{
+													"basic_history": schema.StringAttribute{
+														MarkdownDescription: "Conversation history as a string.",
+														Computed:            true,
+														Validators: []validator.String{
+															stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("advanced_history")),
+														},
+													},
+													"advanced_history": schema.ListNestedAttribute{
+														MarkdownDescription: "Conversation history as a list of messages.",
+														Computed:            true,
+														Validators: []validator.List{
+															listvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("basic_history")),
+														},
+														NestedObject: schema.NestedAttributeObject{
+															Attributes: map[string]schema.Attribute{
+																"role": schema.StringAttribute{
+																	MarkdownDescription: "Role of the message (user or assistant).",
+																	Computed:            true,
+																},
+																"content": schema.StringAttribute{
+																	MarkdownDescription: "Content of the message.",
+																	Computed:            true,
+																},
+															},
+														},
+													},
+												},
+											},
 										},
 									},
 								},

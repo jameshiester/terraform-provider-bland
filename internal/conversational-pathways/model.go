@@ -75,6 +75,22 @@ type ConversationalPathwayNodeDataModel struct {
 	KnowledgeBase    types.String                                        `tfsdk:"kb"`
 	TransferNumber   types.String                                        `tfsdk:"transfer_number"`
 	ModelOptions     *ConversationalPathwayNodeDataModelOptionModel      `tfsdk:"model_options"`
+	PathwayExamples  []ConversationalPathwayExampleModel                 `tfsdk:"pathway_examples"`
+}
+
+type ConversationalPathwayExampleModel struct {
+	ChosenPathway       types.String                             `tfsdk:"chosen_pathway"`
+	ConversationHistory ConversationalPathwayExampleHistoryModel `tfsdk:"conversation_history"`
+}
+
+type ConversationalPathwayExampleHistoryModel struct {
+	BasicHistory    types.String                               `tfsdk:"basic_history"`
+	AdvancedHistory []ConversationalPathwayExampleMessageModel `tfsdk:"advanced_history"`
+}
+
+type ConversationalPathwayExampleMessageModel struct {
+	Role    types.String `tfsdk:"role"`
+	Content types.String `tfsdk:"content"`
 }
 
 // ConversationalPathwayDataSourceModel describes the data source data model.
