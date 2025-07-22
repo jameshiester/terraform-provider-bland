@@ -5,12 +5,6 @@ import (
 	"testing"
 )
 
-type testVersion struct {
-	versionNumber   int
-	revisionNumber  int
-	isPrevPublished *bool
-}
-
 func boolPtr(b bool) *bool { return &b }
 
 func TestFindLatestUnpublishedVersion(t *testing.T) {
