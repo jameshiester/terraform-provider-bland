@@ -9,6 +9,8 @@
                 "text": "Hey there, how are you doing today?",
                 "isStart": true,
                 "isHighlighted": false,
+                "kb": "test-kb",
+                "kbTool": "test-kb-tool",
                 "pathway_examples": [
                     {
                         "Chosen Pathway": "The user has asked about something to do with rosters or rostering.",

@@ -92,6 +92,7 @@ func ConvertFromPathwayNodeDataDto(data *pathwayNodeDataDto) (*ConversationalPat
 		URL:            types.StringPointerValue(data.URL),
 		Condition:      types.StringPointerValue(data.Condition),
 		KnowledgeBase:  types.StringPointerValue(data.KnowledgeBase),
+		KbTool:         types.StringPointerValue(data.KbTool),
 		TransferNumber: types.StringPointerValue(data.TransferNumber),
 	}
 
@@ -246,6 +247,7 @@ func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) *p
 		GlobalLabel:      data.GlobalLabel.ValueStringPointer(),
 		Condition:        data.Condition.ValueStringPointer(),
 		KnowledgeBase:    data.KnowledgeBase.ValueStringPointer(),
+		KbTool:           data.KbTool.ValueStringPointer(),
 		TransferNumber:   data.TransferNumber.ValueStringPointer(),
 		ExtractVars:      extractVars,
 		ResponseData:     responseData,

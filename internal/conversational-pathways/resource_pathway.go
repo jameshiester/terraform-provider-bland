@@ -149,6 +149,16 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 								"kb": schema.StringAttribute{
 									MarkdownDescription: "Knowledge base for the node.",
 									Optional:            true,
+									Validators: []validator.String{
+										stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("kb_tool")),
+									},
+								},
+								"kb_tool": schema.StringAttribute{
+									MarkdownDescription: "Knowledge base tool for the node.",
+									Optional:            true,
+									Validators: []validator.String{
+										stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("kb")),
+									},
 								},
 								"transfer_number": schema.StringAttribute{
 									MarkdownDescription: "Transfer number for the node.",

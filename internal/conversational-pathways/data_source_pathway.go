@@ -120,6 +120,10 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 									MarkdownDescription: "Knowledge base for the node.",
 									Computed:            true,
 								},
+								"kb_tool": schema.StringAttribute{
+									MarkdownDescription: "Knowledge base tool for the node.",
+									Computed:            true,
+								},
 								"transfer_number": schema.StringAttribute{
 									MarkdownDescription: "Transfer number for the node.",
 									Computed:            true,
