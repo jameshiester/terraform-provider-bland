@@ -48,7 +48,8 @@
             "id": "Edge1",
             "source": "1",
             "data": {
-                "label": "Edge Label"
+                "label": "Edge Label",
+                "alwaysPick": true
             },
             "target": "2",
             "type": "custom"

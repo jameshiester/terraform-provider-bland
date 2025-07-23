@@ -317,6 +317,10 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 									MarkdownDescription: "Description of the edge.",
 									Computed:            true,
 								},
+								"always_pick": schema.BoolAttribute{
+									MarkdownDescription: "Whether this edge should always be picked.",
+									Computed:            true,
+								},
 							},
 						},
 					},

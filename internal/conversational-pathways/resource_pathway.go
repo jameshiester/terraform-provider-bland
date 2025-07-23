@@ -355,6 +355,10 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 									MarkdownDescription: "Description of the edge.",
 									Optional:            true,
 								},
+								"always_pick": schema.BoolAttribute{
+									MarkdownDescription: "Whether this edge should always be picked.",
+									Optional:            true,
+								},
 							},
 						},
 					},

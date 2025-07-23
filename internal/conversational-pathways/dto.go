@@ -65,6 +65,7 @@ type pathwayEdgeDataDto struct {
 	Label         string  `json:"label"`
 	IsHighlighted bool    `json:"isHighlighted"`
 	Description   *string `json:"description,omitempty"`
+	AlwaysPick    *bool   `json:"alwaysPick,omitempty"`
 }
 
 type pathwayNodeDataResponseDataDto struct {

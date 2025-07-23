@@ -63,6 +63,7 @@ func TestUnitConversationalPathwayDataSource_Validate_Read(t *testing.T) {
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "edges.0.source", "1"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "edges.0.target", "2"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "edges.0.data.label", "Edge Label"),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "edges.0.data.always_pick", "true"),
 
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "global_config.global_prompt", "Example global prompt"),
 				),

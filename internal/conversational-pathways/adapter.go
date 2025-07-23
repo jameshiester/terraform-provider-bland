@@ -9,18 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-// ExtractVars      *[][]string                       `json:"extractVars,omitempty"`
-// GlobalLabel      *string                           `json:"globalLabel,omitempty"`
-// GlobalPrompt     *string                           `json:"global_prompt,omitempty"`
-// IsStart          *bool                             `json:"isStart,omitempty"`
-// Method           *string                           `json:"method,omitempty"`
-// Name             string                            `json:"name"`
-// Prompt           *string                           `json:"prompt,omitempty"`
-// ResponseData     *[]pathwayNodeDataResponseDataDto `json:"responseData,omitempty"`
-// ResponsePathways *[]interface{}                    `json:"responsePathways,omitempty"`
-// Text             *string                           `json:"text,omitempty"`
-// URL              *string                           `json:"url,omitempty"`
-
 func ConvertFromPathwayNodeDataExtractVars(vals []string) (ConversationalPathwayNodeDataExtractVariableModel, error) {
 	model := ConversationalPathwayNodeDataExtractVariableModel{}
 	if len(vals) != 3 {
@@ -318,6 +306,7 @@ func ConvertFromPathwayEdgeDto(edge pathwayEdgeDto) ConversationalPathwayEdgeMod
 			Label:         types.StringValue(edge.Data.Label),
 			IsHighlighted: types.BoolValue(edge.Data.IsHighlighted),
 			Description:   types.StringPointerValue(edge.Data.Description),
+			AlwaysPick:    types.BoolPointerValue(edge.Data.AlwaysPick),
 		},
 	}
 }
@@ -332,6 +321,7 @@ func ConvertFromPathwayEdgeModel(edge ConversationalPathwayEdgeModel) pathwayEdg
 			Label:         edge.Data.Label.ValueString(),
 			IsHighlighted: edge.Data.IsHighlighted.ValueBool(),
 			Description:   edge.Data.Description.ValueStringPointer(),
+			AlwaysPick:    edge.Data.AlwaysPick.ValueBoolPointer(),
 		},
 	}
 }
