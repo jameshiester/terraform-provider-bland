@@ -26,6 +26,7 @@ func TestKnowledgeBaseClient_CreateKnowledgeBase_WithFile(t *testing.T) {
 
 	providerConfig := &config.ProviderConfig{
 		BaseURL: "api.bland.ai",
+		APIKey:  "123",
 	}
 	apiClient := api.NewApiClientBase(providerConfig, api.NewAuthBase(providerConfig))
 	client := knowledgebase.NewKnowledgeBaseClient(apiClient)
@@ -63,6 +64,7 @@ func TestKnowledgeBaseClient_CreateKnowledgeBase_TextOnly(t *testing.T) {
 
 	providerConfig := &config.ProviderConfig{
 		BaseURL: "api.bland.ai",
+		APIKey:  "123",
 	}
 	apiClient := api.NewApiClientBase(providerConfig, api.NewAuthBase(providerConfig))
 	client := knowledgebase.NewKnowledgeBaseClient(apiClient)
@@ -106,6 +108,7 @@ func TestKnowledgeBaseClient_ReadKnowledgeBase(t *testing.T) {
 
 	providerConfig := &config.ProviderConfig{
 		BaseURL: "api.bland.ai",
+		APIKey:  "123",
 	}
 	apiClient := api.NewApiClientBase(providerConfig, api.NewAuthBase(providerConfig))
 	client := knowledgebase.NewKnowledgeBaseClient(apiClient)
@@ -148,6 +151,7 @@ func TestKnowledgeBaseClient_UpdateKnowledgeBase(t *testing.T) {
 
 	providerConfig := &config.ProviderConfig{
 		BaseURL: "api.bland.ai",
+		APIKey:  "123",
 	}
 	apiClient := api.NewApiClientBase(providerConfig, api.NewAuthBase(providerConfig))
 	client := knowledgebase.NewKnowledgeBaseClient(apiClient)
@@ -185,6 +189,7 @@ func TestKnowledgeBaseClient_DeleteKnowledgeBase(t *testing.T) {
 
 	providerConfig := &config.ProviderConfig{
 		BaseURL: "api.bland.ai",
+		APIKey:  "123",
 	}
 	apiClient := api.NewApiClientBase(providerConfig, api.NewAuthBase(providerConfig))
 	client := knowledgebase.NewKnowledgeBaseClient(apiClient)
