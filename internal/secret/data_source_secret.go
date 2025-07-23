@@ -58,6 +58,10 @@ func (d *SecretDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 				Sensitive:           true,
 			},
+			"static": schema.BoolAttribute{
+				Computed:            true,
+				MarkdownDescription: "Defines if secret is static or refreshes.",
+			},
 			"config": schema.SingleNestedAttribute{
 				MarkdownDescription: "Configuration for refreshable secret.",
 				Computed:            true,

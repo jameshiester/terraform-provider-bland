@@ -23,6 +23,7 @@ Data source to retrieve a specific secret by `id`.
 
 - `config` (Attributes) Configuration for refreshable secret. (see [below for nested schema](#nestedatt--config))
 - `name` (String) The name of the secret.
+- `static` (Boolean) Defines if secret is static or refreshes.
 - `value` (String, Sensitive) The value of the secret.
 
 <a id="nestedatt--config"></a>
