@@ -73,6 +73,7 @@ type ConversationalPathwayNodeDataModel struct {
 	URL              types.String                                        `tfsdk:"url"`
 	Condition        types.String                                        `tfsdk:"condition"`
 	KnowledgeBase    types.String                                        `tfsdk:"kb"`
+	KbTool           types.String                                        `tfsdk:"kb_tool"`
 	TransferNumber   types.String                                        `tfsdk:"transfer_number"`
 	ModelOptions     *ConversationalPathwayNodeDataModelOptionModel      `tfsdk:"model_options"`
 	PathwayExamples  []ConversationalPathwayExampleModel                 `tfsdk:"pathway_examples"`

@@ -67,6 +67,7 @@ func TestUnitSecretResource_Validate_Create(t *testing.T) {
 					resource "bland_secret" "test" {
 						name                              = "test_secret"
 						value                       = "example secret value"
+						static = true
 					}
 					`,
 				Check: resource.ComposeAggregateTestCheckFunc(

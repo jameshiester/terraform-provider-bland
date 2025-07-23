@@ -43,6 +43,7 @@ type updateSecretDto struct {
 type secretDto struct {
 	ID     string           `json:"id"`
 	Name   string           `json:"name"`
+	Static *bool            `json:"static,omitempty"`
 	Value  *string          `json:"secret,omitempty"`
 	Config *secretConfigDto `json:"config,omitempty"`
 }

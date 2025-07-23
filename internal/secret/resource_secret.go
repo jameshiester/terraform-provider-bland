@@ -7,18 +7,23 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int32default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
 	utils "github.com/jameshiester/terraform-provider-bland/internal/util"
 )
 
-var _ resource.Resource = &SecretResource{}
+var _ resource.ResourceWithValidateConfig = &SecretResource{}
 
 type SecretResource struct {
 	utils.TypeInfo
@@ -31,6 +36,42 @@ func NewSecretResource() resource.Resource {
 			TypeName: "secret",
 		},
 	}
+}
+
+func (r SecretResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var data SecretModel
+
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// If attribute_one is not configured, return without warning.
+	if data.Static.ValueBool() && data.Value.ValueStringPointer() != nil {
+		return
+	}
+
+	// If attribute_two is not null, return without warning.
+	if !data.Static.ValueBool() && data.Config != nil {
+		return
+	}
+	if data.Static.ValueBool() {
+		resp.Diagnostics.AddAttributeWarning(
+			path.Root("attribute_two"),
+			"Missing Attribute Configuration",
+			"Expected 'value' to be set when static is set to true. "+
+				"The resource may return unexpected results.",
+		)
+	} else {
+		resp.Diagnostics.AddAttributeWarning(
+			path.Root("attribute_two"),
+			"Missing Attribute Configuration",
+			"Expected 'config' to be set when static is set to true. "+
+				"The resource may return unexpected results.",
+		)
+	}
+
 }
 
 func (r *SecretResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -78,14 +119,27 @@ func (r *SecretResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Required:            true,
 				MarkdownDescription: "The name of the secret.",
 			},
+			"static": schema.BoolAttribute{
+				Required:            true,
+				MarkdownDescription: "Defines if secret is static or refreshes.",
+				PlanModifiers: []planmodifier.Bool{
+					boolplanmodifier.RequiresReplace(),
+				},
+			},
 			"value": schema.StringAttribute{
 				Optional:            true,
 				MarkdownDescription: "The value for a static secret.",
 				Sensitive:           true,
+				Validators: []validator.String{
+					stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("config")),
+				},
 			},
 			"config": schema.SingleNestedAttribute{
-				MarkdownDescription: "Confuration for refreshable secret.",
+				MarkdownDescription: "Configuration for refreshable secret.",
 				Optional:            true,
+				Validators: []validator.Object{
+					objectvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("value")),
+				},
 				Attributes: map[string]schema.Attribute{
 					"body": schema.StringAttribute{
 						MarkdownDescription: "JSON body for the refresh request.",

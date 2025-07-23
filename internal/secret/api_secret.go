@@ -32,10 +32,13 @@ func (c *SecretClient) CreateSecret(ctx context.Context, secret createSecretDto)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create secret: %w", err)
 	}
+	isStatic := secret.Value != nil
 	createdSecret := secretDto{
-		ID:    created.Data.ID,
-		Name:  secret.Name,
-		Value: secret.Value,
+		ID:     created.Data.ID,
+		Name:   secret.Name,
+		Value:  secret.Value,
+		Config: secret.Config,
+		Static: &isStatic,
 	}
 	return &createdSecret, nil
 }

@@ -84,6 +84,7 @@ Read-Only:
 - `is_global` (Boolean) Defines if this is a global node.
 - `is_start` (Boolean) Defines if this is the start node of the pathway.
 - `kb` (String) Knowledge base for the node.
+- `kb_tool` (String) Knowledge base tool for the node.
 - `method` (String) Method for the node.
 - `model_options` (Attributes) Model options for the node. (see [below for nested schema](#nestedatt--nodes--data--model_options))
 - `name` (String) Name of the node.

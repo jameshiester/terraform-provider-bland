@@ -14,9 +14,11 @@ import (
 
 func ConvertFromSecretDto(dto secretDto) SecretModel {
 	return SecretModel{
-		ID:    types.StringValue(dto.ID),
-		Name:  types.StringValue(dto.Name),
-		Value: types.StringPointerValue(dto.Value),
+		ID:     types.StringValue(dto.ID),
+		Name:   types.StringValue(dto.Name),
+		Value:  types.StringPointerValue(dto.Value),
+		Static: types.BoolPointerValue(dto.Static),
+		Config: ConvertFromSecretConfigDto(dto.Config),
 	}
 }
 
@@ -44,6 +46,9 @@ func ConvertToSecretConfigDto(ctx context.Context, model *SecretConfigModel) (*s
 }
 
 func ConvertFromSecretConfigDto(dto *secretConfigDto) *SecretConfigModel {
+	if dto == nil {
+		return nil
+	}
 	var headers types.Map
 	if dto.Headers != nil {
 		headerVals := make(map[string]attr.Value)

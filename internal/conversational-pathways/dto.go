@@ -88,6 +88,7 @@ type pathwayNodeDataDto struct {
 	ResponsePathways *[][]interface{}                  `json:"responsePathways,omitempty"`
 	Condition        *string                           `json:"condition,omitempty"`
 	KnowledgeBase    *string                           `json:"kb,omitempty"`
+	KbTool           *string                           `json:"kbTool,omitempty"`
 	TransferNumber   *string                           `json:"transferNumber,omitempty"`
 	ModelOptions     *modelOptionDto                   `json:"modelOptions,omitempty"`
 	PathwayExamples  *[]pathwayExampleDto              `json:"pathway_examples,omitempty"`
