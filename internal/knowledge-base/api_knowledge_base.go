@@ -20,7 +20,7 @@ type KnowledgeBaseClient struct {
 	Api *api.Client
 }
 
-func newKnowledgeBaseClient(apiClient *api.Client) *KnowledgeBaseClient {
+func NewKnowledgeBaseClient(apiClient *api.Client) *KnowledgeBaseClient {
 	return &KnowledgeBaseClient{Api: apiClient}
 }
 
@@ -39,8 +39,14 @@ func (c *KnowledgeBaseClient) CreateKnowledgeBase(ctx context.Context, kb Create
 		writer := multipart.NewWriter(&buf)
 
 		// Add text fields
-		writer.WriteField("name", kb.Name)
-		writer.WriteField("description", kb.Description)
+		err := writer.WriteField("name", kb.Name)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create form file: %w", err)
+		}
+		err = writer.WriteField("description", kb.Description)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create form file: %w", err)
+		}
 
 		// Add file
 		if len(*kb.File) > 0 {
@@ -59,7 +65,7 @@ func (c *KnowledgeBaseClient) CreateKnowledgeBase(ctx context.Context, kb Create
 		// Set content type header
 		headers := http.Header{}
 		headers.Set("Content-Type", writer.FormDataContentType())
-		_, err := c.Api.Execute(ctx, nil, "POST", apiUrl.String(), headers, io.NopCloser(&buf), []int{http.StatusCreated}, &created)
+		_, err = c.Api.Execute(ctx, nil, "POST", apiUrl.String(), headers, io.NopCloser(&buf), []int{http.StatusCreated}, &created)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create knowledge base: %w", err)
 		}

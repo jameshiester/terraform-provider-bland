@@ -56,7 +56,7 @@ func (r *KnowledgeBaseResource) Configure(ctx context.Context, req resource.Conf
 		)
 		return
 	}
-	r.KnowledgeBaseClient = newKnowledgeBaseClient(client.Api)
+	r.KnowledgeBaseClient = NewKnowledgeBaseClient(client.Api)
 }
 
 func (r *KnowledgeBaseResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
