@@ -14,9 +14,11 @@ import (
 
 func ConvertFromSecretDto(dto secretDto) SecretModel {
 	return SecretModel{
-		ID:    types.StringValue(dto.ID),
-		Name:  types.StringValue(dto.Name),
-		Value: types.StringPointerValue(dto.Value),
+		ID:     types.StringValue(dto.ID),
+		Name:   types.StringValue(dto.Name),
+		Value:  types.StringPointerValue(dto.Value),
+		Static: types.BoolPointerValue(dto.Static),
+		Config: ConvertFromSecretConfigDto(dto.Config),
 	}
 }
 

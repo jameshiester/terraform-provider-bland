@@ -16,6 +16,7 @@ import (
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
 	"github.com/jameshiester/terraform-provider-bland/internal/config"
 	pathways "github.com/jameshiester/terraform-provider-bland/internal/conversational-pathways"
+	knowledgebase "github.com/jameshiester/terraform-provider-bland/internal/knowledge-base"
 	"github.com/jameshiester/terraform-provider-bland/internal/secret"
 )
 
@@ -99,12 +100,15 @@ func (p *BlandProvider) Resources(ctx context.Context) []func() resource.Resourc
 	return []func() resource.Resource{
 		func() resource.Resource { return pathways.NewConversationalPathwayResource() },
 		func() resource.Resource { return secret.NewSecretResource() },
+		func() resource.Resource { return knowledgebase.NewKnowledgeBaseResource() },
 	}
 }
 
 func (p *BlandProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		func() datasource.DataSource { return pathways.NewConversationalPathwayDataSource() },
+		func() datasource.DataSource { return secret.NewSecretDataSource() },
+		func() datasource.DataSource { return knowledgebase.NewKnowledgeBaseDataSource() },
 	}
 }
 

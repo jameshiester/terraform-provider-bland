@@ -18,10 +18,11 @@ Manages a secret.
 ### Required
 
 - `name` (String) The name of the secret.
+- `static` (Boolean) Defines if secret is static or refreshes.
 
 ### Optional
 
-- `config` (Attributes) Confuration for refreshable secret. (see [below for nested schema](#nestedatt--config))
+- `config` (Attributes) Configuration for refreshable secret. (see [below for nested schema](#nestedatt--config))
 - `value` (String, Sensitive) The value for a static secret.
 
 ### Read-Only
