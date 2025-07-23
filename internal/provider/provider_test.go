@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	test "github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	pathways "github.com/jameshiester/terraform-provider-bland/internal/conversational-pathways"
+	knowledgebase "github.com/jameshiester/terraform-provider-bland/internal/knowledge-base"
 	"github.com/jameshiester/terraform-provider-bland/internal/mocks"
 	"github.com/jameshiester/terraform-provider-bland/internal/provider"
 	"github.com/jameshiester/terraform-provider-bland/internal/secret"
@@ -21,6 +22,8 @@ import (
 func TestUnitBlandProviderHasChildDataSources_Basic(t *testing.T) {
 	expectedDataSources := []datasource.DataSource{
 		pathways.NewConversationalPathwayDataSource(),
+		secret.NewSecretDataSource(),
+		knowledgebase.NewKnowledgeBaseDataSource(),
 	}
 	providerInstance := provider.NewBlandProvider(context.Background())()
 	datasources := providerInstance.DataSources(context.Background())
@@ -35,6 +38,7 @@ func TestUnitBlandProviderHasChildResources_Basic(t *testing.T) {
 	expectedResources := []resource.Resource{
 		pathways.NewConversationalPathwayResource(),
 		secret.NewSecretResource(),
+		knowledgebase.NewKnowledgeBaseResource(),
 	}
 	providerInstance := provider.NewBlandProvider(context.Background())()
 	resources := providerInstance.Resources(context.Background())

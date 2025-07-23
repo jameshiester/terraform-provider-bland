@@ -115,9 +115,7 @@ func (d *SecretDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	_, exitContext := utils.EnterRequestContext(ctx, d.TypeInfo, req)
 	defer exitContext()
 
-	var data struct {
-		ID types.String `tfsdk:"id"`
-	}
+	var data SecretDataSourceModel
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 	if resp.Diagnostics.HasError() {

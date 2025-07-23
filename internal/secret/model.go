@@ -21,3 +21,11 @@ type SecretModel struct {
 	Value  types.String       `tfsdk:"value"`
 	Config *SecretConfigModel `tfsdk:"config"`
 }
+
+type SecretDataSourceModel struct {
+	ID     types.String       `tfsdk:"id"`
+	Name   types.String       `tfsdk:"name"`
+	Static types.Bool         `tfsdk:"static"`
+	Value  types.String       `tfsdk:"value"`
+	Config *SecretConfigModel `tfsdk:"config"`
+}
