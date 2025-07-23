@@ -60,6 +60,7 @@ Required:
 
 Optional:
 
+- `always_pick` (Boolean) Whether this edge should always be picked.
 - `description` (String) Description of the edge.
 - `is_highlighted` (Boolean) Whether the edge is highlighted.
 
