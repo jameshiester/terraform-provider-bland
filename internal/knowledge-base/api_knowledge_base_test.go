@@ -144,7 +144,7 @@ func TestKnowledgeBaseClient_UpdateKnowledgeBase(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 
 	// Mock the update endpoint
-	httpmock.RegisterResponder("PUT", "https://api.bland.ai/v1/knowledgebases/kb_123",
+	httpmock.RegisterResponder("PATCH", "https://api.bland.ai/v1/knowledgebases/kb_123",
 		func(req *http.Request) (*http.Response, error) {
 			return httpmock.NewStringResponse(200, `{"data":{"vector_id":"kb_123"}}`), nil
 		})

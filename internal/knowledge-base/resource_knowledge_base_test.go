@@ -97,7 +97,7 @@ func TestUnitKnowledgeBaseResource_Validate_Create_TextOnly(t *testing.T) {
 					resource "bland_knowledge_base" "kb" {
 						name        = "TestKnowledgeBase"
 						description = "Test knowledge base description"
-						text        = "This is some text content for the knowledge base."
+						text        = "This is the extracted text from the knowledge base file."
 					}
 					`,
 				Check: resource.ComposeAggregateTestCheckFunc(
