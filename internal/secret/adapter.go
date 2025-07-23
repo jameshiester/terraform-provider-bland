@@ -46,6 +46,9 @@ func ConvertToSecretConfigDto(ctx context.Context, model *SecretConfigModel) (*s
 }
 
 func ConvertFromSecretConfigDto(dto *secretConfigDto) *SecretConfigModel {
+	if dto == nil {
+		return nil
+	}
 	var headers types.Map
 	if dto.Headers != nil {
 		headerVals := make(map[string]attr.Value)
