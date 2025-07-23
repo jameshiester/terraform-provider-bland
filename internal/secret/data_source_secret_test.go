@@ -33,6 +33,7 @@ func TestUnitSecretDataSource_Validate_Read(t *testing.T) {
 				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.bland_secret.secret", "id", "secret123"),
+					resource.TestCheckResourceAttr("data.bland_secret.secret", "static", "false"),
 					resource.TestCheckResourceAttr("data.bland_secret.secret", "name", "TestSecret"),
 					resource.TestCheckResourceAttr("data.bland_secret.secret", "value", "secret-value"),
 					resource.TestCheckResourceAttr("data.bland_secret.secret", "config.method", "GET"),
