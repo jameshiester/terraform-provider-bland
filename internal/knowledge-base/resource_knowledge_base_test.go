@@ -29,7 +29,7 @@ func TestUnitKnowledgeBaseResource_Validate_Create(t *testing.T) {
 		})
 
 	// Mock update endpoint
-	httpmock.RegisterResponder("PUT", "https://api.bland.ai/v1/knowledgebases/kb_123",
+	httpmock.RegisterResponder("PATCH", "https://api.bland.ai/v1/knowledgebases/kb_123",
 		func(req *http.Request) (*http.Response, error) {
 			return httpmock.NewStringResponse(http.StatusOK, httpmock.File("./tests/resource/knowledge_base/Validate_Create/update_knowledge_base.json").String()), nil
 		})
