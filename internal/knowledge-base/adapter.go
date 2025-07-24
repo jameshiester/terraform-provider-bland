@@ -11,11 +11,12 @@ import (
 
 func ConvertFromKnowledgeBaseDto(dto KnowledgeBaseDto) KnowledgeBaseModel {
 	return KnowledgeBaseModel{
-		ID:          types.StringValue(dto.ID),
-		Name:        types.StringValue(dto.Name),
-		Description: types.StringValue(dto.Description),
-		Text:        types.StringValue(dto.Text),
-		FilePath:    types.StringNull(), // Not returned from API
+		ID:            types.StringValue(dto.ID),
+		Name:          types.StringValue(dto.Name),
+		Description:   types.StringValue(dto.Description),
+		Text:          types.StringValue(dto.Text),
+		ExtractedText: types.StringPointerValue(dto.ExtractedText),
+		FilePath:      types.StringNull(), // Not returned from API
 	}
 }
 
