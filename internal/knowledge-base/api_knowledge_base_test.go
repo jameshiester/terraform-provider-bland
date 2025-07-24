@@ -6,7 +6,6 @@ package knowledgebase_test
 import (
 	"context"
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -21,13 +20,7 @@ func TestKnowledgeBaseClient_CreateKnowledgeBase_WithFile(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	// Create a temp file for file_path
-	tmpfile, err := os.CreateTemp("", "test_kb_*.txt")
-	require.NoError(t, err)
-	defer os.Remove(tmpfile.Name())
-	_, err = tmpfile.Write([]byte("test file content"))
-	require.NoError(t, err)
-	tmpfile.Close()
+	filePath := "./tests/example.txt"
 
 	// Mock the file upload endpoint
 	httpmock.RegisterResponder("POST", "https://api.bland.ai/v1/knowledgebases/upload",
@@ -45,7 +38,7 @@ func TestKnowledgeBaseClient_CreateKnowledgeBase_WithFile(t *testing.T) {
 	model := knowledgebase.KnowledgeBaseModel{
 		Name:        types.StringValue("Test KB"),
 		Description: types.StringValue("Test Description"),
-		FilePath:    types.StringValue(tmpfile.Name()),
+		FilePath:    types.StringValue(filePath),
 	}
 
 	result, err := client.CreateKnowledgeBase(context.Background(), model)
@@ -136,13 +129,7 @@ func TestKnowledgeBaseClient_UpdateKnowledgeBase(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	// Create a temp file for file_path
-	tmpfile, err := os.CreateTemp("", "test_kb_*.txt")
-	require.NoError(t, err)
-	defer os.Remove(tmpfile.Name())
-	_, err = tmpfile.Write([]byte("updated file content"))
-	require.NoError(t, err)
-	tmpfile.Close()
+	filePath := "./tests/example.txt"
 
 	// Mock the update endpoint
 	httpmock.RegisterResponder("PATCH", "https://api.bland.ai/v1/knowledgebases/kb_123",
@@ -160,7 +147,7 @@ func TestKnowledgeBaseClient_UpdateKnowledgeBase(t *testing.T) {
 	model := knowledgebase.KnowledgeBaseModel{
 		Name:        types.StringValue("Updated KB"),
 		Description: types.StringValue("Updated Description"),
-		FilePath:    types.StringValue(tmpfile.Name()),
+		FilePath:    types.StringValue(filePath),
 	}
 
 	result, err := client.UpdateKnowledgeBase(context.Background(), "kb_123", model)
