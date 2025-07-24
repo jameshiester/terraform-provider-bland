@@ -75,7 +75,7 @@ jobs:
       - run: go mod download
       - env:
           TF_ACC: "1"
-          BLAND_API_KEY: "test_key"
+          BLAND_API_KEY: ${{ secrets.BLAND_API_KEY }}
         run: go test  -p 16 -v -timeout 2m -cover ./internal/...
         timeout-minutes: 2
 

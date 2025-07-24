@@ -23,8 +23,9 @@ Manages a knowledge base.
 ### Optional
 
 - `file` (String, Sensitive) Base64 encoded file content for the knowledge base
-- `text` (String, Sensitive) Extracted text from the knowledge base
+- `text` (String, Sensitive) Input text from the knowledge base
 
 ### Read-Only
 
+- `extracted_text` (String, Sensitive) Extracted text from the knowledge base
 - `id` (String) Unique knowledge base id

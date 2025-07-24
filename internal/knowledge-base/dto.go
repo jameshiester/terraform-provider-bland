@@ -4,17 +4,18 @@
 package knowledgebase
 
 type KnowledgeBaseDto struct {
-	ID          string  `json:"id,omitempty"`
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Text        string  `json:"text"`
-	File        *[]byte `json:"-"` // Binary data, not serialized to JSON
+	ID            string  `json:"id,omitempty"`
+	Name          string  `json:"name"`
+	Description   string  `json:"description"`
+	Text          string  `json:"text"`
+	ExtractedText *string `json:"-"` // not included in response
+	File          *[]byte `json:"-"` // Binary data, not serialized to JSON
 }
 
 type readKnowledgeBaseResponseDataDto struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Text        string `json:"text"`
+	Name          string  `json:"name"`
+	Description   string  `json:"description"`
+	ExtractedText *string `json:"text"`
 }
 
 type readKnowledgeBaseResponseDto struct {

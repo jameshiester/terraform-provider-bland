@@ -17,20 +17,22 @@ func ConvertFromKnowledgeBaseDto(dto KnowledgeBaseDto) KnowledgeBaseModel {
 		fileValue = types.StringValue(base64.StdEncoding.EncodeToString(*dto.File))
 	}
 	return KnowledgeBaseModel{
-		ID:          types.StringValue(dto.ID),
-		Name:        types.StringValue(dto.Name),
-		Description: types.StringValue(dto.Description),
-		Text:        types.StringValue(dto.Text),
-		File:        fileValue,
+		ID:            types.StringValue(dto.ID),
+		Name:          types.StringValue(dto.Name),
+		Description:   types.StringValue(dto.Description),
+		Text:          types.StringValue(dto.Text),
+		File:          fileValue,
+		ExtractedText: types.StringPointerValue(dto.ExtractedText),
 	}
 }
 
 func ConvertFromKnowledgeBaseDtoToDataSource(dto KnowledgeBaseDto) KnowledgeBaseDataSourceModel {
 	return KnowledgeBaseDataSourceModel{
-		ID:          types.StringValue(dto.ID),
-		Name:        types.StringValue(dto.Name),
-		Description: types.StringValue(dto.Description),
-		Text:        types.StringValue(dto.Text),
+		ID:            types.StringValue(dto.ID),
+		Name:          types.StringValue(dto.Name),
+		Description:   types.StringValue(dto.Description),
+		Text:          types.StringValue(dto.Text),
+		ExtractedText: types.StringPointerValue(dto.ExtractedText),
 	}
 }
 

@@ -12,6 +12,31 @@ import (
 	"github.com/jarcoal/httpmock"
 )
 
+func TestAccKnowledgeBaseResource_Validate_Create(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+
+		ProtoV6ProviderFactories: mocks.TestAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: `
+					resource "bland_knowledge_base" "kb" {
+						name        = "TestKnowledgeBase"
+						description = "Test knowledge base description"
+						file        = "dGVzdCBmaWxlIGNvbnRlbnQ="
+					}
+					`,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "name", "TestKnowledgeBase"),
+					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "description", "Test knowledge base description"),
+					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "id", "kb_123"),
+					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "text", "This is the extracted text from the knowledge base file."),
+					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "file", "dGVzdCBmaWxlIGNvbnRlbnQ="),
+				),
+			},
+		},
+	})
+}
+
 func TestUnitKnowledgeBaseResource_Validate_Create(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
@@ -105,6 +130,7 @@ func TestUnitKnowledgeBaseResource_Validate_Create_TextOnly(t *testing.T) {
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "description", "Test knowledge base description"),
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "id", "kb_123"),
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "text", "This is the extracted text from the knowledge base file."),
+					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "extracted_text", "This is the extracted text from the knowledge base file."),
 				),
 			},
 		},

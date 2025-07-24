@@ -87,8 +87,13 @@ func (r *KnowledgeBaseResource) Schema(ctx context.Context, req resource.SchemaR
 				},
 			},
 			"text": schema.StringAttribute{
-				MarkdownDescription: "Extracted text from the knowledge base",
+				MarkdownDescription: "Input text from the knowledge base",
 				Optional:            true,
+				Computed:            true,
+				Sensitive:           true,
+			},
+			"extracted_text": schema.StringAttribute{
+				MarkdownDescription: "Extracted text from the knowledge base",
 				Computed:            true,
 				Sensitive:           true,
 			},
@@ -121,6 +126,7 @@ func (r *KnowledgeBaseResource) Create(ctx context.Context, req resource.CreateR
 
 	model := ConvertFromKnowledgeBaseDto(*read)
 	model.File = plan.File
+	model.Text = plan.Text
 	resp.State.Set(ctx, model)
 }
 
@@ -142,6 +148,7 @@ func (r *KnowledgeBaseResource) Read(ctx context.Context, req resource.ReadReque
 
 	model := ConvertFromKnowledgeBaseDto(*read)
 	model.File = state.File
+	model.Text = state.Text
 	resp.State.Set(ctx, model)
 }
 
@@ -169,6 +176,7 @@ func (r *KnowledgeBaseResource) Update(ctx context.Context, req resource.UpdateR
 
 	model := ConvertFromKnowledgeBaseDto(*read)
 	model.File = plan.File
+	model.Text = plan.Text
 	resp.State.Set(ctx, model)
 }
 

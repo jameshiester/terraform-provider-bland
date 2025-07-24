@@ -50,7 +50,7 @@ func (c *KnowledgeBaseClient) CreateKnowledgeBase(ctx context.Context, kb Create
 
 		// Add file
 		if len(*kb.File) > 0 {
-			part, err := writer.CreateFormFile("file", "knowledge_base_file")
+			part, err := writer.CreateFormFile("file", "knowledge_base_file.txt")
 			if err != nil {
 				return nil, fmt.Errorf("failed to create form file: %w", err)
 			}
@@ -65,7 +65,6 @@ func (c *KnowledgeBaseClient) CreateKnowledgeBase(ctx context.Context, kb Create
 		// Set content type header
 		headers := http.Header{}
 		headers.Set("Content-Type", writer.FormDataContentType())
-		headers.Set("Content-Length", fmt.Sprintf("%d", buf.Len()))
 		reqBody := bytes.NewReader(buf.Bytes())
 		ctxWithTimeout, cancel := context.WithTimeout(ctx, 60*time.Second)
 		defer cancel()
@@ -103,10 +102,10 @@ func (c *KnowledgeBaseClient) ReadKnowledgeBase(ctx context.Context, id string) 
 		return nil, fmt.Errorf("failed to read knowledge base: %w", err)
 	}
 	result := KnowledgeBaseDto{
-		ID:          id,
-		Name:        kb.Data.Name,
-		Description: kb.Data.Description,
-		Text:        kb.Data.Text,
+		ID:            id,
+		Name:          kb.Data.Name,
+		Description:   kb.Data.Description,
+		ExtractedText: kb.Data.ExtractedText,
 	}
 	return &result, nil
 }

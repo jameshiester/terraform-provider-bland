@@ -35,7 +35,7 @@ func TestUnitKnowledgeBaseDataSource_Validate_Read(t *testing.T) {
 					resource.TestCheckResourceAttr("data.bland_knowledge_base.kb", "id", "kb_123"),
 					resource.TestCheckResourceAttr("data.bland_knowledge_base.kb", "name", "TestKnowledgeBase"),
 					resource.TestCheckResourceAttr("data.bland_knowledge_base.kb", "description", "Test knowledge base description"),
-					resource.TestCheckResourceAttr("data.bland_knowledge_base.kb", "text", "This is the extracted text from the knowledge base file."),
+					resource.TestCheckResourceAttr("data.bland_knowledge_base.kb", "extracted_text", "This is the extracted text from the knowledge base file."),
 				),
 			},
 		},
