@@ -180,3 +180,43 @@ func prepareRequestBody(body any) (io.Reader, error) {
 
 	return bodyBuffer, nil
 }
+
+func (client *Client) ExecuteMultipart(ctx context.Context, method, url string, headers http.Header, body io.Reader, acceptableStatusCodes []int, responseObj any) (*Response, error) {
+	request, err := http.NewRequestWithContext(ctx, method, url, body)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range headers {
+		request.Header[k] = v
+	}
+
+	resp, err := client.doRequest(ctx, client.Config.APIKey, request, headers)
+	if err != nil {
+		return resp, fmt.Errorf("Error making %s request to %s. %w", request.Method, request.RequestURI, err)
+	}
+
+	isAcceptable := len(acceptableStatusCodes) > 0 && arrays.Contains(acceptableStatusCodes, resp.HttpResponse.StatusCode)
+	if isAcceptable {
+		if responseObj != nil && len(resp.BodyAsBytes) > 0 {
+			err = resp.MarshallTo(responseObj)
+			if err != nil {
+				return resp, fmt.Errorf("Error marshalling response to json. %w", err)
+			}
+		}
+		return resp, nil
+	}
+
+	isRetryable := arrays.Contains(retryableStatusCodes, resp.HttpResponse.StatusCode)
+	if !isRetryable {
+		return resp, NewUnexpectedHttpStatusCodeError(acceptableStatusCodes, resp.HttpResponse.StatusCode, resp.HttpResponse.Status, resp.BodyAsBytes)
+	}
+
+	waitFor := retryAfter(ctx, resp.HttpResponse)
+	tflog.Debug(ctx, fmt.Sprintf("Received status code %d for request %s, retrying after %s", resp.HttpResponse.StatusCode, url, waitFor))
+	err = client.SleepWithContext(ctx, waitFor)
+	if err != nil {
+		return resp, err
+	}
+	return resp, nil
+}

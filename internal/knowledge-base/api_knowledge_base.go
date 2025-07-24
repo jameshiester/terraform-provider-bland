@@ -69,7 +69,7 @@ func (c *KnowledgeBaseClient) CreateKnowledgeBase(ctx context.Context, kb Create
 		reqBody := bytes.NewReader(buf.Bytes())
 		ctxWithTimeout, cancel := context.WithTimeout(ctx, 60*time.Second)
 		defer cancel()
-		_, err = c.Api.Execute(ctxWithTimeout, nil, "POST", apiUrl.String(), headers, reqBody, []int{http.StatusOK}, &created)
+		_, err = c.Api.ExecuteMultipart(ctxWithTimeout, "POST", apiUrl.String(), headers, reqBody, []int{http.StatusOK}, &created)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create knowledge base: %w", err)
 		}
