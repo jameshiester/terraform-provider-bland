@@ -7,10 +7,13 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
 	utils "github.com/jameshiester/terraform-provider-bland/internal/util"
@@ -78,17 +81,24 @@ func (r *KnowledgeBaseResource) Schema(ctx context.Context, req resource.SchemaR
 				MarkdownDescription: "Description of the knowledge base",
 				Required:            true,
 			},
-			"file": schema.StringAttribute{
-				MarkdownDescription: "Base64 encoded file content for the knowledge base",
+			"file_path": schema.StringAttribute{
+				MarkdownDescription: "Path to the file to upload as the knowledge base.",
 				Optional:            true,
 				Sensitive:           true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
+				Validators: []validator.String{
+					stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("text")),
 				},
 			},
 			"text": schema.StringAttribute{
-				MarkdownDescription: "Extracted text from the knowledge base",
+				MarkdownDescription: "Input text for the knowledge base",
 				Optional:            true,
+				Sensitive:           true,
+				Validators: []validator.String{
+					stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("file_path")),
+				},
+			},
+			"extracted_text": schema.StringAttribute{
+				MarkdownDescription: "Extracted text from the knowledge base",
 				Computed:            true,
 				Sensitive:           true,
 			},
@@ -106,8 +116,7 @@ func (r *KnowledgeBaseResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 
-	dto := ConvertToCreateKnowledgeBaseDto(plan)
-	vectorID, err := r.KnowledgeBaseClient.CreateKnowledgeBase(ctx, dto)
+	vectorID, err := r.KnowledgeBaseClient.CreateKnowledgeBase(ctx, plan)
 	if err != nil {
 		resp.Diagnostics.AddError("Error creating knowledge base", err.Error())
 		return
@@ -120,7 +129,8 @@ func (r *KnowledgeBaseResource) Create(ctx context.Context, req resource.CreateR
 	}
 
 	model := ConvertFromKnowledgeBaseDto(*read)
-	model.File = plan.File
+	model.FilePath = plan.FilePath
+	model.Text = plan.Text
 	resp.State.Set(ctx, model)
 }
 
@@ -141,7 +151,8 @@ func (r *KnowledgeBaseResource) Read(ctx context.Context, req resource.ReadReque
 	}
 
 	model := ConvertFromKnowledgeBaseDto(*read)
-	model.File = state.File
+	model.FilePath = state.FilePath
+	model.Text = state.Text
 	resp.State.Set(ctx, model)
 }
 
@@ -154,9 +165,7 @@ func (r *KnowledgeBaseResource) Update(ctx context.Context, req resource.UpdateR
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	dto := ConvertToUpdateKnowledgeBaseDto(plan)
-	_, err := r.KnowledgeBaseClient.UpdateKnowledgeBase(ctx, plan.ID.ValueString(), dto)
+	_, err := r.KnowledgeBaseClient.UpdateKnowledgeBase(ctx, plan.ID.ValueString(), plan)
 	if err != nil {
 		resp.Diagnostics.AddError("Error updating knowledge base", err.Error())
 		return
@@ -168,7 +177,8 @@ func (r *KnowledgeBaseResource) Update(ctx context.Context, req resource.UpdateR
 	}
 
 	model := ConvertFromKnowledgeBaseDto(*read)
-	model.File = plan.File
+	model.FilePath = plan.FilePath
+	model.Text = plan.Text
 	resp.State.Set(ctx, model)
 }
 

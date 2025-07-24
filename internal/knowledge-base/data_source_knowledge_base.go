@@ -73,7 +73,7 @@ func (d *KnowledgeBaseDataSource) Schema(ctx context.Context, req datasource.Sch
 				MarkdownDescription: "Description of the knowledge base",
 				Computed:            true,
 			},
-			"text": schema.StringAttribute{
+			"extracted_text": schema.StringAttribute{
 				MarkdownDescription: "Extracted text from the knowledge base",
 				Computed:            true,
 				Sensitive:           true,

@@ -22,5 +22,5 @@ Retrieve a knowledge base by ID.
 ### Read-Only
 
 - `description` (String) Description of the knowledge base
+- `extracted_text` (String, Sensitive) Extracted text from the knowledge base
 - `name` (String) Name of the knowledge base
-- `text` (String, Sensitive) Extracted text from the knowledge base

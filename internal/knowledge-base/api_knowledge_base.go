@@ -10,6 +10,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
+	"path/filepath"
 	"time"
 
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
@@ -24,10 +25,14 @@ func NewKnowledgeBaseClient(apiClient *api.Client) *KnowledgeBaseClient {
 	return &KnowledgeBaseClient{Api: apiClient}
 }
 
-func (c *KnowledgeBaseClient) CreateKnowledgeBase(ctx context.Context, kb CreateKnowledgeBaseDto) (*string, error) {
+func (c *KnowledgeBaseClient) CreateKnowledgeBase(ctx context.Context, kbModel KnowledgeBaseModel) (*string, error) {
+	createDto, err := ConvertToCreateKnowledgeBaseDto(kbModel)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read file for knowledge base: %w", err)
+	}
 
 	var created createKnowledgeBaseUploadResponseDto
-	if kb.File != nil {
+	if createDto.File != nil {
 		apiUrl := &url.URL{
 			Scheme: constants.HTTPS,
 			Host:   c.Api.Config.BaseURL,
@@ -39,22 +44,23 @@ func (c *KnowledgeBaseClient) CreateKnowledgeBase(ctx context.Context, kb Create
 		writer := multipart.NewWriter(&buf)
 
 		// Add text fields
-		err := writer.WriteField("name", kb.Name)
+		err := writer.WriteField("name", createDto.Name)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create form file: %w", err)
 		}
-		err = writer.WriteField("description", kb.Description)
+		err = writer.WriteField("description", createDto.Description)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create form file: %w", err)
 		}
 
 		// Add file
-		if len(*kb.File) > 0 {
-			part, err := writer.CreateFormFile("file", "knowledge_base_file")
+		if len(*createDto.File) > 0 {
+			filename := filepath.Base(kbModel.FilePath.ValueString())
+			part, err := writer.CreateFormFile("file", filename)
 			if err != nil {
 				return nil, fmt.Errorf("failed to create form file: %w", err)
 			}
-			_, err = part.Write(*kb.File)
+			_, err = part.Write(*createDto.File)
 			if err != nil {
 				return nil, fmt.Errorf("failed to write file data: %w", err)
 			}
@@ -65,7 +71,6 @@ func (c *KnowledgeBaseClient) CreateKnowledgeBase(ctx context.Context, kb Create
 		// Set content type header
 		headers := http.Header{}
 		headers.Set("Content-Type", writer.FormDataContentType())
-		headers.Set("Content-Length", fmt.Sprintf("%d", buf.Len()))
 		reqBody := bytes.NewReader(buf.Bytes())
 		ctxWithTimeout, cancel := context.WithTimeout(ctx, 60*time.Second)
 		defer cancel()
@@ -79,7 +84,7 @@ func (c *KnowledgeBaseClient) CreateKnowledgeBase(ctx context.Context, kb Create
 			Host:   c.Api.Config.BaseURL,
 			Path:   "/v1/knowledgebases",
 		}
-		_, err := c.Api.Execute(ctx, nil, "POST", apiUrl.String(), nil, kb, []int{http.StatusOK}, &created)
+		_, err := c.Api.Execute(ctx, nil, "POST", apiUrl.String(), nil, createDto, []int{http.StatusOK}, &created)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create knowledge base: %w", err)
 		}
@@ -103,30 +108,34 @@ func (c *KnowledgeBaseClient) ReadKnowledgeBase(ctx context.Context, id string) 
 		return nil, fmt.Errorf("failed to read knowledge base: %w", err)
 	}
 	result := KnowledgeBaseDto{
-		ID:          id,
-		Name:        kb.Data.Name,
-		Description: kb.Data.Description,
-		Text:        kb.Data.Text,
+		ID:            id,
+		Name:          kb.Data.Name,
+		Description:   kb.Data.Description,
+		ExtractedText: kb.Data.ExtractedText,
 	}
 	return &result, nil
 }
 
-func (c *KnowledgeBaseClient) UpdateKnowledgeBase(ctx context.Context, id string, kb UpdateKnowledgeBaseDto) (*KnowledgeBaseDto, error) {
+func (c *KnowledgeBaseClient) UpdateKnowledgeBase(ctx context.Context, id string, kbModel KnowledgeBaseModel) (*KnowledgeBaseDto, error) {
+	updateDto, err := ConvertToUpdateKnowledgeBaseDto(kbModel)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read file for knowledge base: %w", err)
+	}
 	var updated createKnowledgeBaseUploadResponseDto
 	apiUrl := &url.URL{
 		Scheme: constants.HTTPS,
 		Host:   c.Api.Config.BaseURL,
 		Path:   fmt.Sprintf("/v1/knowledgebases/%s", id),
 	}
-	_, err := c.Api.Execute(ctx, nil, "PATCH", apiUrl.String(), nil, kb, []int{http.StatusOK}, &updated)
+	_, err = c.Api.Execute(ctx, nil, "PATCH", apiUrl.String(), nil, updateDto, []int{http.StatusOK}, &updated)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create secret: %w", err)
+		return nil, fmt.Errorf("failed to update knowledge base: %w", err)
 	}
 	updatedDto := KnowledgeBaseDto{
 		ID:          id,
-		Name:        kb.Name,
-		Description: kb.Description,
-		File:        kb.File,
+		Name:        kbModel.Name.ValueString(),
+		Description: kbModel.Description.ValueString(),
+		File:        updateDto.File,
 	}
 	return &updatedDto, nil
 }
