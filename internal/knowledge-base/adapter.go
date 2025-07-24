@@ -31,7 +31,6 @@ func ConvertFromKnowledgeBaseDtoToDataSource(dto KnowledgeBaseDto) KnowledgeBase
 		ID:            types.StringValue(dto.ID),
 		Name:          types.StringValue(dto.Name),
 		Description:   types.StringValue(dto.Description),
-		Text:          types.StringValue(dto.Text),
 		ExtractedText: types.StringPointerValue(dto.ExtractedText),
 	}
 }

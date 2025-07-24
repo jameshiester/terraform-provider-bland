@@ -7,10 +7,13 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
 	utils "github.com/jameshiester/terraform-provider-bland/internal/util"
@@ -85,12 +88,17 @@ func (r *KnowledgeBaseResource) Schema(ctx context.Context, req resource.SchemaR
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
+				Validators: []validator.String{
+					stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("text")),
+				},
 			},
 			"text": schema.StringAttribute{
 				MarkdownDescription: "Input text from the knowledge base",
 				Optional:            true,
-				Computed:            true,
 				Sensitive:           true,
+				Validators: []validator.String{
+					stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("file")),
+				},
 			},
 			"extracted_text": schema.StringAttribute{
 				MarkdownDescription: "Extracted text from the knowledge base",
