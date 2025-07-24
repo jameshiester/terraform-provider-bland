@@ -4,25 +4,18 @@
 package knowledgebase
 
 import (
-	"encoding/base64"
+	"os"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 func ConvertFromKnowledgeBaseDto(dto KnowledgeBaseDto) KnowledgeBaseModel {
-	var fileValue types.String
-	if dto.File == nil {
-		fileValue = types.StringNull()
-	} else {
-		fileValue = types.StringValue(base64.StdEncoding.EncodeToString(*dto.File))
-	}
 	return KnowledgeBaseModel{
-		ID:            types.StringValue(dto.ID),
-		Name:          types.StringValue(dto.Name),
-		Description:   types.StringValue(dto.Description),
-		Text:          types.StringValue(dto.Text),
-		File:          fileValue,
-		ExtractedText: types.StringPointerValue(dto.ExtractedText),
+		ID:          types.StringValue(dto.ID),
+		Name:        types.StringValue(dto.Name),
+		Description: types.StringValue(dto.Description),
+		Text:        types.StringValue(dto.Text),
+		FilePath:    types.StringNull(), // Not returned from API
 	}
 }
 
@@ -35,10 +28,13 @@ func ConvertFromKnowledgeBaseDtoToDataSource(dto KnowledgeBaseDto) KnowledgeBase
 	}
 }
 
-func ConvertToCreateKnowledgeBaseDto(model KnowledgeBaseModel) CreateKnowledgeBaseDto {
+func ConvertToCreateKnowledgeBaseDto(model KnowledgeBaseModel) (CreateKnowledgeBaseDto, error) {
 	var fileBytesPtr *[]byte
-	if !model.File.IsNull() && model.File.ValueString() != "" {
-		fileBytes, _ := base64.StdEncoding.DecodeString(model.File.ValueString())
+	if !model.FilePath.IsNull() && model.FilePath.ValueString() != "" {
+		fileBytes, err := os.ReadFile(model.FilePath.ValueString())
+		if err != nil {
+			return CreateKnowledgeBaseDto{}, err
+		}
 		fileBytesPtr = &fileBytes
 	} else {
 		fileBytesPtr = nil
@@ -48,13 +44,16 @@ func ConvertToCreateKnowledgeBaseDto(model KnowledgeBaseModel) CreateKnowledgeBa
 		Description: model.Description.ValueString(),
 		File:        fileBytesPtr,
 		Text:        model.Text.ValueStringPointer(),
-	}
+	}, nil
 }
 
-func ConvertToUpdateKnowledgeBaseDto(model KnowledgeBaseModel) UpdateKnowledgeBaseDto {
+func ConvertToUpdateKnowledgeBaseDto(model KnowledgeBaseModel) (UpdateKnowledgeBaseDto, error) {
 	var fileBytesPtr *[]byte
-	if !model.File.IsNull() && model.File.ValueString() != "" {
-		fileBytes, _ := base64.StdEncoding.DecodeString(model.File.ValueString())
+	if !model.FilePath.IsNull() && model.FilePath.ValueString() != "" {
+		fileBytes, err := os.ReadFile(model.FilePath.ValueString())
+		if err != nil {
+			return UpdateKnowledgeBaseDto{}, err
+		}
 		fileBytesPtr = &fileBytes
 	} else {
 		fileBytesPtr = nil
@@ -64,5 +63,5 @@ func ConvertToUpdateKnowledgeBaseDto(model KnowledgeBaseModel) UpdateKnowledgeBa
 		Description: model.Description.ValueString(),
 		File:        fileBytesPtr,
 		Text:        model.Text.ValueStringPointer(),
-	}
+	}, nil
 }

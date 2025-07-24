@@ -6,12 +6,11 @@ package knowledgebase
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type KnowledgeBaseModel struct {
-	ID            types.String `tfsdk:"id"`
-	Name          types.String `tfsdk:"name"`
-	Description   types.String `tfsdk:"description"`
-	File          types.String `tfsdk:"file"`
-	Text          types.String `tfsdk:"text"`
-	ExtractedText types.String `tfsdk:"extracted_text"`
+	ID          types.String `tfsdk:"id"`
+	Name        types.String `tfsdk:"name"`
+	Description types.String `tfsdk:"description"`
+	FilePath    types.String `tfsdk:"file_path"`
+	Text        types.String `tfsdk:"text"`
 }
 
 type KnowledgeBaseDataSourceModel struct {

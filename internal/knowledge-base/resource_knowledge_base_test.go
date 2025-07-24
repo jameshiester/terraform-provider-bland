@@ -4,6 +4,7 @@
 package knowledgebase_test
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 
@@ -22,7 +23,7 @@ func TestAccKnowledgeBaseResource_Validate_Create(t *testing.T) {
 					resource "bland_knowledge_base" "kb" {
 						name        = "TestKnowledgeBase"
 						description = "Test knowledge base description"
-						file        = "dGVzdCBmaWxlIGNvbnRlbnQ="
+						file_path        = "./tests/example.txt"
 					}
 					`,
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -39,6 +40,9 @@ func TestAccKnowledgeBaseResource_Validate_Create(t *testing.T) {
 func TestUnitKnowledgeBaseResource_Validate_Create(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
+
+	// Use a static test file for file_path
+	filePath := "./tests/example.txt"
 
 	// Mock file upload endpoint
 	httpmock.RegisterResponder("POST", "https://api.bland.ai/v1/knowledgebases/upload",
@@ -65,24 +69,22 @@ func TestUnitKnowledgeBaseResource_Validate_Create(t *testing.T) {
 		})
 
 	resource.Test(t, resource.TestCase{
-		IsUnitTest: true,
-
+		IsUnitTest:               true,
 		ProtoV6ProviderFactories: mocks.TestUnitTestProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: `
+				Config: fmt.Sprintf(`
 					resource "bland_knowledge_base" "kb" {
 						name        = "TestKnowledgeBase"
 						description = "Test knowledge base description"
-						file        = "dGVzdCBmaWxlIGNvbnRlbnQ="
+						file_path   = "%s"
 					}
-					`,
+				`, filePath),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "name", "TestKnowledgeBase"),
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "description", "Test knowledge base description"),
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "id", "kb_123"),
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "extracted_text", "This is the extracted text from the knowledge base file."),
-					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "file", "dGVzdCBmaWxlIGNvbnRlbnQ="),
 				),
 			},
 		},
@@ -112,8 +114,7 @@ func TestUnitKnowledgeBaseResource_Validate_Create_TextOnly(t *testing.T) {
 		})
 
 	resource.Test(t, resource.TestCase{
-		IsUnitTest: true,
-
+		IsUnitTest:               true,
 		ProtoV6ProviderFactories: mocks.TestUnitTestProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
@@ -123,7 +124,7 @@ func TestUnitKnowledgeBaseResource_Validate_Create_TextOnly(t *testing.T) {
 						description = "Test knowledge base description"
 						text        = "This is the extracted text from the knowledge base file."
 					}
-					`,
+				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "name", "TestKnowledgeBase"),
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "description", "Test knowledge base description"),
