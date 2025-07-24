@@ -94,8 +94,11 @@ func (c *KnowledgeBaseClient) ReadKnowledgeBase(ctx context.Context, id string) 
 		Host:   c.Api.Config.BaseURL,
 		Path:   fmt.Sprintf("/v1/knowledgebases/%s", id),
 	}
+	// Set content type header
+	headers := http.Header{}
+	headers.Set("Include-Text", "true")
 	var kb readKnowledgeBaseResponseDto
-	_, err := c.Api.Execute(ctx, nil, "GET", apiUrl.String(), nil, nil, []int{http.StatusOK}, &kb)
+	_, err := c.Api.Execute(ctx, nil, "GET", apiUrl.String(), headers, nil, []int{http.StatusOK}, &kb)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read knowledge base: %w", err)
 	}
