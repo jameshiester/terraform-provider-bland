@@ -93,6 +93,15 @@ type pathwayNodeDataDto struct {
 	TransferNumber   *string                           `json:"transferNumber,omitempty"`
 	ModelOptions     *modelOptionDto                   `json:"modelOptions,omitempty"`
 	PathwayExamples  *[]pathwayExampleDto              `json:"pathway_examples,omitempty"`
+	Headers          *[][]string                       `json:"headers,omitempty"`
+	Auth             *AuthDto                          `json:"auth,omitempty"`
+	Body             *string                           `json:"body,omitempty"`
+}
+
+type AuthDto struct {
+	Type   string `json:"type"`
+	Token  string `json:"token"`
+	Encode bool   `json:"encode"`
 }
 
 type modelOptionDto struct {

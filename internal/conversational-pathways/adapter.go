@@ -82,15 +82,23 @@ func ConvertFromPathwayNodeDataDto(data *pathwayNodeDataDto) (*ConversationalPat
 		KnowledgeBase:  types.StringPointerValue(data.KnowledgeBase),
 		KbTool:         types.StringPointerValue(data.KbTool),
 		TransferNumber: types.StringPointerValue(data.TransferNumber),
+		Body:           types.StringPointerValue(data.Body),
 	}
-
-	if data.ModelOptions != nil {
-		model.ModelOptions = &ConversationalPathwayNodeDataModelOptionModel{
-			Type:                  types.StringValue(data.ModelOptions.Type),
-			InterruptionThreshold: types.StringPointerValue(data.ModelOptions.InterruptionThreshold),
-			Temperature:           types.Float32PointerValue(data.ModelOptions.Temperature),
-			SkipUserResponse:      types.BoolPointerValue(data.ModelOptions.SkipUserResponse),
-			BlockInterruptions:    types.BoolPointerValue(data.ModelOptions.BlockInterruptions),
+	if data.Auth != nil {
+		model.Auth = &ConversationalPathwayAuthModel{
+			Type:   types.StringValue(data.Auth.Type),
+			Token:  types.StringValue(data.Auth.Token),
+			Encode: types.BoolValue(data.Auth.Encode),
+		}
+	}
+	if data.Headers != nil {
+		for _, h := range *data.Headers {
+			if len(h) == 2 {
+				model.Headers = append(model.Headers, ConversationalPathwayHeaderModel{
+					Name:  types.StringValue(h[0]),
+					Value: types.StringValue(h[1]),
+				})
+			}
 		}
 	}
 
@@ -223,6 +231,33 @@ func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) *p
 		pathwayExamples = nil
 	}
 
+	var headers *[][]string
+	if len(data.Headers) > 0 {
+		tmp := make([][]string, 0, len(data.Headers))
+		for _, h := range data.Headers {
+			tmp = append(tmp, []string{h.Name.ValueString(), h.Value.ValueString()})
+		}
+		headers = &tmp
+	} else {
+		headers = nil
+	}
+
+	var auth *AuthDto
+	if data.Auth != nil {
+		auth = &AuthDto{
+			Type:   data.Auth.Type.ValueString(),
+			Token:  data.Auth.Token.ValueString(),
+			Encode: data.Auth.Encode.ValueBool(),
+		}
+	} else {
+		auth = nil
+	}
+	var body *string
+	if !data.Body.IsNull() && !data.Body.IsUnknown() {
+		b := data.Body.ValueString()
+		body = &b
+	}
+
 	return &pathwayNodeDataDto{
 		Name:             data.Name.ValueString(),
 		GlobalPrompt:     data.GlobalPrompt.ValueStringPointer(),
@@ -242,6 +277,9 @@ func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) *p
 		ResponsePathways: responsePathways,
 		ModelOptions:     modelOptions,
 		PathwayExamples:  pathwayExamples,
+		Headers:          headers,
+		Auth:             auth,
+		Body:             body,
 	}
 }
 

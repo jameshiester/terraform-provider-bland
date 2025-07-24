@@ -78,10 +78,13 @@ Read-Only:
 
 Read-Only:
 
+- `auth` (Attributes) Authentication for the node. (see [below for nested schema](#nestedatt--nodes--data--auth))
+- `body` (String) Body for the node.
 - `condition` (String) Condition for the node.
 - `extract_vars` (Attributes List) Variables to extract from the node. (see [below for nested schema](#nestedatt--nodes--data--extract_vars))
 - `global_label` (String) Label for a global node.
 - `global_prompt` (String) Prompt for a global node.
+- `headers` (Attributes List) Headers for the node. (see [below for nested schema](#nestedatt--nodes--data--headers))
 - `is_global` (Boolean) Defines if this is a global node.
 - `is_start` (Boolean) Defines if this is the start node of the pathway.
 - `kb` (String) Knowledge base for the node.
@@ -97,6 +100,16 @@ Read-Only:
 - `transfer_number` (String) Transfer number for the node.
 - `url` (String) URL for the node.
 
+<a id="nestedatt--nodes--data--auth"></a>
+### Nested Schema for `nodes.data.auth`
+
+Read-Only:
+
+- `encode` (Boolean) Whether to encode the token.
+- `token` (String) Auth token.
+- `type` (String) Auth type (e.g., Bearer).
+
+
 <a id="nestedatt--nodes--data--extract_vars"></a>
 ### Nested Schema for `nodes.data.extract_vars`
 
@@ -105,6 +118,15 @@ Read-Only:
 - `description` (String) Description of the variable.
 - `name` (String) Name of the variable.
 - `type` (String) Type of the variable.
+
+
+<a id="nestedatt--nodes--data--headers"></a>
+### Nested Schema for `nodes.data.headers`
+
+Read-Only:
+
+- `name` (String) Header name.
+- `value` (String) Header value.
 
 
 <a id="nestedatt--nodes--data--model_options"></a>

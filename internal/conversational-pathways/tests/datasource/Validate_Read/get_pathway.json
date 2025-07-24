@@ -11,6 +11,16 @@
                 "isHighlighted": false,
                 "kb": "test-kb",
                 "kbTool": "test-kb-tool",
+                "headers": [
+                    {"name": "a", "value": "val"},
+                    {"name": "b", "value": "val2"}
+                ],
+                "auth": {
+                    "type": "Bearer",
+                    "token": "124",
+                    "encode": false
+                },
+                "body": "test body",
                 "pathway_examples": [
                     {
                         "Chosen Pathway": "The user has asked about something to do with rosters or rostering.",

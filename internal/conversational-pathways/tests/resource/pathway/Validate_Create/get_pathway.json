@@ -7,7 +7,17 @@
             "data": {
               "name": "Start",
               "text": "Hey there, how are you doing today?",
-              "isStart": true
+              "isStart": true,
+              "headers": [
+                {"name": "a", "value": "val"},
+                {"name": "b", "value": "val2"}
+              ],
+              "auth": {
+                "type": "Bearer",
+                "token": "124",
+                "encode": false
+              },
+              "body": "test body"
             },
             "type": "Default"
         },

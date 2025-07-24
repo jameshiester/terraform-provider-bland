@@ -77,6 +77,20 @@ type ConversationalPathwayNodeDataModel struct {
 	TransferNumber   types.String                                        `tfsdk:"transfer_number"`
 	ModelOptions     *ConversationalPathwayNodeDataModelOptionModel      `tfsdk:"model_options"`
 	PathwayExamples  []ConversationalPathwayExampleModel                 `tfsdk:"pathway_examples"`
+	Headers          []ConversationalPathwayHeaderModel                  `tfsdk:"headers"`
+	Auth             *ConversationalPathwayAuthModel                     `tfsdk:"auth"`
+	Body             types.String                                        `tfsdk:"body"`
+}
+
+type ConversationalPathwayAuthModel struct {
+	Type   types.String `tfsdk:"type"`
+	Token  types.String `tfsdk:"token"`
+	Encode types.Bool   `tfsdk:"encode"`
+}
+
+type ConversationalPathwayHeaderModel struct {
+	Name  types.String `tfsdk:"name"`
+	Value types.String `tfsdk:"value"`
 }
 
 type ConversationalPathwayExampleModel struct {
