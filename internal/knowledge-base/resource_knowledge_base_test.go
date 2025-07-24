@@ -19,7 +19,7 @@ func TestUnitKnowledgeBaseResource_Validate_Create(t *testing.T) {
 	// Mock file upload endpoint
 	httpmock.RegisterResponder("POST", "https://api.bland.ai/v1/knowledgebases/upload",
 		func(req *http.Request) (*http.Response, error) {
-			return httpmock.NewStringResponse(http.StatusCreated, httpmock.File("./tests/resource/knowledge_base/Validate_Create/post_knowledge_base.json").String()), nil
+			return httpmock.NewStringResponse(http.StatusOK, httpmock.File("./tests/resource/knowledge_base/Validate_Create/post_knowledge_base.json").String()), nil
 		})
 
 	// Mock read endpoint
