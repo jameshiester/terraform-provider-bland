@@ -12,7 +12,6 @@ const (
 	HEADER_OPERATION_LOCATION = "Operation-Location"
 	HEADER_RETRY_AFTER        = "Retry-After"
 	HTTPS                     = "https"
-	API_VERSION_PARAM         = "api-version"
 )
 
 const (
