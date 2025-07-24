@@ -23,7 +23,7 @@ Manages a knowledge base.
 ### Optional
 
 - `file_path` (String, Sensitive) Path to the file to upload as the knowledge base.
-- `text` (String, Sensitive) Input text from the knowledge base
+- `text` (String, Sensitive) Input text for the knowledge base
 
 ### Read-Only
 

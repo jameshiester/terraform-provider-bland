@@ -90,7 +90,7 @@ func (r *KnowledgeBaseResource) Schema(ctx context.Context, req resource.SchemaR
 				},
 			},
 			"text": schema.StringAttribute{
-				MarkdownDescription: "Input text from the knowledge base",
+				MarkdownDescription: "Input text for the knowledge base",
 				Optional:            true,
 				Sensitive:           true,
 				Validators: []validator.String{
