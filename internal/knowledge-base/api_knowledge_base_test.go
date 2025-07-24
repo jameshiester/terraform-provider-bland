@@ -21,7 +21,7 @@ func TestKnowledgeBaseClient_CreateKnowledgeBase_WithFile(t *testing.T) {
 	// Mock the file upload endpoint
 	httpmock.RegisterResponder("POST", "https://api.bland.ai/v1/knowledgebases/upload",
 		func(req *http.Request) (*http.Response, error) {
-			return httpmock.NewStringResponse(201, `{"data":{"vector_id":"kb_123"}}`), nil
+			return httpmock.NewStringResponse(200, `{"data":{"vector_id":"kb_123"}}`), nil
 		})
 
 	providerConfig := &config.ProviderConfig{
