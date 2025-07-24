@@ -134,7 +134,7 @@ func TestKnowledgeBaseClient_ReadKnowledgeBase(t *testing.T) {
 		t.Errorf("Expected description 'Test Description', got '%s'", result.Description)
 	}
 
-	if result.Text != "Extracted text content" {
+	if *result.ExtractedText != "Extracted text content" {
 		t.Errorf("Expected text 'Extracted text content', got '%s'", result.Text)
 	}
 }

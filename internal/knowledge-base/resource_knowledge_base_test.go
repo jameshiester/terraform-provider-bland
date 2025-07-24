@@ -29,7 +29,7 @@ func TestAccKnowledgeBaseResource_Validate_Create(t *testing.T) {
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "name", "TestKnowledgeBase"),
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "description", "Test knowledge base description"),
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "id", "kb_123"),
-					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "extracted_text", "This is the extracted text from the knowledge base file."),
+					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "extracted_text", "test file content"),
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "file", "dGVzdCBmaWxlIGNvbnRlbnQ="),
 				),
 			},
