@@ -65,6 +65,7 @@ func (c *KnowledgeBaseClient) CreateKnowledgeBase(ctx context.Context, kb Create
 		// Set content type header
 		headers := http.Header{}
 		headers.Set("Content-Type", writer.FormDataContentType())
+		headers.Set("Content-Length", fmt.Sprintf("%d", buf.Len()))
 		reqBody := bytes.NewReader(buf.Bytes())
 		ctxWithTimeout, cancel := context.WithTimeout(ctx, 60*time.Second)
 		defer cancel()
