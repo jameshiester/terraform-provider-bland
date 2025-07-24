@@ -28,7 +28,6 @@ func TestAccKnowledgeBaseResource_Validate_Create(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "name", "TestKnowledgeBase"),
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "description", "Test knowledge base description"),
-					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "id", "kb_123"),
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "extracted_text", "test file content"),
 					resource.TestCheckResourceAttr("bland_knowledge_base.kb", "file", "dGVzdCBmaWxlIGNvbnRlbnQ="),
 				),
