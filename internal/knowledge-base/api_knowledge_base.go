@@ -7,10 +7,10 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io"
 	"mime/multipart"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/jameshiester/terraform-provider-bland/internal/api"
 	"github.com/jameshiester/terraform-provider-bland/internal/constants"
@@ -65,7 +65,10 @@ func (c *KnowledgeBaseClient) CreateKnowledgeBase(ctx context.Context, kb Create
 		// Set content type header
 		headers := http.Header{}
 		headers.Set("Content-Type", writer.FormDataContentType())
-		_, err = c.Api.Execute(ctx, nil, "POST", apiUrl.String(), headers, io.NopCloser(&buf), []int{http.StatusCreated}, &created)
+		reqBody := bytes.NewReader(buf.Bytes())
+		ctxWithTimeout, cancel := context.WithTimeout(ctx, 60*time.Second)
+		defer cancel()
+		_, err = c.Api.Execute(ctxWithTimeout, nil, "POST", apiUrl.String(), headers, reqBody, []int{http.StatusCreated}, &created)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create knowledge base: %w", err)
 		}
@@ -77,7 +80,7 @@ func (c *KnowledgeBaseClient) CreateKnowledgeBase(ctx context.Context, kb Create
 		}
 		_, err := c.Api.Execute(ctx, nil, "POST", apiUrl.String(), nil, kb, []int{http.StatusOK}, &created)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create secret: %w", err)
+			return nil, fmt.Errorf("failed to create knowledge base: %w", err)
 		}
 	}
 
