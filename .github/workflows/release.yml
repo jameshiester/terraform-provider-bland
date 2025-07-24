@@ -76,7 +76,7 @@ jobs:
       - env:
           TF_ACC: "1"
           BLAND_API_KEY: ${{ secrets.BLAND_API_KEY }}
-        run: go test -v -timeout 5m -cover ./internal/...
+        run: go test -p 1 -v -timeout 5m -cover ./internal/...
         timeout-minutes: 2
 
   version:
