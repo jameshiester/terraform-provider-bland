@@ -14,7 +14,7 @@
                 "token": "124",
                 "encode": false
               },
-              "body": "test body"
+              "body": "{}"
             },
             "type": "Default"
         },

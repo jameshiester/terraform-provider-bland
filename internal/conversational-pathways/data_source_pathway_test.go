@@ -62,7 +62,7 @@ func TestUnitConversationalPathwayDataSource_Validate_Read(t *testing.T) {
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.auth.type", "Bearer"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.auth.token", "124"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.auth.encode", "false"),
-					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.body", "test body"),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.body", "{}"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.1.id", "2"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.1.type", "Default"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.1.data.name", "Edge 2"),
