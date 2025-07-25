@@ -24,7 +24,7 @@ func ConvertFromPathwayNodeDataResponseData(data pathwayNodeDataResponseDataDto)
 	return ConversationalPathwayNodeDataResponseDataModel{
 		Name:    types.StringValue(data.Name),
 		Data:    types.StringValue(data.Data),
-		Context: types.StringValue(data.Context),
+		Context: types.StringPointerValue(data.Context),
 	}
 }
 
@@ -83,6 +83,15 @@ func ConvertFromPathwayNodeDataDto(data *pathwayNodeDataDto) (*ConversationalPat
 		KbTool:         types.StringPointerValue(data.KbTool),
 		TransferNumber: types.StringPointerValue(data.TransferNumber),
 		Body:           types.StringPointerValue(data.Body),
+	}
+	if data.ModelOptions != nil {
+		model.ModelOptions = &ConversationalPathwayNodeDataModelOptionModel{
+			Type:                  types.StringValue(data.ModelOptions.Type),
+			InterruptionThreshold: types.StringPointerValue(data.ModelOptions.InterruptionThreshold),
+			Temperature:           types.Float32PointerValue(data.ModelOptions.Temperature),
+			SkipUserResponse:      types.BoolPointerValue(data.ModelOptions.SkipUserResponse),
+			BlockInterruptions:    types.BoolPointerValue(data.ModelOptions.BlockInterruptions),
+		}
 	}
 	if data.Auth != nil {
 		model.Auth = &ConversationalPathwayAuthModel{
@@ -179,7 +188,7 @@ func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) *p
 			tmp = append(tmp, pathwayNodeDataResponseDataDto{
 				Name:    v.Name.ValueString(),
 				Data:    v.Data.ValueString(),
-				Context: v.Context.ValueString(),
+				Context: v.Context.ValueStringPointer(),
 			})
 		}
 		responseData = &tmp

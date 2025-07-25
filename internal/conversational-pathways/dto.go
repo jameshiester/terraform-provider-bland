@@ -69,9 +69,9 @@ type pathwayEdgeDataDto struct {
 }
 
 type pathwayNodeDataResponseDataDto struct {
-	Data    string `json:"data"`
-	Name    string `json:"name"`
-	Context string `json:"context"`
+	Data    string  `json:"data"`
+	Name    string  `json:"name"`
+	Context *string `json:"context,omitempty"`
 }
 
 type pathwayNodeDataDto struct {

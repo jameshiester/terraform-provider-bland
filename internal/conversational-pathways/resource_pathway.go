@@ -199,7 +199,7 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 											},
 											"context": schema.StringAttribute{
 												MarkdownDescription: "Context for the response data.",
-												Required:            true,
+												Optional:            true,
 											},
 										},
 									},
