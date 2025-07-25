@@ -80,6 +80,16 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
               						name = "Start"
               						text = "Hey there, how are you doing today?"
               						is_start = true
+									headers = [
+										["a", "val"],
+										["b", "val2"]
+									]
+									auth = {
+										type = "Bearer"
+										token = "124"
+										encode = false
+									}
+									body = "{}"
            						}
 							}
 						]
@@ -103,7 +113,7 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.auth.type", "Bearer"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.auth.token", "124"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.auth.encode", "false"),
-					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.body", "test body"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.body", "{}"),
 				),
 			},
 		},
