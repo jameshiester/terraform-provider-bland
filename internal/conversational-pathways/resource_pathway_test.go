@@ -81,8 +81,13 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
               						text = "Hey there, how are you doing today?"
               						is_start = true
 									headers = [
-										["a", "val"],
-										["b", "val2"]
+										{
+											name = "a"
+											value = "val"
+										},
+										{
+											name = "b"
+											value = "val2"
 									]
 									auth = {
 										type = "Bearer"
