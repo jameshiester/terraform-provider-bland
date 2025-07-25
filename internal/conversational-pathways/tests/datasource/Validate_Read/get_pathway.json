@@ -17,7 +17,7 @@
                     "token": "124",
                     "encode": false
                 },
-                "body": "test body",
+                "body": "{}",
                 "pathway_examples": [
                     {
                         "Chosen Pathway": "The user has asked about something to do with rosters or rostering.",
