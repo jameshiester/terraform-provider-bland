@@ -88,6 +88,7 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 										{
 											name = "b"
 											value = "val2"
+										}
 									]
 									auth = {
 										type = "Bearer"
