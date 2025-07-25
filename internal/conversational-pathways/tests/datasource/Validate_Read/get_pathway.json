@@ -11,10 +11,7 @@
                 "isHighlighted": false,
                 "kb": "test-kb",
                 "kbTool": "test-kb-tool",
-                "headers": [
-                    {"name": "a", "value": "val"},
-                    {"name": "b", "value": "val2"}
-                ],
+                "headers": [["a","val"],["b","val2"]],
                 "auth": {
                     "type": "Bearer",
                     "token": "124",
