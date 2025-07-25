@@ -276,6 +276,44 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 										},
 									},
 								},
+								"auth": schema.SingleNestedAttribute{
+									MarkdownDescription: "Authentication for the node.",
+									Computed:            true,
+									Attributes: map[string]schema.Attribute{
+										"type": schema.StringAttribute{
+											MarkdownDescription: "Auth type (e.g., Bearer).",
+											Computed:            true,
+										},
+										"token": schema.StringAttribute{
+											MarkdownDescription: "Auth token.",
+											Computed:            true,
+										},
+										"encode": schema.BoolAttribute{
+											MarkdownDescription: "Whether to encode the token.",
+											Computed:            true,
+										},
+									},
+								},
+								"body": schema.StringAttribute{
+									MarkdownDescription: "Body for the node.",
+									Computed:            true,
+								},
+								"headers": schema.ListNestedAttribute{
+									MarkdownDescription: "Headers for the node.",
+									Computed:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"name": schema.StringAttribute{
+												MarkdownDescription: "Header name.",
+												Computed:            true,
+											},
+											"value": schema.StringAttribute{
+												MarkdownDescription: "Header value.",
+												Computed:            true,
+											},
+										},
+									},
+								},
 							},
 						},
 					},

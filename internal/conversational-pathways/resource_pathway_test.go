@@ -80,6 +80,22 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
               						name = "Start"
               						text = "Hey there, how are you doing today?"
               						is_start = true
+									headers = [
+										{
+											name = "a"
+											value = "val"
+										},
+										{
+											name = "b"
+											value = "val2"
+										}
+									]
+									auth = {
+										type = "Bearer"
+										token = "124"
+										encode = false
+									}
+									body = "{}"
            						}
 							}
 						]
@@ -95,6 +111,15 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.id", "1"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.#", "1"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "global_config.global_prompt", "Example global prompt"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.headers.#", "2"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.headers.0.name", "a"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.headers.0.value", "val"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.headers.1.name", "b"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.headers.1.value", "val2"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.auth.type", "Bearer"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.auth.token", "124"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.auth.encode", "false"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.body", "{}"),
 				),
 			},
 		},
