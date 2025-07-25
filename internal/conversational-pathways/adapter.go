@@ -335,11 +335,15 @@ func ConvertFromPathwayNodeModel(node ConversationalPathwayNodeModel) pathwayNod
 }
 
 func ConvertFromPathwayEdgeDto(edge pathwayEdgeDto) ConversationalPathwayEdgeModel {
+	nodeType := edge.Type
+	if nodeType == "" {
+		nodeType = "custom"
+	}
 	return ConversationalPathwayEdgeModel{
 		ID:     types.StringValue(edge.ID),
 		Source: types.StringValue(edge.Source),
 		Target: types.StringValue(edge.Target),
-		Type:   types.StringValue(edge.Type),
+		Type:   types.StringValue(nodeType),
 		Data: ConversationalPathwayEdgeDataModel{
 			Label:         types.StringValue(edge.Data.Label),
 			IsHighlighted: types.BoolValue(edge.Data.IsHighlighted),
