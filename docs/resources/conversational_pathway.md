@@ -189,9 +189,12 @@ Required:
 
 Required:
 
-- `context` (String) Context for the response data.
 - `data` (String) Data value.
 - `name` (String) Name of the response data.
+
+Optional:
+
+- `context` (String) Context for the response data.
 
 
 <a id="nestedatt--nodes--data--response_pathways"></a>
