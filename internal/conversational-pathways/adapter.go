@@ -461,18 +461,12 @@ func ConvertFromPathwayEdgeModel(edge ConversationalPathwayEdgeModel) pathwayEdg
 		Description:   edge.Data.Description.ValueStringPointer(),
 		AlwaysPick:    edge.Data.AlwaysPick.ValueBoolPointer(),
 	}
-<<<<<<< HEAD
 	if edge.Data.Conditions != nil {
 		for _, condition := range *edge.Data.Conditions {
 			if edgeData.Condition == nil {
 				edgeData.Condition = &[]EdgeConditionDto{}
 			}
 			*edgeData.Condition = append(*edgeData.Condition, EdgeConditionDto{
-=======
-	if len(edge.Data.Conditions) > 0 {
-		for _, condition := range edge.Data.Conditions {
-			edgeData.Condition = append(edgeData.Condition, EdgeConditionDto{
->>>>>>> origin/main
 				Field:    condition.Field.ValueString(),
 				Value:    condition.Value.ValueString(),
 				IsGroup:  condition.IsGroup.ValueBool(),
