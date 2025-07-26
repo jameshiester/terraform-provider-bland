@@ -80,6 +80,19 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
               						name = "Start"
               						text = "Hey there, how are you doing today?"
               						is_start = true
+									extract_vars = [
+										{
+											name = "name1"
+											type = "type1"
+											description = "description1"
+											increase_spelling_precision = true
+										},
+										{
+											name = "name2"
+											type = "type2"
+											description = "description2"
+										}
+									]
 									headers = [
 										{
 											name = "a"
