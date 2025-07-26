@@ -399,6 +399,30 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 									MarkdownDescription: "Whether this edge should always be picked.",
 									Computed:            true,
 								},
+								"conditions": schema.ListNestedAttribute{
+									MarkdownDescription: "Conditions for the edge.",
+									Computed:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"field": schema.StringAttribute{
+												MarkdownDescription: "Field name.",
+												Computed:            true,
+											},
+											"value": schema.StringAttribute{
+												MarkdownDescription: "Field value.",
+												Computed:            true,
+											},
+											"is_group": schema.BoolAttribute{
+												MarkdownDescription: "Whether this is a group condition.",
+												Computed:            true,
+											},
+											"operator": schema.StringAttribute{
+												MarkdownDescription: "Condition operator.",
+												Computed:            true,
+											},
+										},
+									},
+								},
 							},
 						},
 					},

@@ -432,10 +432,40 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 								"description": schema.StringAttribute{
 									MarkdownDescription: "Description of the edge.",
 									Optional:            true,
+									Validators: []validator.String{
+										stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("conditions")),
+									},
 								},
 								"always_pick": schema.BoolAttribute{
 									MarkdownDescription: "Whether this edge should always be picked.",
 									Optional:            true,
+								},
+								"conditions": schema.ListNestedAttribute{
+									MarkdownDescription: "Conditions for the edge.",
+									Optional:            true,
+									Validators: []validator.List{
+										listvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("description")),
+									},
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"field": schema.StringAttribute{
+												MarkdownDescription: "Field name.",
+												Optional:            true,
+											},
+											"value": schema.StringAttribute{
+												MarkdownDescription: "Field value.",
+												Optional:            true,
+											},
+											"is_group": schema.BoolAttribute{
+												MarkdownDescription: "Whether this is a group condition.",
+												Optional:            true,
+											},
+											"operator": schema.StringAttribute{
+												MarkdownDescription: "Condition operator.",
+												Optional:            true,
+											},
+										},
+									},
 								},
 							},
 						},

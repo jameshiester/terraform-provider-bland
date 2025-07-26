@@ -50,9 +50,21 @@ Read-Only:
 Read-Only:
 
 - `always_pick` (Boolean) Whether this edge should always be picked.
+- `conditions` (Attributes List) Conditions for the edge. (see [below for nested schema](#nestedatt--edges--data--conditions))
 - `description` (String) Description of the edge.
 - `is_highlighted` (Boolean) Whether the edge is highlighted.
 - `label` (String) Label for the edge.
+
+<a id="nestedatt--edges--data--conditions"></a>
+### Nested Schema for `edges.data.conditions`
+
+Read-Only:
+
+- `field` (String) Field name.
+- `is_group` (Boolean) Whether this is a group condition.
+- `operator` (String) Condition operator.
+- `value` (String) Field value.
+
 
 
 

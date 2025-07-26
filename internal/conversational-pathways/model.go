@@ -144,9 +144,17 @@ type ConversationalPathwayEdgeModel struct {
 	Data   ConversationalPathwayEdgeDataModel `tfsdk:"data"`
 }
 
+type ConversationalPathwayEdgeConditionModel struct {
+	Field    types.String `tfsdk:"field"`
+	Value    types.String `tfsdk:"value"`
+	IsGroup  types.Bool   `tfsdk:"is_group"`
+	Operator types.String `tfsdk:"operator"`
+}
+
 type ConversationalPathwayEdgeDataModel struct {
-	Label         types.String `tfsdk:"label"`
-	IsHighlighted types.Bool   `tfsdk:"is_highlighted"`
-	Description   types.String `tfsdk:"description"`
-	AlwaysPick    types.Bool   `tfsdk:"always_pick"`
+	Label         types.String                              `tfsdk:"label"`
+	IsHighlighted types.Bool                                `tfsdk:"is_highlighted"`
+	Description   types.String                              `tfsdk:"description"`
+	AlwaysPick    types.Bool                                `tfsdk:"always_pick"`
+	Conditions    []ConversationalPathwayEdgeConditionModel `tfsdk:"conditions"`
 }
