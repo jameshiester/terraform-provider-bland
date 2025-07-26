@@ -358,6 +358,14 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 									MarkdownDescription: "Fallback node ID.",
 									Computed:            true,
 								},
+								"timeout_value": schema.Int64Attribute{
+									MarkdownDescription: "Timeout value for the node.",
+									Computed:            true,
+								},
+								"max_retries": schema.Int64Attribute{
+									MarkdownDescription: "Maximum number of retries for the node.",
+									Computed:            true,
+								},
 							},
 						},
 					},

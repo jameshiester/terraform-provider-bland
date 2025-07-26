@@ -83,6 +83,8 @@ type ConversationalPathwayNodeDataModel struct {
 	Body             types.String                                        `tfsdk:"body"`
 	Routes           []ConversationalPathwayRouteModel                   `tfsdk:"routes"`
 	FallbackNodeId   types.String                                        `tfsdk:"fallback_node_id"`
+	TimeoutValue     types.Int64                                         `tfsdk:"timeout_value"`
+	MaxRetries       types.Int64                                         `tfsdk:"max_retries"`
 }
 
 type ConversationalPathwayAuthModel struct {

@@ -99,6 +99,8 @@ type pathwayNodeDataDto struct {
 	Body             *string                           `json:"body,omitempty"`
 	Routes           *[]RouteDto                       `json:"routes,omitempty"`
 	FallbackNodeId   *string                           `json:"fallbackNodeId,omitempty"`
+	TimeoutValue     *int                              `json:"timeoutValue,omitempty"`
+	MaxRetries       *int                              `json:"max_retries,omitempty"`
 }
 
 type AuthDto struct {
