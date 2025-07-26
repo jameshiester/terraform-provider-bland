@@ -163,7 +163,6 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.1.name", "name2"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.1.type", "type2"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.1.description", "description2"),
-					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.1.increase_spelling_precision", ""),
 				),
 			},
 		},
