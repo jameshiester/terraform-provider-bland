@@ -9,14 +9,40 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-func ConvertFromPathwayNodeDataExtractVars(vals []string) (ConversationalPathwayNodeDataExtractVariableModel, error) {
+func ConvertFromPathwayNodeDataExtractVars(vals []interface{}) (ConversationalPathwayNodeDataExtractVariableModel, error) {
 	model := ConversationalPathwayNodeDataExtractVariableModel{}
-	if len(vals) != 3 {
+	if len(vals) != 3 && len(vals) != 4 {
 		return model, fmt.Errorf("failed to get pathway: %d", len(vals))
 	}
-	model.Name = types.StringValue(vals[0])
-	model.Type = types.StringValue(vals[1])
-	model.Description = types.StringValue(vals[2])
+
+	// Convert first three values to strings
+	if name, ok := vals[0].(string); ok {
+		model.Name = types.StringValue(name)
+	} else {
+		return model, fmt.Errorf("name must be a string")
+	}
+
+	if varType, ok := vals[1].(string); ok {
+		model.Type = types.StringValue(varType)
+	} else {
+		return model, fmt.Errorf("type must be a string")
+	}
+
+	if description, ok := vals[2].(string); ok {
+		model.Description = types.StringValue(description)
+	} else {
+		return model, fmt.Errorf("description must be a string")
+	}
+
+	// Handle optional fourth value (boolean)
+	if len(vals) == 4 {
+		if increaseSpellingPrecision, ok := vals[3].(bool); ok {
+			model.IncreaseSpellingPrecision = types.BoolValue(increaseSpellingPrecision)
+		} else {
+			return model, fmt.Errorf("increase_spelling_precision must be a boolean")
+		}
+	}
+
 	return model, nil
 }
 
@@ -182,15 +208,24 @@ func ConvertFromPathwayExampleMessageDto(dto pathwayExampleMessageDto) Conversat
 }
 
 func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) *pathwayNodeDataDto {
-	var extractVars *[][]string
+	var extractVars *[][]interface{}
 	if len(data.ExtractVars) > 0 {
-		tmp := make([][]string, 0, len(data.ExtractVars))
+		tmp := make([][]interface{}, 0, len(data.ExtractVars))
 		for _, v := range data.ExtractVars {
-			tmp = append(tmp, []string{
-				v.Name.ValueString(),
-				v.Type.ValueString(),
-				v.Description.ValueString(),
-			})
+			if !v.IncreaseSpellingPrecision.IsNull() {
+				tmp = append(tmp, []interface{}{
+					v.Name.ValueString(),
+					v.Type.ValueString(),
+					v.Description.ValueString(),
+					v.IncreaseSpellingPrecision.ValueBool(),
+				})
+			} else {
+				tmp = append(tmp, []interface{}{
+					v.Name.ValueString(),
+					v.Type.ValueString(),
+					v.Description.ValueString(),
+				})
+			}
 		}
 		extractVars = &tmp
 	} else {

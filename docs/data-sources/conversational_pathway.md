@@ -130,6 +130,7 @@ Read-Only:
 Read-Only:
 
 - `description` (String) Description of the variable.
+- `increase_spelling_precision` (Boolean) Indicates if model uses increased spelling precision
 - `name` (String) Name of the variable.
 - `type` (String) Type of the variable.
 

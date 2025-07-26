@@ -146,6 +146,10 @@ Required:
 - `name` (String) Name of the variable.
 - `type` (String) Type of the variable.
 
+Optional:
+
+- `increase_spelling_precision` (Boolean) Indicates if model uses increased spelling precision
+
 
 <a id="nestedatt--nodes--data--headers"></a>
 ### Nested Schema for `nodes.data.headers`

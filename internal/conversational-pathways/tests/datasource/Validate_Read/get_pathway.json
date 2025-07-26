@@ -11,6 +11,10 @@
                 "isHighlighted": false,
                 "kb": "test-kb",
                 "kbTool": "test-kb-tool",
+                "extractVars": [
+                    ["name1", "type1", "description1", true],
+                    ["name2", "type2", "description2"]
+                ],
                 "headers": [["a","val"],["b","val2"]],
                 "auth": {
                     "type": "Bearer",

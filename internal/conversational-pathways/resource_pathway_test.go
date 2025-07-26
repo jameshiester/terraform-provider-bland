@@ -80,6 +80,19 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
               						name = "Start"
               						text = "Hey there, how are you doing today?"
               						is_start = true
+									extract_vars = [
+										{
+											name = "name1"
+											type = "type1"
+											description = "description1"
+											increase_spelling_precision = true
+										},
+										{
+											name = "name2"
+											type = "type2"
+											description = "description2"
+										}
+									]
 									headers = [
 										{
 											name = "a"
@@ -142,6 +155,14 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.routes.0.conditions.0.operator", "less than"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.routes.0.target_node_id", "78136d68-d3d7-4d91-917e-26853c830d09"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.fallback_node_id", "fallback-node-id"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.#", "2"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.0.name", "name1"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.0.type", "type1"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.0.description", "description1"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.0.increase_spelling_precision", "true"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.1.name", "name2"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.1.type", "type2"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.1.description", "description2"),
 				),
 			},
 		},
