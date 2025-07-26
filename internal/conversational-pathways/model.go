@@ -22,9 +22,10 @@ type ConversationalPathwayNodeModel struct {
 }
 
 type ConversationalPathwayNodeDataExtractVariableModel struct {
-	Name        types.String `tfsdk:"name"`
-	Type        types.String `tfsdk:"type"`
-	Description types.String `tfsdk:"description"`
+	Name                      types.String `tfsdk:"name"`
+	Type                      types.String `tfsdk:"type"`
+	Description               types.String `tfsdk:"description"`
+	IncreaseSpellingPrecision types.Bool   `tfsdk:"increase_spelling_precision"`
 }
 
 type ConversationalPathwayNodeDataResponseDataModel struct {

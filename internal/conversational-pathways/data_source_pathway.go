@@ -145,6 +145,10 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 												MarkdownDescription: "Description of the variable.",
 												Computed:            true,
 											},
+											"increase_spelling_precision": schema.BoolAttribute{
+												MarkdownDescription: "Indicates if model uses increased spelling precision",
+												Computed:            true,
+											},
 										},
 									},
 								},

@@ -85,7 +85,7 @@ type pathwayNodeDataDto struct {
 	GlobalLabel      *string                           `json:"globalLabel,omitempty"`
 	URL              *string                           `json:"url,omitempty"`
 	Method           *string                           `json:"method,omitempty"`
-	ExtractVars      *[][]string                       `json:"extractVars,omitempty"`
+	ExtractVars      *[][]interface{}                  `json:"extractVars,omitempty"`
 	ResponseData     *[]pathwayNodeDataResponseDataDto `json:"responseData,omitempty"`
 	ResponsePathways *[][]interface{}                  `json:"responsePathways,omitempty"`
 	Condition        *string                           `json:"condition,omitempty"`
