@@ -96,6 +96,20 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 										encode = false
 									}
 									body = "test body"
+									routes = [
+										{
+											conditions = [
+												{
+													field = "expected_annual_salary"
+													value = "500000"
+													is_group = false
+													operator = "less than"
+												}
+											]
+											target_node_id = "78136d68-d3d7-4d91-917e-26853c830d09"
+										}
+									]
+									fallback_node_id = "fallback-node-id"
            						}
 							}
 						]
