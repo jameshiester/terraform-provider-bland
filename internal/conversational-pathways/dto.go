@@ -62,10 +62,11 @@ type pathwayEdgeDto struct {
 }
 
 type pathwayEdgeDataDto struct {
-	Label         string  `json:"label"`
-	IsHighlighted bool    `json:"isHighlighted"`
-	Description   *string `json:"description,omitempty"`
-	AlwaysPick    *bool   `json:"alwaysPick,omitempty"`
+	Label         string             `json:"label"`
+	IsHighlighted bool               `json:"isHighlighted"`
+	Description   *string            `json:"description,omitempty"`
+	AlwaysPick    *bool              `json:"alwaysPick,omitempty"`
+	Condition     []EdgeConditionDto `json:"condition,omitempty"`
 }
 
 type pathwayNodeDataResponseDataDto struct {
@@ -230,4 +231,11 @@ type RouteConditionDto struct {
 type RouteDto struct {
 	Conditions   []RouteConditionDto `json:"conditions"`
 	TargetNodeId string              `json:"targetNodeId"`
+}
+
+type EdgeConditionDto struct {
+	Field    string `json:"field"`
+	Value    string `json:"value"`
+	IsGroup  bool   `json:"isGroup"`
+	Operator string `json:"operator"`
 }

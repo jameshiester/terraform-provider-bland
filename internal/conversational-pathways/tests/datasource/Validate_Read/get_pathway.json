@@ -70,7 +70,15 @@
             "source": "1",
             "data": {
                 "label": "Edge Label",
-                "alwaysPick": true
+                "alwaysPick": true,
+                "condition": [
+                    {
+                        "field": "expected_annual_salary",
+                        "value": "500000",
+                        "isGroup": false,
+                        "operator": "less than"
+                    }
+                ]
             },
             "target": "2",
             "type": "custom"

@@ -393,7 +393,7 @@ func ConvertFromPathwayEdgeDto(edge pathwayEdgeDto) ConversationalPathwayEdgeMod
 	if nodeType == "" {
 		nodeType = "custom"
 	}
-	return ConversationalPathwayEdgeModel{
+	model := ConversationalPathwayEdgeModel{
 		ID:     types.StringValue(edge.ID),
 		Source: types.StringValue(edge.Source),
 		Target: types.StringValue(edge.Target),
@@ -405,20 +405,42 @@ func ConvertFromPathwayEdgeDto(edge pathwayEdgeDto) ConversationalPathwayEdgeMod
 			AlwaysPick:    types.BoolPointerValue(edge.Data.AlwaysPick),
 		},
 	}
+	if edge.Data.Condition != nil {
+		for _, condition := range edge.Data.Condition {
+			model.Data.Conditions = append(model.Data.Conditions, ConversationalPathwayEdgeConditionModel{
+				Field:    types.StringValue(condition.Field),
+				Value:    types.StringValue(condition.Value),
+				IsGroup:  types.BoolValue(condition.IsGroup),
+				Operator: types.StringValue(condition.Operator),
+			})
+		}
+	}
+	return model
 }
 
 func ConvertFromPathwayEdgeModel(edge ConversationalPathwayEdgeModel) pathwayEdgeDto {
+	edgeData := pathwayEdgeDataDto{
+		Label:         edge.Data.Label.ValueString(),
+		IsHighlighted: edge.Data.IsHighlighted.ValueBool(),
+		Description:   edge.Data.Description.ValueStringPointer(),
+		AlwaysPick:    edge.Data.AlwaysPick.ValueBoolPointer(),
+	}
+	if len(edge.Data.Conditions) > 0 {
+		for _, condition := range edge.Data.Conditions {
+			edgeData.Condition = append(edgeData.Condition, EdgeConditionDto{
+				Field:    condition.Field.ValueString(),
+				Value:    condition.Value.ValueString(),
+				IsGroup:  condition.IsGroup.ValueBool(),
+				Operator: condition.Operator.ValueString(),
+			})
+		}
+	}
 	return pathwayEdgeDto{
 		ID:     edge.ID.ValueString(),
 		Source: edge.Source.ValueString(),
 		Target: edge.Target.ValueString(),
 		Type:   edge.Type.ValueString(),
-		Data: pathwayEdgeDataDto{
-			Label:         edge.Data.Label.ValueString(),
-			IsHighlighted: edge.Data.IsHighlighted.ValueBool(),
-			Description:   edge.Data.Description.ValueStringPointer(),
-			AlwaysPick:    edge.Data.AlwaysPick.ValueBoolPointer(),
-		},
+		Data:   edgeData,
 	}
 }
 
