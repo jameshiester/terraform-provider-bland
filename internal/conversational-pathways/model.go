@@ -153,9 +153,9 @@ type ConversationalPathwayEdgeConditionModel struct {
 }
 
 type ConversationalPathwayEdgeDataModel struct {
-	Label         types.String                              `tfsdk:"label"`
-	IsHighlighted types.Bool                                `tfsdk:"is_highlighted"`
-	Description   types.String                              `tfsdk:"description"`
-	AlwaysPick    types.Bool                                `tfsdk:"always_pick"`
-	Conditions    []ConversationalPathwayEdgeConditionModel `tfsdk:"conditions"`
+	Label         types.String                               `tfsdk:"label"`
+	IsHighlighted types.Bool                                 `tfsdk:"is_highlighted"`
+	Description   types.String                               `tfsdk:"description"`
+	AlwaysPick    types.Bool                                 `tfsdk:"always_pick"`
+	Conditions    *[]ConversationalPathwayEdgeConditionModel `tfsdk:"conditions"`
 }
