@@ -102,6 +102,7 @@ Read-Only:
 - `is_start` (Boolean) Defines if this is the start node of the pathway.
 - `kb` (String) Knowledge base for the node.
 - `kb_tool` (String) Knowledge base tool for the node.
+- `max_retries` (Number) Maximum number of retries for the node.
 - `method` (String) Method for the node.
 - `model_options` (Attributes) Model options for the node. (see [below for nested schema](#nestedatt--nodes--data--model_options))
 - `name` (String) Name of the node.
@@ -111,6 +112,7 @@ Read-Only:
 - `response_pathways` (Attributes List) Response pathways for the node. (see [below for nested schema](#nestedatt--nodes--data--response_pathways))
 - `routes` (Attributes List) Routes for the node. (see [below for nested schema](#nestedatt--nodes--data--routes))
 - `text` (String) Text for the node.
+- `timeout_value` (Number) Timeout value for the node.
 - `transfer_number` (String) Transfer number for the node.
 - `url` (String) URL for the node.
 
