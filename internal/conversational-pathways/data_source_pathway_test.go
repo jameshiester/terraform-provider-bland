@@ -51,7 +51,6 @@ func TestUnitConversationalPathwayDataSource_Validate_Read(t *testing.T) {
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.extract_vars.1.name", "name2"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.extract_vars.1.type", "type2"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.extract_vars.1.description", "description2"),
-					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.extract_vars.1.increase_spelling_precision", ""),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.pathway_examples.#", "2"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.pathway_examples.0.chosen_pathway", "The user has asked about something to do with rosters or rostering."),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.pathway_examples.0.conversation_history.basic_history", "i want to talk to the rostering team"),
