@@ -314,6 +314,46 @@ func (d *ConversationalPathwayDataSource) Schema(ctx context.Context, req dataso
 										},
 									},
 								},
+								"routes": schema.ListNestedAttribute{
+									MarkdownDescription: "Routes for the node.",
+									Computed:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"conditions": schema.ListNestedAttribute{
+												MarkdownDescription: "Conditions for the route.",
+												Computed:            true,
+												NestedObject: schema.NestedAttributeObject{
+													Attributes: map[string]schema.Attribute{
+														"field": schema.StringAttribute{
+															MarkdownDescription: "Field name.",
+															Computed:            true,
+														},
+														"value": schema.StringAttribute{
+															MarkdownDescription: "Field value.",
+															Computed:            true,
+														},
+														"is_group": schema.BoolAttribute{
+															MarkdownDescription: "Whether this is a group condition.",
+															Computed:            true,
+														},
+														"operator": schema.StringAttribute{
+															MarkdownDescription: "Condition operator.",
+															Computed:            true,
+														},
+													},
+												},
+											},
+											"target_node_id": schema.StringAttribute{
+												MarkdownDescription: "Target node ID.",
+												Computed:            true,
+											},
+										},
+									},
+								},
+								"fallback_node_id": schema.StringAttribute{
+									MarkdownDescription: "Fallback node ID.",
+									Computed:            true,
+								},
 							},
 						},
 					},

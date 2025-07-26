@@ -83,6 +83,7 @@ func ConvertFromPathwayNodeDataDto(data *pathwayNodeDataDto) (*ConversationalPat
 		KbTool:         types.StringPointerValue(data.KbTool),
 		TransferNumber: types.StringPointerValue(data.TransferNumber),
 		Body:           types.StringPointerValue(data.Body),
+		FallbackNodeId: types.StringPointerValue(data.FallbackNodeId),
 	}
 	if data.ModelOptions != nil {
 		model.ModelOptions = &ConversationalPathwayNodeDataModelOptionModel{
@@ -110,7 +111,22 @@ func ConvertFromPathwayNodeDataDto(data *pathwayNodeDataDto) (*ConversationalPat
 			}
 		}
 	}
-
+	if data.Routes != nil {
+		for _, route := range *data.Routes {
+			routeModel := ConversationalPathwayRouteModel{
+				TargetNodeId: types.StringValue(route.TargetNodeId),
+			}
+			for _, condition := range route.Conditions {
+				routeModel.Conditions = append(routeModel.Conditions, ConversationalPathwayRouteConditionModel{
+					Field:    types.StringValue(condition.Field),
+					Value:    types.StringValue(condition.Value),
+					IsGroup:  types.BoolValue(condition.IsGroup),
+					Operator: types.StringValue(condition.Operator),
+				})
+			}
+			model.Routes = append(model.Routes, routeModel)
+		}
+	}
 	if data.ExtractVars != nil {
 		for _, variable := range *data.ExtractVars {
 			varModel, err := ConvertFromPathwayNodeDataExtractVars(variable)
@@ -267,6 +283,33 @@ func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) *p
 		body = &b
 	}
 
+	var routes *[]RouteDto
+	if len(data.Routes) > 0 {
+		tmp := make([]RouteDto, 0, len(data.Routes))
+		for _, route := range data.Routes {
+			routeDto := RouteDto{
+				TargetNodeId: route.TargetNodeId.ValueString(),
+			}
+			for _, condition := range route.Conditions {
+				routeDto.Conditions = append(routeDto.Conditions, RouteConditionDto{
+					Field:    condition.Field.ValueString(),
+					Value:    condition.Value.ValueString(),
+					IsGroup:  condition.IsGroup.ValueBool(),
+					Operator: condition.Operator.ValueString(),
+				})
+			}
+			tmp = append(tmp, routeDto)
+		}
+		routes = &tmp
+	} else {
+		routes = nil
+	}
+	var fallbackNodeId *string
+	if !data.FallbackNodeId.IsNull() && !data.FallbackNodeId.IsUnknown() {
+		f := data.FallbackNodeId.ValueString()
+		fallbackNodeId = &f
+	}
+
 	return &pathwayNodeDataDto{
 		Name:             data.Name.ValueString(),
 		GlobalPrompt:     data.GlobalPrompt.ValueStringPointer(),
@@ -289,6 +332,8 @@ func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) *p
 		Headers:          headers,
 		Auth:             auth,
 		Body:             body,
+		Routes:           routes,
+		FallbackNodeId:   fallbackNodeId,
 	}
 }
 

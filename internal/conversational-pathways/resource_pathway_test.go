@@ -95,7 +95,7 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 										token = "124"
 										encode = false
 									}
-									body = "{}"
+									body = "test body"
            						}
 							}
 						]
@@ -119,7 +119,15 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.auth.type", "Bearer"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.auth.token", "124"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.auth.encode", "false"),
-					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.body", "{}"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.body", "test body"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.routes.#", "1"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.routes.0.conditions.#", "1"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.routes.0.conditions.0.field", "expected_annual_salary"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.routes.0.conditions.0.value", "500000"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.routes.0.conditions.0.is_group", "false"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.routes.0.conditions.0.operator", "less than"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.routes.0.target_node_id", "78136d68-d3d7-4d91-917e-26853c830d09"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.fallback_node_id", "fallback-node-id"),
 				),
 			},
 		},

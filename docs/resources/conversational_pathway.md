@@ -96,6 +96,7 @@ Optional:
 - `body` (String) Body for the node.
 - `condition` (String) Condition for the node.
 - `extract_vars` (Attributes List) Variables to extract from the node. (see [below for nested schema](#nestedatt--nodes--data--extract_vars))
+- `fallback_node_id` (String) Fallback node ID.
 - `global_label` (String) Label for a global node.
 - `global_prompt` (String) Prompt for a global node.
 - `headers` (Attributes List) Headers for the node. (see [below for nested schema](#nestedatt--nodes--data--headers))
@@ -109,6 +110,7 @@ Optional:
 - `prompt` (String) Prompt for a knowledge base node.
 - `response_data` (Attributes List) Response data for the node. (see [below for nested schema](#nestedatt--nodes--data--response_data))
 - `response_pathways` (Attributes List) Response pathways for the node. (see [below for nested schema](#nestedatt--nodes--data--response_pathways))
+- `routes` (Attributes List) Routes for the node. (see [below for nested schema](#nestedatt--nodes--data--routes))
 - `text` (String) Text for the node.
 - `transfer_number` (String) Transfer number for the node.
 - `url` (String) URL for the node.
@@ -222,6 +224,32 @@ Required:
 
 - `id` (String) Outcome node id.
 - `node_name` (String) Outcome node name.
+
+
+
+<a id="nestedatt--nodes--data--routes"></a>
+### Nested Schema for `nodes.data.routes`
+
+Required:
+
+- `target_node_id` (String) Target node ID.
+
+Optional:
+
+- `conditions` (Attributes List) Conditions for the route. (see [below for nested schema](#nestedatt--nodes--data--routes--conditions))
+
+<a id="nestedatt--nodes--data--routes--conditions"></a>
+### Nested Schema for `nodes.data.routes.conditions`
+
+Required:
+
+- `field` (String) Field name.
+- `operator` (String) Condition operator.
+- `value` (String) Field value.
+
+Optional:
+
+- `is_group` (Boolean) Whether this is a group condition.
 
 ## Import
 

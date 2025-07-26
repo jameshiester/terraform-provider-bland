@@ -80,6 +80,8 @@ type ConversationalPathwayNodeDataModel struct {
 	Headers          []ConversationalPathwayHeaderModel                  `tfsdk:"headers"`
 	Auth             *ConversationalPathwayAuthModel                     `tfsdk:"auth"`
 	Body             types.String                                        `tfsdk:"body"`
+	Routes           []ConversationalPathwayRouteModel                   `tfsdk:"routes"`
+	FallbackNodeId   types.String                                        `tfsdk:"fallback_node_id"`
 }
 
 type ConversationalPathwayAuthModel struct {
@@ -106,6 +108,18 @@ type ConversationalPathwayExampleHistoryModel struct {
 type ConversationalPathwayExampleMessageModel struct {
 	Role    types.String `tfsdk:"role"`
 	Content types.String `tfsdk:"content"`
+}
+
+type ConversationalPathwayRouteConditionModel struct {
+	Field    types.String `tfsdk:"field"`
+	Value    types.String `tfsdk:"value"`
+	IsGroup  types.Bool   `tfsdk:"is_group"`
+	Operator types.String `tfsdk:"operator"`
+}
+
+type ConversationalPathwayRouteModel struct {
+	Conditions   []ConversationalPathwayRouteConditionModel `tfsdk:"conditions"`
+	TargetNodeId types.String                               `tfsdk:"target_node_id"`
 }
 
 // ConversationalPathwayDataSourceModel describes the data source data model.
