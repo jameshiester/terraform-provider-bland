@@ -350,6 +350,46 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 										},
 									},
 								},
+								"routes": schema.ListNestedAttribute{
+									MarkdownDescription: "Routes for the node.",
+									Optional:            true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"conditions": schema.ListNestedAttribute{
+												MarkdownDescription: "Conditions for the route.",
+												Optional:            true,
+												NestedObject: schema.NestedAttributeObject{
+													Attributes: map[string]schema.Attribute{
+														"field": schema.StringAttribute{
+															MarkdownDescription: "Field name.",
+															Required:            true,
+														},
+														"value": schema.StringAttribute{
+															MarkdownDescription: "Field value.",
+															Required:            true,
+														},
+														"is_group": schema.BoolAttribute{
+															MarkdownDescription: "Whether this is a group condition.",
+															Optional:            true,
+														},
+														"operator": schema.StringAttribute{
+															MarkdownDescription: "Condition operator.",
+															Required:            true,
+														},
+													},
+												},
+											},
+											"target_node_id": schema.StringAttribute{
+												MarkdownDescription: "Target node ID.",
+												Required:            true,
+											},
+										},
+									},
+								},
+								"fallback_node_id": schema.StringAttribute{
+									MarkdownDescription: "Fallback node ID.",
+									Optional:            true,
+								},
 							},
 						},
 					},

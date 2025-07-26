@@ -17,7 +17,21 @@
                     "token": "124",
                     "encode": false
                 },
-                "body": "{}",
+                "body": "test body",
+                "routes": [
+                    {
+                        "conditions": [
+                            {
+                                "field": "expected_annual_salary",
+                                "value": "500000",
+                                "isGroup": false,
+                                "operator": "less than"
+                            }
+                        ],
+                        "targetNodeId": "78136d68-d3d7-4d91-917e-26853c830d09"
+                    }
+                ],
+                "fallbackNodeId": "fallback-node-id",
                 "pathway_examples": [
                     {
                         "Chosen Pathway": "The user has asked about something to do with rosters or rostering.",

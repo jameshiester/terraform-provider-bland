@@ -96,6 +96,8 @@ type pathwayNodeDataDto struct {
 	Headers          *[][]string                       `json:"headers,omitempty"`
 	Auth             *AuthDto                          `json:"auth,omitempty"`
 	Body             *string                           `json:"body,omitempty"`
+	Routes           *[]RouteDto                       `json:"routes,omitempty"`
+	FallbackNodeId   *string                           `json:"fallbackNodeId,omitempty"`
 }
 
 type AuthDto struct {
@@ -216,4 +218,16 @@ func (h *pathwayExampleHistory) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 	return fmt.Errorf("conversation History is neither string nor array of messages")
+}
+
+type RouteConditionDto struct {
+	Field    string `json:"field"`
+	Value    string `json:"value"`
+	IsGroup  bool   `json:"isGroup"`
+	Operator string `json:"operator"`
+}
+
+type RouteDto struct {
+	Conditions   []RouteConditionDto `json:"conditions"`
+	TargetNodeId string              `json:"targetNodeId"`
 }
