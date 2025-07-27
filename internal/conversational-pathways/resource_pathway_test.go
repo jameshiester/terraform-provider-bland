@@ -123,6 +123,8 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 										}
 									]
 									fallback_node_id = "fallback-node-id"
+									timeout_value = 30
+									max_retries = 3
            						}
 							}
 						]
@@ -163,6 +165,8 @@ func TestUnitConversationalPathwayResource_Validate_Create(t *testing.T) {
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.1.name", "name2"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.1.type", "type2"),
 					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.extract_vars.1.description", "description2"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.timeout_value", "30"),
+					resource.TestCheckResourceAttr("bland_conversational_pathway.path", "nodes.0.data.max_retries", "3"),
 				),
 			},
 		},

@@ -394,6 +394,14 @@ func (r *ConversationalPathwayResource) Schema(ctx context.Context, req resource
 									MarkdownDescription: "Fallback node ID.",
 									Optional:            true,
 								},
+								"timeout_value": schema.Int64Attribute{
+									MarkdownDescription: "Timeout value for the node.",
+									Optional:            true,
+								},
+								"max_retries": schema.Int64Attribute{
+									MarkdownDescription: "Maximum number of retries for the node.",
+									Optional:            true,
+								},
 							},
 						},
 					},

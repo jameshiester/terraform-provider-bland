@@ -79,6 +79,8 @@ func TestUnitConversationalPathwayDataSource_Validate_Read(t *testing.T) {
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.routes.0.conditions.0.operator", "less than"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.routes.0.target_node_id", "78136d68-d3d7-4d91-917e-26853c830d09"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.fallback_node_id", "fallback-node-id"),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.timeout_value", "30"),
+					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.0.data.max_retries", "3"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.1.id", "2"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.1.type", "Default"),
 					resource.TestCheckResourceAttr("data.bland_conversational_pathway.pathway", "nodes.1.data.name", "Edge 2"),

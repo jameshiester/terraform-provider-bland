@@ -110,6 +110,8 @@ func ConvertFromPathwayNodeDataDto(data *pathwayNodeDataDto) (*ConversationalPat
 		TransferNumber: types.StringPointerValue(data.TransferNumber),
 		Body:           types.StringPointerValue(data.Body),
 		FallbackNodeId: types.StringPointerValue(data.FallbackNodeId),
+		TimeoutValue:   types.Int64PointerValue(convertIntToInt64(data.TimeoutValue)),
+		MaxRetries:     types.Int64PointerValue(convertIntToInt64(data.MaxRetries)),
 	}
 	if data.ModelOptions != nil {
 		model.ModelOptions = &ConversationalPathwayNodeDataModelOptionModel{
@@ -345,6 +347,17 @@ func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) *p
 		fallbackNodeId = &f
 	}
 
+	var timeoutValue *int
+	if !data.TimeoutValue.IsNull() && !data.TimeoutValue.IsUnknown() {
+		t := int(data.TimeoutValue.ValueInt64())
+		timeoutValue = &t
+	}
+	var maxRetries *int
+	if !data.MaxRetries.IsNull() && !data.MaxRetries.IsUnknown() {
+		m := int(data.MaxRetries.ValueInt64())
+		maxRetries = &m
+	}
+
 	return &pathwayNodeDataDto{
 		Name:             data.Name.ValueString(),
 		GlobalPrompt:     data.GlobalPrompt.ValueStringPointer(),
@@ -369,6 +382,8 @@ func ConvertFromPathwayNodeDataModel(data ConversationalPathwayNodeDataModel) *p
 		Body:             body,
 		Routes:           routes,
 		FallbackNodeId:   fallbackNodeId,
+		TimeoutValue:     timeoutValue,
+		MaxRetries:       maxRetries,
 	}
 }
 
@@ -546,4 +561,12 @@ func ConvertFromPathwayModel(pathway ConversationalPathwayDataSourceModel) pathw
 		path.Edges = append(path.Edges, edgeModel)
 	}
 	return path
+}
+
+func convertIntToInt64(i *int) *int64 {
+	if i == nil {
+		return nil
+	}
+	val := int64(*i)
+	return &val
 }

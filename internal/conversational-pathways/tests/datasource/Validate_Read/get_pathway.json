@@ -36,6 +36,8 @@
                     }
                 ],
                 "fallbackNodeId": "fallback-node-id",
+                "timeoutValue": 30,
+                "max_retries": 3,
                 "pathway_examples": [
                     {
                         "Chosen Pathway": "The user has asked about something to do with rosters or rostering.",

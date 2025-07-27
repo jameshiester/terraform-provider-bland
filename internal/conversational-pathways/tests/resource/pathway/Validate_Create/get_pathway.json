@@ -32,7 +32,9 @@
                   "targetNodeId": "78136d68-d3d7-4d91-917e-26853c830d09"
                 }
               ],
-              "fallbackNodeId": "fallback-node-id"
+              "fallbackNodeId": "fallback-node-id",
+              "timeoutValue": 30,
+              "max_retries": 3
             },
             "type": "Default"
         },
